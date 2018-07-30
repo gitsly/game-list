@@ -18,8 +18,9 @@
             db))
 
 (rf/reg-event-db
- ::remove-game
+ ::set-selected-game
  ;; db is the pre-state,
  (fn-traced [db
-             [event-name params]]
-            (println params) ))
+             [event-name game]]
+            (println "set selected game: " game)
+            (assoc db :selected-game game)))

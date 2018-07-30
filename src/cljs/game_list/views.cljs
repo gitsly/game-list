@@ -6,6 +6,9 @@
 
    [clojure.string :as string]))
 
+;; TODO (ideas for re-frame components)
+;; - Make a selected div component group
+
 (def delete-game-text "Remove")
 
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
@@ -17,7 +20,9 @@
   [game]
   (let [id (:id game)
         name (:name game)]
-    [:div {:style {:font-weight "bold" :background-color "#ebe6e0"}} (string/upper-case name)
+    [:div {:style {:font-weight "bold"
+                   :background-color "#ebe6e0"}}
+     name
      ;; [:div delete-game-text]
      ]))
 
@@ -28,7 +33,9 @@
         name (:name game)]
     (if (= id selected-game-id)
       ^{:key id} [:div (div-game-selected game)]
-      ^{:key id} [:div name])))
+      ^{:key id} [:div
+                  {:on-click #(rf/dispatch [::events/set-selected-game game])}
+                  name])))
 
 
 
@@ -37,7 +44,7 @@
   (let [games (rf/subscribe [::subs/games])
         selected-game (rf/subscribe [::subs/selected-game])
         selected-game-id (:id @selected-game)]
-    (println "selected game id: "selected-game-id)
+    (println "selected game: " @selected-game)
     [:div
      (for [g @games]
        (div-game g selected-game-id))]))
