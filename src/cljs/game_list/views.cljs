@@ -25,8 +25,24 @@
    (list-items games)
    ])
 
+
 (defn main-panel []
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:h1 "Game list: " @name]
      (div-game-list games/game-list)]))
+
+;;--------------- Snippets
+
+(let [a [ 1  2  3]
+      b ["a" "b" "c"]]
+  (map #(zipmap [:digit :letter] [% %2]) a b))
+
+
+(let [cnt (count games/game-list)
+      indices (take cnt (range))
+      names games/game-list]
+  (map #(zipmap [:index :name] [%1 %2]) indices names))
+
+
+(take 3 (range))
