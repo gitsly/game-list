@@ -6,6 +6,8 @@
 
    [clojure.string :as string]))
 
+(def delete-game-text "Remove")
+
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 (defn rand-color
   []
@@ -15,7 +17,9 @@
   [game]
   (let [id (:id game)
         name (:name game)]
-    [:div {:style {:font-weight "bold"}} (string/upper-case name)]))
+    [:div {:style {:font-weight "bold" :background-color "#ebe6e0"}} (string/upper-case name)
+     ;; [:div delete-game-text]
+     ]))
 
 (defn div-game
   [game

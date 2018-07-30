@@ -11,4 +11,6 @@
 
 (def default-db
   {:name "Bullen"
-   :games (take 7 default-games)})
+   :games (take 7 default-games)
+   :selected-game (nth default-games 4)
+   })
