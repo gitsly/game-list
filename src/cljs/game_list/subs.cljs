@@ -6,3 +6,8 @@
  ::name
  (fn [db]
    (:name db)))
+
+(re-frame/reg-sub
+ ::games
+ (fn [db]
+   (:games db)))
