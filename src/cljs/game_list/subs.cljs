@@ -11,3 +11,8 @@
  ::games
  (fn [db]
    (:games db)))
+
+(re-frame/reg-sub
+ ::selected-game
+ (fn [db]
+   (:selected-game db)))

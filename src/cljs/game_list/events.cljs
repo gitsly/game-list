@@ -18,9 +18,8 @@
             db))
 
 (rf/reg-event-db
- ::my-event1
+ ::remove-game
  ;; db is the pre-state,
  (fn-traced [db
              [event-name params]]
-            (println "Din mamma was here" event-name "parameters: " params)
-            (assoc db :name params)))
+            (println params) ))

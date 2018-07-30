@@ -1,7 +1,6 @@
 (ns game-list.views
   (:require
    [re-frame.core :as rf]
-   [game-list.games :as games]
    [game-list.subs :as subs]
    [game-list.events :as events]
    ))
@@ -13,18 +12,17 @@
 
 (defn div-game
   [game]
-  ^{:key game} [:div game])
+  (let [id (:id game)
+        name (:name game)]
+    ^{:key id} [:div name]))
 
-(defn list-items
-  [data]
-  (for [g data]
-    (div-game g)))
 
 (defn div-game-list
-  [games]
+[]
+(let [games (rf/subscribe [::subs/games])]
   [:div
-   (list-items games)
-   ])
+   (for [g @games]
+     (div-game g))]))
 
 ;; [:button  {:on-click #(rf/dispatch [::events/my-event1 "Bullen"])} "change list name"]
                                         ; Button should change @name
@@ -33,23 +31,17 @@
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:h1 "Game list: " @name]
-     ;; [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]
-
-     (div-game-list games/game-list)
-     [:div
-      [:p "test button"]
+     (div-game-list)
+     [:div {:style {:background-color "#e0e0eb"}}
+      [:p "Test button"]
       [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
 
      ]))
+
+
 
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
   (map #(zipmap [:digit :letter] [% %2]) a b))
-
-
-(let [cnt (count games/game-list)
-      indices (take cnt (range))
-      names games/game-list]
-  (map #(zipmap [:index :name] [%1 %2]) indices names))
