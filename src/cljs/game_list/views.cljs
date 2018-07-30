@@ -23,7 +23,9 @@
     [:div {:style {:font-weight "bold"
                    :background-color "#ebe6e0"}}
      name
-     ;; [:div delete-game-text]
+     [:div
+      {:on-click #(rf/dispatch [::events/delete-selected-game game])}
+      delete-game-text]
      ]))
 
 (defn div-game
@@ -37,8 +39,6 @@
                   {:on-click #(rf/dispatch [::events/set-selected-game game])}
                   name])))
 
-
-
 (defn div-game-list
   []
   (let [games (rf/subscribe [::subs/games])
@@ -46,8 +46,8 @@
         selected-game-id (:id @selected-game)]
     (println "selected game: " @selected-game)
     [:div
-     (for [g @games]
-       (div-game g selected-game-id))]))
+     (for [game @games]
+       (div-game game selected-game-id))]))
 
 
 (defn main-panel []

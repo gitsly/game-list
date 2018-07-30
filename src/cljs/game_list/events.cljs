@@ -24,3 +24,11 @@
              [event-name game]]
             (println "set selected game: " game)
             (assoc db :selected-game game)))
+
+(rf/reg-event-db
+ ::delete-selected-game
+ (fn-traced [db
+             [_ game]]
+            (println "delete selected game: " game)
+            (assoc game :name "Del")
+            (assoc db :selected-game nil)))
