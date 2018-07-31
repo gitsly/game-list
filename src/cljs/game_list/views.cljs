@@ -3,8 +3,10 @@
    [re-frame.core :as rf]
    [game-list.subs :as subs]
    [game-list.events :as events]
-
+   ;; [clojure.data :as data]
    [clojure.string :as string]))
+
+
 
 ;; TODO (ideas for re-frame components)
 ;; - Make a selected div component group
@@ -51,20 +53,25 @@
 
 
 (defn main-panel []
-(let [name (rf/subscribe [::subs/name])]
-  [:div
-   [:h1 "Game list: " @name]
-   (div-game-list)
-   [:div {:style {:background-color "#e0e0eb"}}
-    [:p "Test button"]
-    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-
-   ]))
+  (let [name (rf/subscribe [::subs/name])]
+    [:div
+     [:h1 "Game list: " @name]
+     (div-game-list)
+     [:div {:style {:background-color "#e0e0eb"}}
+      [:p "Test button"]
+      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+     ]))
 
 
 
 ;;--------------- Snippets
 
+
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-(map #(zipmap [:digit :letter] [% %2]) a b))
+  (map #(zipmap [:digit :letter] [% %2]) a b))
+
+(let [a {:name "ninja" :stamina 18 }
+      b {:name "ninja" :stamina 15 }
+      [only-a only-b both] (clojure.data/diff a b)]
+  both)

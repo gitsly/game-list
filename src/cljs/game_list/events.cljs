@@ -11,19 +11,19 @@
 
 
 (rf/reg-event-db
- ::test
- (fn-traced [db
-             [event-name params]]
-            (println "test button pressed: " params)
-            db))
+  ::test
+  (fn-traced [db
+              [event-name params]]
+    (println event-name "button pressed: " params)
+    db))
 
 (rf/reg-event-db
- ::set-selected-game
- ;; db is the pre-state,
- (fn-traced [db
-             [event-name game]]
-            (println "set selected game: " game)
-            (assoc db :selected-game game)))
+  ::set-selected-game
+  ;; db is the pre-state,
+  (fn-traced [db
+              [event-name game]]
+    (println "set selected game: " game)
+    (assoc db :selected-game game)))
 
 (rf/reg-event-db
  ::delete-selected-game
