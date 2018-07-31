@@ -11,6 +11,7 @@
 ;; - Make a selected div component group
 
 (def delete-game-text "Remove")
+(def add-game-text "Add game")
 
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 (defn rand-color
@@ -50,32 +51,46 @@
      (for [game @games]
        (div-game game selected-game-id))]))
 
+(defn div-add-game
+  []
+  [:div {:style {:background-color "#f3e0bb"}}
+
+   [:input {:id "name" :class "text" :value "Hero Quest"}]
+   [:button
+    {:on-click #(rf/dispatch [::events/add-game %])}
+    add-game-text]
+   ;; (-> % .-target .-value)
+   ])
+
+;; [:input {:class "text"
+;;          :value "name"}
+;;  [:button {:on-click #(rf/dispatch [::events/add-game .-value])}
+;;   add-game-text]
+;;  ]])
 
 (defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
-    [:div
-     [:h1 "Game list: " @name]
-     [:h2 "apan"]
-     (div-game-list)
-     [:div {:style {:background-color "#e0e0eb"}}
-      [:p "Test button"]
-      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-     ]))
+(let [name (rf/subscribe [::subs/name])]
+  [:div
+   [:h1 "Game list: " @name]
+   (div-game-list)
+   (div-add-game)
+   [:div {:style {:background-color "#e0e0eb"}}
+    [:p "Test button"]
+    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+   ]))
 
 
 
 ;;--------------- Snippets
 
-
-
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-  (map #(zipmap [:digit :letter] [% %2]) a b))
+(map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
-  both)
+both)
 
 
 (let [id 1
@@ -83,4 +98,5 @@
             {:id 1 :name "alice"}
             {:id 2 :name "lisa"}]
       modded (remove #(= id (:id %)) data)]
-  )
+modded
+)
