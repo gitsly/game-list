@@ -3,7 +3,6 @@
    [re-frame.core :as rf]
    [game-list.subs :as subs]
    [game-list.events :as events]
-   ;; [clojure.data :as data]
    [clojure.string :as string]))
 
 
@@ -75,3 +74,10 @@
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
   both)
+
+
+(let [data {:apan "ouch"
+            {:id 0 :name "bength"}
+            {:id 1 :name "alice"}
+            }]
+  (dissoc data :apan))
