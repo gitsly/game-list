@@ -30,4 +30,6 @@
   (fn-traced [db
               [_ game]]
     (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
-      (assoc (assoc db :games pruned-games) :selected-game nil))))
+      (-> db
+          (assoc :selected-game nil)
+          (assoc :games pruned-games)))))
