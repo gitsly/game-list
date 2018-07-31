@@ -55,6 +55,7 @@
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:h1 "Game list: " @name]
+     [:h2 "apan"]
      (div-game-list)
      [:div {:style {:background-color "#e0e0eb"}}
       [:p "Test button"]
@@ -64,6 +65,7 @@
 
 
 ;;--------------- Snippets
+
 
 
 (let [a [ 1  2  3]
@@ -76,8 +78,9 @@
   both)
 
 
-(let [data {:apan "ouch"
-            {:id 0 :name "bength"}
+(let [id 1
+      data [{:id 0 :name "bength"}
             {:id 1 :name "alice"}
-            }]
-  (dissoc data :apan))
+            {:id 2 :name "lisa"}]
+      modded (remove #(= id (:id %)) data)]
+  )

@@ -5,9 +5,9 @@
    [day8.re-frame.tracing :refer-macros [fn-traced defn-traced]]))
 
 (rf/reg-event-db
- ::initialize-db
- (fn-traced [_ _]
-            db/default-db))
+  ::initialize-db
+  (fn-traced [_ _]
+    db/default-db))
 
 
 (rf/reg-event-db
@@ -29,5 +29,5 @@
   ::delete-selected-game
   (fn-traced [db
               [_ game]]
-    (println "delete selected game: " game)
-    (assoc db :selected-game nil)))
+    (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
+      (assoc (assoc db :games pruned-games) :selected-game nil))))
