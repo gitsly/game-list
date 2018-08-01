@@ -67,14 +67,7 @@
                         (.querySelector "#the-input")
                         .-value)])}
     add-game-text]
-   ;; (-> % .-target .-value)
    ])
-
-;;(-> % .-target .-parentNode (.children "#the-input"))]
-;; https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
-
-;; :on-change #(rf/dispatch [::events/add-game
-;;                           (-> % .-target .-value)])}]]
 
 (defn main-panel []
   (let [name (rf/subscribe [::subs/name])]

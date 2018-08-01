@@ -24,18 +24,27 @@
             (println "set selected game: " game)
             (assoc db :selected-game game)))
 
+(defn new-game
+  [name
+   db]
+  (let [new-id (count (:games db))]
+    {:id new-id :name name}))
+
 (rf/reg-event-db
  ::add-game
  (fn-traced [db
              [event-name param]]
-            (println "add-game" param)
-            db))
+            (let [game (new-game param db)
+                  games (:games db)]
+              (println "add-game, param: " param " new-game: " game)
+              (-> db
+                  (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
- ::delete-selected-game
- (fn-traced [db
-             [_ game]]
-            (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
-              (-> db
-                  (assoc :selected-game nil)
-                  (assoc :games pruned-games)))))
+::delete-selected-game
+(fn-traced [db
+            [_ game]]
+           (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
+             (-> db
+                 (assoc :selected-game nil)
+                 (assoc :games pruned-games)))))
