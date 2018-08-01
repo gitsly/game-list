@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [game-list.subs :as subs]
    [game-list.events :as events]
+   [goog.object :as gobject]
    [clojure.string :as string]))
 
 
@@ -57,19 +58,17 @@
 
    [:input {:id "div-add-game-name" :class "text"}]
    [:button
-    {:on-click
+    {:id "apan i bepan"
+     :on-click
      #(rf/dispatch [::events/add-game
-                    (let [form (.getElementById js/document "div-add-game-name")]
-                      (-> form .-value)) ])}
+                    (-> % .-target .-parentNode)]
+                   )}
     add-game-text]
    ;; (-> % .-target .-value)
    ])
 
-;; [:input {:class "text"
-;;          :value "name"}
-;;  [:button {:on-click #(rf/dispatch [::events/add-game .-value])}
-;;   add-game-text]
-;;  ]])
+;; :on-change #(rf/dispatch [::events/add-game
+;;                           (-> % .-target .-value)])}]]
 
 (defn main-panel []
   (let [name (rf/subscribe [::subs/name])]
