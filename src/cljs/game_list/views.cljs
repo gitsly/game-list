@@ -54,18 +54,18 @@
 
 (defn div-add-game
   []
-  [:div {:style {:background-color "#f3e0bb"}}
+  [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
-   [:input {:id "div-add-game-name" :class "text"}]
+   [:input {:id "the-input" :class "text"}]
    [:button
-    {:id "apan i bepan"
-     :on-click
+    {:on-click
      #(rf/dispatch [::events/add-game
-                    (-> % .-target .-parentNode .-firstChild .-value)]
+                    (-> % .-target (.closest "#the-div"))]
                    )}
     add-game-text]
    ;; (-> % .-target .-value)
    ])
+;; https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
 
 ;; :on-change #(rf/dispatch [::events/add-game
 ;;                           (-> % .-target .-value)])}]]
