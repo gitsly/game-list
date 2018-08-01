@@ -61,7 +61,7 @@
     {:id "apan i bepan"
      :on-click
      #(rf/dispatch [::events/add-game
-                    (-> % .-target .-parentNode)]
+                    (-> % .-target .-parentNode .-firstChild .-value)]
                    )}
     add-game-text]
    ;; (-> % .-target .-value)
