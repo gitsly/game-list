@@ -55,9 +55,12 @@
   []
   [:div {:style {:background-color "#f3e0bb"}}
 
-   [:input {:id "div-add-game-name" :class "text" :value "Hero Quest"}]
+   [:input {:id "div-add-game-name" :class "text"}]
    [:button
-    {:on-click #(rf/dispatch [::events/add-game (.getElementById js/document "div-add-game-name") ])}
+    {:on-click
+     #(rf/dispatch [::events/add-game
+                    (let [form (.getElementById js/document "div-add-game-name")]
+                      (-> form .-value)) ])}
     add-game-text]
    ;; (-> % .-target .-value)
    ])
