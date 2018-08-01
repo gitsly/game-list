@@ -27,8 +27,8 @@
 (rf/reg-event-db
  ::add-game
  (fn-traced [db
-             [event-name game]]
-            (println "add-game" game)
+             [event-name param]]
+            (println "add-game" param)
             db))
 
 (rf/reg-event-db
