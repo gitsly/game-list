@@ -59,12 +59,18 @@
    [:input {:id "the-input" :class "text"}]
    [:button
     {:on-click
+     ;; Note, the .-target property refers to the event (javascript)
      #(rf/dispatch [::events/add-game
-                    (-> % .-target (.closest "#the-div"))]
-                   )}
+                    (-> %
+                        .-target
+                        .-parentNode
+                        (.querySelector "#the-input")
+                        .-value)])}
     add-game-text]
    ;; (-> % .-target .-value)
    ])
+
+;;(-> % .-target .-parentNode (.children "#the-input"))]
 ;; https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
 
 ;; :on-change #(rf/dispatch [::events/add-game
@@ -92,7 +98,7 @@
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
-both)
+  both)
 
 
 (let [id 1
@@ -100,5 +106,5 @@ both)
             {:id 1 :name "alice"}
             {:id 2 :name "lisa"}]
       modded (remove #(= id (:id %)) data)]
-modded
-)
+  modded
+  )
