@@ -56,23 +56,26 @@
   []
   [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
-   [:input {:id "the-input" :class "text"}]
-   [:button
-    {:on-click
-     ;; Note, the .-target property refers to the event (javascript)
-     #(rf/dispatch [::events/add-game
-                    (-> %
-                        .-target
-                        .-parentNode
-                        (.querySelector "#the-input")
-                        .-value)])}
-    add-game-text]
+   [:form
+    [:p "Name"][:input {:name "name" :class "text"}]
+    [:p "Notes"][:input {:name "notes" :class "text"}]
+    [:br]
+    [:input {:type "submit" :value add-game-text}]]
    ])
+
+;; {:on-click
+;;  #(rf/dispatch [::events/add-game
+;;                 (-> %
+;;                     .-target
+;;                     .-parentNode
+;;                     (.querySelector "#the-input")
+;;                     .-value)])}
+
 
 (defn main-panel []
   (let [name (rf/subscribe [::subs/name])]
     [:div
-     [:h1 "Game list: " @name]
+     [:h1 "Game collection: " @name]
      (div-game-list)
      (div-add-game)
      [:div {:style {:background-color "#e0e0eb"}}
@@ -81,12 +84,11 @@
      ]))
 
 
-
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-(map #(zipmap [:digit :letter] [% %2]) a b))
+  (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
