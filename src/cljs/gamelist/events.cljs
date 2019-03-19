@@ -1,0 +1,8 @@
+(ns gamelist.events
+  (:require [re-frame.core :as re-frame]
+            [gamelist.db :as db]))
+
+(re-frame/reg-event-db
+ :initialize-db
+ (fn  [_ _]
+   db/default-db))
