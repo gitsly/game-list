@@ -1,8 +1,18 @@
 (ns gamelist.subs
-  (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [re-frame.core :as re-frame]))
+  (:require
+   [re-frame.core :as rf]))
 
-(re-frame/reg-sub
- :name
+(rf/reg-sub
+ ::name
  (fn [db]
    (:name db)))
+
+(rf/reg-sub
+ ::games
+ (fn [db]
+   (:games db)))
+
+(rf/reg-sub
+ ::selected-game
+ (fn [db]
+   (:selected-game db)))

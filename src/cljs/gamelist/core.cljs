@@ -1,10 +1,11 @@
 (ns gamelist.core
-  (:require [reagent.core :as reagent]
-            [re-frame.core :as re-frame]
-            [gamelist.events]
-            [gamelist.subs]
-            [gamelist.views :as views]
-            [gamelist.config :as config]))
+  (:require
+   [reagent.core :as reagent]
+   [re-frame.core :as re-frame]
+   [gamelist.events :as events]
+   [gamelist.views :as views]
+   [gamelist.config :as config]
+   ))
 
 (enable-console-print!)
 
