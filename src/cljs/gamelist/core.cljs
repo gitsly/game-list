@@ -9,6 +9,8 @@
 
 (enable-console-print!)
 
+(println "trace: apan!")
+
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)

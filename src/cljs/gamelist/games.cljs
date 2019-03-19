@@ -1,4 +1,4 @@
-(ns game-list.games
+(ns gamelist.games
   (:require [clojure.set :as set]))
 
 (def rank [4 3 1 1])
