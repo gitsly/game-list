@@ -1,18 +1,21 @@
 (ns gamelist.games
   (:require [clojure.set :as set]))
 
+(def play-history
+  {:date "2019-03-23" :game agricola :time 3.5})
+
 (def rank [4 3 1 1])
 
 (def syn-list
-#{"Mombasa"
-  "Throughi the ages"
-  "Le Havre"})
+  #{"Mombasa"
+    "Throughi the ages"
+    "Le Havre"})
 
 (def aan-list
-#{"Eclipse"
-  "Mombasa"
-  "Alchemists"
-  "Stock-Pile"})
+  #{"Eclipse"
+    "Mombasa"
+    "Alchemists"
+    "Stock-Pile"})
 
 (def dbe-list
 #{"Mombasa"
@@ -63,7 +66,9 @@ time)
 
 
 (def game-list
-  ["The ancient world" ; 2 hours
+  [
+   "agricola"
+   "The ancient world" ; 2 hours
    "Panamax"
    "Andor"
    "Through the ages"
@@ -113,7 +118,7 @@ time)
                {:game-name "SmallWorld", :Anna -, :Martin  6, :Simon 8, :David 5}
                {:game-name "Descent", :Anna  6, :Martin  7, :Simon 7, :David 7}
                {:game-name "Roll for the Galaxy", :Anna  4, :Martin  8, :Simon 7, :David 7}
-               {:game-name "PandemicLegacy", :Anna 8, :Martin  9, :Simon 1, :David0  10}
+               {:game-name "PandemicLegacy", :Anna 8, :Martin  9, :Simon 10, :David0  10}
                {:game-name "Le Havre", :Anna 5, :Martin  2, :Simon 8, :David 6}
                {:game-name "Dominon", :Anna  7, :Martin  5, :Simon 4, :David 7}
                {:game-name "Planet steam", :Anna 5, :Martin  5, :Simon 7, :David 6}
@@ -123,7 +128,7 @@ time)
                {:game-name "Champions of x", :Anna 7, :Martinidgard  9, :Simon 10, :David 9}
                {:game-name "Dead of Winter", :Anna 6, :Martin  7, :Simon 7, :David 7}
                {:game-name "Robinsson", :Anna  7, :Martin  6, :Simon 9, :David 7}
-               {:game-name "Alchemists", :Anna 1, :Martin0 9, :Simon 9, :David 9}
+               {:game-name "Alchemists", :Anna -, :Martin0 9, :Simon 9, :David 9}
                {:game-name "Giljotin", :Anna -, :Martin 4, :Simon  5, :David 5}
                {:game-name "RuneBound", :Anna  4, :Martin  4, :Simon 4, :David 4}
                {:game-name "Stock-Pile", :Anna 6, :Martin  4, :Simon 6, :David 6}
