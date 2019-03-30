@@ -7,9 +7,15 @@
 (defn home-routes [endpoint]
   (routes
    (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+        (-> "public/index.html"
+            io/resource
+            io/input-stream
+            response
+            (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+   
+   (GET "/test" x
+        (str "<html> <body> <p>Isolation rattle snake</p> </body> </html>"))
+   
    (resources "/")))
+
+
