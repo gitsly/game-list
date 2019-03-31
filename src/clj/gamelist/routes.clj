@@ -2,7 +2,14 @@
   (:require [clojure.java.io :as io]
             [compojure.core :refer [ANY GET PUT POST DELETE routes]]
             [compojure.route :refer [resources]]
+            [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [response]]))
+
+
+;; This will work as reload after modifying routes (server-side)
+(do
+  (user/stop)
+  (user/go))
 
 (defn home-routes [endpoint]
   (routes
@@ -14,7 +21,7 @@
             (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
    
    (GET "/test" x
-        (str "<html> <body> <p>Isolation rattle snake</p> </body> </html>"))
+        (str "<html> <body> <p>Isolation rattle snarp</p> </body> </html>"))
    
    (resources "/")))
 
