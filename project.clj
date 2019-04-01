@@ -17,9 +17,13 @@
                  [org.danielsz/system "0.4.1"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [http-kit "2.3.0"]
+                 [cljs-http "0.1.46"]
                  [compojure "1.6.1"]
                  [re-frame "0.10.6"]
+                 [org.clojure/core.async "0.4.490"]
                  [lambdaisland/garden-watcher "0.3.3"]]
+
+
 
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-environ "1.1.0"]]
