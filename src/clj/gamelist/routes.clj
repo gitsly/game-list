@@ -16,6 +16,13 @@
 
 (defn home-routes [endpoint]
   (routes
+
+   (POST "/add-game" _
+     (-> "public/index.html"
+         io/resource
+         io/input-stream
+         response))
+   
    (GET "/" _
      (-> "public/index.html"
          io/resource

@@ -6,6 +6,9 @@
    [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
+;; Find out this programatically (if localhost 
+(def base-url "http://localhost:10555/")
+
 
 (rf/reg-event-db
  ::initialize-db
@@ -18,39 +21,48 @@
  (fn [db
       [event-name params]]
 
-   (go (let [response (<! (http/get "http://localhost:10555/wrap"))]
+   (go (let [response (<! (http/get (str base-url "wrap")))]
          (println event-name "completed request: " params)
          (println  response))
        db)))
 
 (rf/reg-event-db
-::set-selected-game
-(fn [db
-     [event-name game]]
-  (println "set selected game: " game)
-  (assoc db :selected-game game)))
+ ::set-selected-game
+ (fn [db
+      [event-name game]]
+   (println "set selected game: " game)
+   (assoc db :selected-game game)))
+
 
 (defn new-game
-[name
- db]
-(let [new-id (count (:games db))]
-  {:id new-id :name name}))
+  [name
+   db]
+  (let [new-id (count (:games db))]
+    {:id new-id :name name}))
+
+(defn store-new-game [game]
+  "Create the new game on remote host using http post"
+  (go (let [response (<! (http/put (str base-url "add-game")))]
+        (println  response))))
+
+;;(go (let [response (<! (http/post (str base-url "add-game"))]
 
 (rf/reg-event-db
-::add-game
-(fn [db
-     [event-name param]]
-  (let [game (new-game param db)
-        games (:games db)]
-    (println "add-game, param: " param " new-game: " game)
-    (-> db
-        (assoc :games (conj games game) )))))
+ ::add-game
+ (fn [db
+      [event-name param]]
+   (let [game (new-game param db)
+         games (:games db)]
+     (println "add-game, param: " param " new-game: " game)
+     (store-new-game game) 
+     (-> db
+         (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
-::delete-selected-game
-(fn [db
-     [_ game]]
-  (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
-    (-> db
-        (assoc :selected-game nil)
-        (assoc :games pruned-games)))))
+ ::delete-selected-game
+ (fn [db
+      [_ game]]
+   (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
+     (-> db
+         (assoc :selected-game nil)
+         (assoc :games pruned-games)))))
