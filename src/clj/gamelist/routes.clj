@@ -8,15 +8,19 @@
             [ring.util.response :refer [response]]))
 
 ;; This will work as reload after modifying routes (server-side)
-;; (do
-;;   (user/stop)
-;;   (user/go))
+(do
+  (user/stop)
+  (user/go))
+
+(defn add-game-handler
+  [request]
+  "hep")
 
 (defn home-routes [endpoint]
   (routes
    
    (PUT "/addgame" request
-     "body content")
+     (add-game-handler request))
 
    (GET "/" _
      (-> "public/index.html"

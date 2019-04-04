@@ -7,7 +7,10 @@
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 ;; Find out this programatically (if localhost 
-(def base-url "http://localhost:10555/")
+(defn base-url
+  "prepends base-url to part"
+  [part]
+  (str "http://localhost:10555/" part))
 
 
 (rf/reg-event-db
@@ -21,7 +24,7 @@
  (fn [db
       [event-name params]]
 
-   (go (let [response (<! (http/get (str base-url "wrap")))]
+   (go (let [response (<! (http/get (base-url "wrap")))]
          (println event-name "completed request: " params)
          (println  response))
        db)))
@@ -50,11 +53,10 @@
    Create the new game on remote host using http post"
   (go (let [game-json (tojson { :key1 "val1" :key2 "val2" })
             testprm {:body game-json}
-            url (str base-url "addgame")
+            url (base-url "addgame")
             response (<! (http/put url testprm))]
         (println (:body response)))))
 
-;;(go (let [response (<! (http/post (str base-url "add-game"))]
 
 (rf/reg-event-db
  ::add-game
