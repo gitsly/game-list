@@ -50,7 +50,9 @@
 (defn store-new-game [game]
   "Create the new game on remote host using http post"
   (go (let [game-json (tojson { :key1 "val1" :key2 "val2" })
-            response (<! (http/put (str base-url "addgame") game))]
+            testprm {:body "hep"}
+            url (str base-url "addgame")
+            response (<! (http/put url testprm))]
         (println (:body response)))))
 
 ;;(go (let [response (<! (http/post (str base-url "add-game"))]
