@@ -45,8 +45,6 @@
   [o]
   (.stringify js/JSON (clj->js o)))
 
-
-
 (defn store-new-game [game]
   "Perform cljs-http PUT request,
    Create the new game on remote host using http post"

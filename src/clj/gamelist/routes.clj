@@ -13,19 +13,19 @@
 ;;   (user/go))
 
 (defn home-routes [endpoint]
-(routes
- 
- (PUT "/addgame" request
-   (str "<html> <body> <p>" (add-game request) "</p> </body> </html>"))
+  (routes
+   
+   (PUT "/addgame" request
+     "body content")
 
- (GET "/" _
-   (-> "public/index.html"
-       io/resource
-       io/input-stream
-       response
-       (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+   (GET "/" _
+     (-> "public/index.html"
+         io/resource
+         io/input-stream
+         response
+         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
- (GET "/test/:var1" [var1]
-   (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
+   (GET "/test/:var1" [var1]
+     (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
 
- (resources "/")))
+   (resources "/")))
