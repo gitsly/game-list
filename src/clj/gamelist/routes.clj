@@ -1,29 +1,17 @@
 (ns gamelist.routes
   (:require [clojure.java.io :as io]
             [clojure.data.json :as json]
+            [ring.middleware.json :refer [wrap-json-response]]
+            [ring.util.response :refer [response]]
             [compojure.core :refer [ANY GET PUT POST DELETE routes]]
             [compojure.route :refer [resources]]
-            [ring.middleware.reload :refer [wrap-reload]] ;; https://practicalli.github.io/clojure-webapps/middleware-in-ring/wrap-reload.html
             [ring.util.response :refer [response]]))
 
-;; (json/write-str { :key1 "val1" :key2 "val2" })
-
 ;; This will work as reload after modifying routes (server-side)
-(do
-  (user/stop)
-  (user/go))
+;; (do
+;;   (user/stop)
+;;   (user/go))
 
-;; (spit "out.txt" (slurp body))
-
-(defn add-game
-  [request]
-  (let [body (:body request)]
-    body))
-
-
-;; org.httpkit.BytesInputStream 
-
-;; https://stackoverflow.com/questions/3488353/whats-the-big-idea-behind-compojure-routes
 (defn home-routes [endpoint]
 (routes
  
@@ -41,5 +29,3 @@
    (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
 
  (resources "/")))
-
-
