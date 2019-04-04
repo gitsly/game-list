@@ -40,10 +40,18 @@
   (let [new-id (count (:games db))]
     {:id new-id :name name}))
 
+(defn tojson
+  "Create json from clojure map"
+  [o]
+  (.stringify js/JSON (clj->js o)))
+
+
+
 (defn store-new-game [game]
   "Create the new game on remote host using http post"
-  (go (let [response (<! (http/put (str base-url "add-game")))]
-        (println  response))))
+  (go (let [game-json (tojson { :key1 "val1" :key2 "val2" })
+            response (<! (http/put (str base-url "addgame") game))]
+        (println (:body response)))))
 
 ;;(go (let [response (<! (http/post (str base-url "add-game"))]
 
@@ -59,10 +67,10 @@
          (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
- ::delete-selected-game
- (fn [db
-      [_ game]]
-   (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
-     (-> db
-         (assoc :selected-game nil)
-         (assoc :games pruned-games)))))
+::delete-selected-game
+(fn [db
+     [_ game]]
+  (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
+    (-> db
+        (assoc :selected-game nil)
+        (assoc :games pruned-games)))))
