@@ -17,42 +17,48 @@
   (str "whohaa: " a))
 
 (defn add-game
-  [game]
-  (spit "out.txt" game)
-  (str "<html><body>" (:body game) "</body></html>"))
+  [request]
+  (let [body (:body request)
+        content (.bytes (body))]
+    body))
+
+;; org.httpkit.BytesInputStream 
+
 
 ;; https://stackoverflow.com/questions/3488353/whats-the-big-idea-behind-compojure-routes
 (defn home-routes [endpoint]
   (routes
 
-   (PUT "/addgame" x
-     (add-game x))
-   
-   (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
-       
-       (GET "/test" x
-         (str "<html> <body> <p>Isolation rattle snake</p> </body> </html>"))
+   (PUT "/addgame" request
+     (-> (add-game request)
+         (assoc :headers {"Content-Type" "application/json"})
+         (assoc :headers {"Accept" "application/json"})))))
 
-       ;; Read from file and put on page:
-       ;; the current working directory seems to be the root of the clojure project
-       ;; (where project.clj lies)
-       (GET "/slurp" _
-         (let [file "test.txt"
-               currpath (System/getProperty "user.dir")]
-           (str currpath ": " (slurp file))))
-       
-       
-       (GET "/wrap" r
-         (welcome r))
-       
-       (GET "/test/:var1" [var1]
-         (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
-       
-       (resources "/")))
+(GET "/" _
+  (-> "public/index.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+  
+  (GET "/test" x
+    (str "<html> <body> <p>Isolation rattle snake</p> </body> </html>"))
+
+  ;; Read from file and put on page:
+  ;; the current working directory seems to be the root of the clojure project
+  ;; (where project.clj lies)
+  (GET "/slurp" _
+    (let [file "test.txt"
+          currpath (System/getProperty "user.dir")]
+      (str currpath ": " (slurp file))))
+  
+  
+  (GET "/wrap" r
+    (welcome r))
+  
+  (GET "/test/:var1" [var1]
+    (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
+  
+  (resources "/")))
 
 
