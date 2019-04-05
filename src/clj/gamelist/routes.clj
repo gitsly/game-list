@@ -34,10 +34,3 @@
      (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
 
    (resources "/")))
-
-;; is compojure.handler deprecated?
-(def app
-  (-> (handler/api home-routes)
-      (wrap-json-body)
-      (wrap-json-params)
-      (wrap-json-response)))
