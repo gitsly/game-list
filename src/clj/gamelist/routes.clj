@@ -17,7 +17,7 @@
 
 (defn home-routes [endpoint]
   (routes
-   
+
    (PUT "/addgame" request
      (add-game-handler request))
 
