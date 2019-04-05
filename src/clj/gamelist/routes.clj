@@ -1,10 +1,8 @@
 (ns gamelist.routes
-  (:require [clojure.java.io :as io]
-            [clojure.data.json :as json]
-            [ring.middleware.json :refer :all]
-            [ring.util.response :refer [response]]
-            [compojure.handler :as handler]
+  (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]
             [compojure.core :refer [ANY GET PUT POST DELETE routes]]
+            [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response]]))
 
