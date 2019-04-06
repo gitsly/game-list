@@ -50,37 +50,26 @@
 
 
 (def testpayload {:body "{\"json\": \"input\"}"
-                  :form-params {:foo "bar"}
-                  :content-type :json
+                  :content-type "application/json"
                   :json-opts {:date-format "yyyy-MM-dd"}
                   :accept :json})
-
-(def testpayload2 {:body {:mymapkey1 "myval1" }
-                   :form-params {:foo "bar"}
-                   :content-type "application/json"
-                   :json-opts {:date-format "yyyy-MM-dd"}
-                   :accept :json})
 
 (defn store-new-game [game]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
-  (go (let [game-json (tojson { :key1 "pressminator" :key2 "valior" })
-            testprm {:body game-json}
-            url (base-url "addgame")
-            response (<! (http/post url testpayload2))]
-        (println testprm)
+  (go (let [url (base-url "addgame")
+            response (<! (http/post url testpayload))]
         (println (:body response)))))
 
-
 (rf/reg-event-db
-::add-game
-(fn [db
-     [event-name param]]
-  (let [game (new-game param db)
-        games (:games db)]
-    (store-new-game game) 
-    (-> db
-        (assoc :games (conj games game) )))))
+ ::add-game
+ (fn [db
+      [event-name param]]
+   (let [game (new-game param db)
+         games (:games db)]
+     (store-new-game game) 
+     (-> db
+         (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
 ::delete-selected-game

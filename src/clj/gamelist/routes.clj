@@ -11,6 +11,7 @@
   (user/stop)
   (user/go))
 
+;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
   (if-let [type (get-in request [:headers "content-type"])]
     (not (empty? (re-find #"^application/(.+\+)?json" type)))))
