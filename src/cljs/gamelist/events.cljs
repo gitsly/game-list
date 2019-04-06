@@ -6,7 +6,7 @@
    [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-;; Find out this programatically (if localhost 
+;; TODO: Find out this programatically (if localhost 
 (defn base-url
   "prepends base-url to part"
   [part]
@@ -17,7 +17,6 @@
  ::initialize-db
  (fn [_ _]
    db/default-db))
-
 
 (rf/reg-event-db
  ::test
@@ -48,26 +47,33 @@
   [o]
   (.stringify js/JSON (clj->js o)))
 
+
+
+(def testpayload {:body "{\"json\": \"input\"}"
+                  :headers {"X-Api-Version" "2"}
+                  :content-type :json
+                  :accept :json})
+
 (defn store-new-game [game]
   "Perform cljs-http PUT request,
    Create the new game on remote host using http post"
-  (go (let [game-json (tojson { :key1 "val1" :key2 "val2" })
+  (go (let [game-json (tojson { :key1 "pressminator" :key2 "valior" })
             testprm {:body game-json}
             url (base-url "addgame")
-            response (<! (http/put url testprm))]
+            response (<! (http/put url testpayload))]
+        (println testprm)
         (println (:body response)))))
 
 
 (rf/reg-event-db
- ::add-game
- (fn [db
-      [event-name param]]
-   (let [game (new-game param db)
-         games (:games db)]
-     (println "add-game, param: " param " new-game: " game)
-     (store-new-game game) 
-     (-> db
-         (assoc :games (conj games game) )))))
+::add-game
+(fn [db
+     [event-name param]]
+  (let [game (new-game param db)
+        games (:games db)]
+    (store-new-game game) 
+    (-> db
+        (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
 ::delete-selected-game
