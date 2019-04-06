@@ -42,34 +42,38 @@
   (let [new-id (count (:games db))]
     {:id new-id :name name}))
 
-(defn tojson
+(defn to-json
   "Create json from clojure map"
   [o]
   (.stringify js/JSON (clj->js o)))
 
+(defn json-request
+  "Takes a map or hash or vector an constructs a JSON request
+  that is parsable at server using compojure route and ring-json lib"
+  [data]
+  {:body (to-json data)
+   :content-type "application/json"
+   :json-opts {:date-format "yyyy-MM-dd"}
+   :accept :json})
 
-
-(def testpayload {:body "{\"json\": \"input\"}"
-                  :content-type "application/json"
-                  :json-opts {:date-format "yyyy-MM-dd"}
-                  :accept :json})
 
 (defn store-new-game [game]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
   (go (let [url (base-url "addgame")
-            response (<! (http/post url testpayload))]
+            payload (json-request game)
+            response (<! (http/post url payload))]
         (println (:body response)))))
 
 (rf/reg-event-db
- ::add-game
- (fn [db
-      [event-name param]]
-   (let [game (new-game param db)
-         games (:games db)]
-     (store-new-game game) 
-     (-> db
-         (assoc :games (conj games game) )))))
+::add-game
+(fn [db
+     [event-name param]]
+  (let [game (new-game param db)
+        games (:games db)]
+    (store-new-game game) 
+    (-> db
+        (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
 ::delete-selected-game
