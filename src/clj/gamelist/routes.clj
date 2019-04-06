@@ -1,10 +1,8 @@
 (ns gamelist.routes
-  (:require [clojure.java.io :as io]
-            [clojure.data.json :as json]
-            [ring.middleware.json :refer :all]
-            [ring.util.response :refer [response]]
-            [compojure.handler :as handler]
+  (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]
             [compojure.core :refer [ANY GET PUT POST DELETE routes]]
+            [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response]]))
 
@@ -19,7 +17,7 @@
 
 (defn home-routes [endpoint]
   (routes
-   
+
    (PUT "/addgame" request
      (add-game-handler request))
 
@@ -34,10 +32,3 @@
      (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
 
    (resources "/")))
-
-;; is compojure.handler deprecated?
-(def app
-  (-> (handler/api home-routes)
-      (wrap-json-body)
-      (wrap-json-params)
-      (wrap-json-response)))
