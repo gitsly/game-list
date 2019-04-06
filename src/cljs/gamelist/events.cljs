@@ -50,17 +50,24 @@
 
 
 (def testpayload {:body "{\"json\": \"input\"}"
-                  :headers {"X-Api-Version" "2"}
+                  :form-params {:foo "bar"}
                   :content-type :json
+                  :json-opts {:date-format "yyyy-MM-dd"}
                   :accept :json})
 
+(def testpayload2 {:body {:mymapkey1 "myval1" }
+                   :form-params {:foo "bar"}
+                   :content-type "application/json"
+                   :json-opts {:date-format "yyyy-MM-dd"}
+                   :accept :json})
+
 (defn store-new-game [game]
-  "Perform cljs-http PUT request,
+  "Perform cljs-http request,
    Create the new game on remote host using http post"
   (go (let [game-json (tojson { :key1 "pressminator" :key2 "valior" })
             testprm {:body game-json}
             url (base-url "addgame")
-            response (<! (http/put url testpayload))]
+            response (<! (http/post url testpayload2))]
         (println testprm)
         (println (:body response)))))
 
