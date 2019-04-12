@@ -17,9 +17,10 @@
         db                    (mg/get-db conn "test")]
     db))
 
-(mc/insert-and-return (test-connect) "documents" {:name "John" :age 30})
+;; (mc/insert-and-return (test-connect) "documents" {:name "John" :age 30})
+;; (test-connect)
 
-(test-connect)
+
 ;; This will work as reload after modifying routes (server-side)
 ;; (do
 ;;   (user/stop)
@@ -27,8 +28,8 @@
 
 ;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
-(if-let [type (get-in request [:headers "content-type"])]
-  (not (empty? (re-find #"^application/(.+\+)?json" type)))))
+  (if-let [type (get-in request [:headers "content-type"])]
+    (not (empty? (re-find #"^application/(.+\+)?json" type)))))
 
 (defn add-game-handler
   [request]
