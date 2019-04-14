@@ -77,6 +77,7 @@
          (assoc :loading? true)))))
 
 (rf/reg-event-db
+ "event callback after getting stuff from db"
  ::add-game-response 
  (fn-traced
   [db [_ game]]
