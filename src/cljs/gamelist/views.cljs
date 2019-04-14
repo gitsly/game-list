@@ -69,20 +69,20 @@
 
 (defn div-loading
   []
-  (let [loading (rf/subscribe [::subs/loading])]
+  (let [loading (rf/subscribe [::subs/loading?])]
     [:div "Loading: [" @loading "]"]))
 
 (defn main-panel []
-(let [name (rf/subscribe [::subs/name])]
-  [:div
-   [:h1 "Game list: " @name]
-   (div-loading)
-   (div-game-list)
-   (div-add-game)
-   [:div {:style {:background-color "#e0e0eb"}}
-    [:p "Test button"]
-    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-   ]))
+  (let [name (rf/subscribe [::subs/name])]
+    [:div
+     [:h1 "Game list: " @name]
+     (div-loading)
+     (div-game-list)
+     (div-add-game)
+     [:div {:style {:background-color "#e0e0eb"}}
+      [:p "Test button"]
+      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+     ]))
 
 
 

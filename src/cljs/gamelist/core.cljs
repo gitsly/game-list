@@ -9,8 +9,6 @@
 
 (enable-console-print!)
 
-(println "trace: apan!")
-
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)
@@ -22,6 +20,6 @@
                   (.getElementById js/document "app")))
 
 (defn render []
-  (re-frame/dispatch-sync [:initialize-db])
+  (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
   (mount-root))

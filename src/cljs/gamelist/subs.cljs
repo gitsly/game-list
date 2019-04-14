@@ -13,9 +13,9 @@
    (:games db)))
 
 (rf/reg-sub
- ::loading
+ ::loading?
  (fn [db]
-   (:loading db)))
+   (:loading? db)))
 
 (rf/reg-sub
  ::selected-game
