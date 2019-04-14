@@ -12,5 +12,6 @@
 (def default-db
   {:name "Bullen"
    :games (take 7 default-games)
+   :loading "hep"
    :selected-game nil
    })

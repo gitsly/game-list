@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [gamelist.db :as db]
    [cljs-http.client :as http]
+   [day8.re-frame.tracing :refer-macros [fn-traced defn-traced]]
    [cljs.core.async :as async :refer [<! >!]]) 
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
@@ -71,18 +72,17 @@
  (fn [db
       [event-name game-name]]
    (println "client: add-game")
-   (let [game (new-game game-name)
-         game {:name "Fake" :_id "98u21da"}
-         games (:games db)]
-     db)))
+   (let [game (new-game game-name)]
+     (-> db
+         (assoc :workdam true)))))
 
-(rf/register-handler
+(rf/reg-event-db
  ::add-game-response 
- (fn
-   [db [_]]
-   (println "eventhandler")
-   (-> db
-       (assoc :loading false)))) ;; take away that modal 
+ (fn-traced
+  [db [_]]
+  (println "eventhandler")
+  (-> db
+      (assoc :workdam false)))) ;; take away that modal 
 
 (rf/reg-event-db
 ::delete-selected-game

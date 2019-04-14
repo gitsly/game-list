@@ -70,7 +70,7 @@
 (defn div-loading
   []
   (let [loading (rf/subscribe [::subs/loading])]
-    [:div "Loading: " @loading]))
+    [:div "Loading: [" @loading "]"]))
 
 (defn main-panel []
 (let [name (rf/subscribe [::subs/name])]

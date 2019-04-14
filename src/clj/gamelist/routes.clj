@@ -10,8 +10,6 @@
   (:import [com.mongodb MongoOptions ServerAddress]))
 
 
-
-
 (defn test-connect []
   (println "Testing connect to mongo db")
   (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
@@ -20,7 +18,7 @@
         db                    (mg/get-db conn "test")]
     db))
 
-(mc/insert-and-return (test-connect) "games" { :name "Kikana" })
+;; (mc/insert-and-return (test-connect) "games" { :name "Kikana" })
 ;; (test-connect)
 
 (dissoc {:id 0, :name "Kepler"} :id)
