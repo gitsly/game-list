@@ -44,6 +44,7 @@
 
 (defn add-game-handler
   [request]
+  (Thread/sleep 1000) ; fake processing time
   (let [db (test-connect)
         game (json/read-str (str (:body request)) :key-fn keyword)
         db-result (mc/insert-and-return (test-connect) "games" game)
