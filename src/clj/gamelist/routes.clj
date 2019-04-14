@@ -20,15 +20,12 @@
         db                    (mg/get-db conn "test")]
     db))
 
-(mc/insert-and-return (test-connect) "documents" {:name "Kikana" :age 32})
-(test-connect)
+;; (mc/insert-and-return (test-connect) "documents" {:name "Kikana" :age 32})
+;; (test-connect)
 
 (dissoc {:id 0, :name "Kepler"} :id)
-
 (dissoc {"id" 0, "name" "Kepler"} "id")
-
 (json/read-str "{\"a\":1,\"b\":2}" :key-fn keyword)
-
 (json/read-str (str {"id" 16, "name" "Abatorrr21"}) :key-fn keyword)
 
 ;; This will work as reload after modifying routes (server-side)
