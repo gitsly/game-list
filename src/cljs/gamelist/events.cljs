@@ -14,64 +14,59 @@
 
 
 (rf/reg-event-db
- ::initialize-db
- (fn [_ _]
-   db/default-db))
+::initialize-db
+(fn [_ _]
+  db/default-db))
 
 (rf/reg-event-db
- ::test
- (fn [db
-      [event-name params]]
+::test
+(fn [db
+     [event-name params]]
 
-   (go (let [response (<! (http/get (base-url "wrap")))]
-         (println event-name "completed request: " params)
-         (println  response))
-       db)))
+  (go (let [response (<! (http/get (base-url "wrap")))]
+        (println event-name "completed request: " params)
+        (println  response))
+      db)))
 
 (rf/reg-event-db
- ::set-selected-game
- (fn [db
-      [event-name game]]
-   (println "set selected game: " game)
-   (assoc db :selected-game game)))
+::set-selected-game
+(fn [db
+     [event-name game]]
+  (println "set selected game: " game)
+  (assoc db :selected-game game)))
 
-
-(defn new-game
-  [name
-   db]
-  (let [new-id (count (:games db))]
-    {:id new-id :name name}))
 
 (defn to-json
-  "Create json from clojure map"
-  [o]
-  (.stringify js/JSON (clj->js o)))
+"Create json from clojure map"
+[o]
+(.stringify js/JSON (clj->js o)))
 
 (defn json-request
-  "Takes a map or hash or vector an constructs a JSON request
+"Takes a map or hash or vector an constructs a JSON request
   that is parsable at server using compojure route and ring-json lib"
-  [data]
-  {:body (to-json data)
-   :content-type "application/json"
-   :json-opts {:date-format "yyyy-MM-dd"}
-   :accept :json})
+[data]
+{:body (to-json data)
+ :content-type "application/json"
+ :json-opts {:date-format "yyyy-MM-dd"}
+ :accept :json})
 
 
-(defn store-new-game [game]
+(defn new-game [name]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
-  (go (let [url (base-url "addgame")
-            payload (json-request game)
-            response (<! (http/post url payload))]
-        (println (:body response)))))
+  (let [url (base-url "addgame")
+        game {:name name}
+        payload (json-request game)
+        response (http/post url payload)]
+    (:body response)))
 
 (rf/reg-event-db
 ::add-game
 (fn [db
-     [event-name param]]
-  (let [game (new-game param db)
+     [event-name game-name]]
+  (let [game (new-game game-name)
         games (:games db)]
-    (store-new-game game) 
+    (prn game)
     (-> db
         (assoc :games (conj games game) )))))
 
@@ -79,7 +74,7 @@
 ::delete-selected-game
 (fn [db
      [_ game]]
-  (let [pruned-games (remove #(= (:id game) (:id %)) (:games db))]
+  (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
     (-> db
         (assoc :selected-game nil)
         (assoc :games pruned-games)))))

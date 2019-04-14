@@ -19,7 +19,7 @@
 
 (defn div-game-selected
   [game]
-  (let [id (:id game)
+  (let [id (:_id game)
         name (:name game)]
     [:div {:style {:font-weight "bold"
                    :background-color "#ebe6e0"}}
@@ -32,7 +32,7 @@
 (defn div-game
   [game
    selected-game-id]
-  (let [id (:id game)
+  (let [id (:_id game)
         name (:name game)]
     (if (= id selected-game-id)
       ^{:key id} [:div (div-game-selected game)]
@@ -44,7 +44,7 @@
   []
   (let [games (rf/subscribe [::subs/games])
         selected-game (rf/subscribe [::subs/selected-game])
-        selected-game-id (:id @selected-game)]
+        selected-game-id (:_id @selected-game)]
     (println "selected game: " @selected-game)
     [:div
      (for [game @games]
