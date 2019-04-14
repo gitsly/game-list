@@ -3,8 +3,14 @@
    [re-frame.core :as rf]
    [gamelist.db :as db]
    [cljs-http.client :as http]
-   [cljs.core.async :refer [<!]])
+   [cljs.core.async :as async :refer [<! >!]]) 
   (:require-macros [cljs.core.async.macros :refer [go]]))
+
+;; Core async limitations in cljs
+;; https://stackoverflow.com/questions/52375152/core-async-difference-between-clojure-and-clojurescript
+
+;; https://github.com/Day8/re-frame/wiki/Talking-To-Servers
+
 
 ;; TODO: Find out this programatically (if localhost 
 (defn base-url
@@ -19,56 +25,55 @@
    db/default-db))
 
 (rf/reg-event-db
-::test
-(fn [db
-     [event-name params]]
+ ::test
+ (fn [db
+      [event-name params]]
 
-  (go (let [response (<! (http/get (base-url "wrap")))]
-        (println event-name "completed request: " params)
-        (println  response))
-      db)))
+   (go (let [response (<! (http/get (base-url "wrap")))]
+         (println event-name "completed request: " params)
+         (println  response))
+       db)))
 
 (rf/reg-event-db
-::set-selected-game
-(fn [db
-     [event-name game]]
-  (println "set selected game: " game)
-  (assoc db :selected-game game)))
+ ::set-selected-game
+ (fn [db
+      [event-name game]]
+   (println "set selected game: " game)
+   (assoc db :selected-game game)))
 
 
 (defn to-json
-"Create json from clojure map"
-[o]
-(.stringify js/JSON (clj->js o)))
+  "Create json from clojure map"
+  [o]
+  (.stringify js/JSON (clj->js o)))
 
 (defn json-request
-"Takes a map or hash or vector an constructs a JSON request
+  "Takes a map or hash or vector an constructs a JSON request
   that is parsable at server using compojure route and ring-json lib"
-[data]
-{:body (to-json data)
- :content-type "application/json"
- :json-opts {:date-format "yyyy-MM-dd"}
- :accept :json})
-
+  [data]
+  {:body (to-json data)
+   :content-type "application/json"
+   :json-opts {:date-format "yyyy-MM-dd"}
+   :accept :json})
 
 (defn new-game [name]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
   
-  (go (let [url (base-url "addgame")
-            game {:name name}
-            payload (json-request game)
-            req (<! (http/post url payload))]
-        (:body req))))
-
+  (let [url (base-url "addgame")
+        game {:name name}
+        payload (json-request game)
+        response (go (<! (http/post url payload)))]
+    (:body response)))
 
 (rf/reg-event-db
  ::add-game
  (fn [db
       [event-name game-name]]
    (let [game (new-game game-name)
+         trace (println "clientside: " game)
+         game {:name "Fake" :_id "98u21da"}
          games (:games db)]
-     (prn game)
      (-> db
          (assoc :games (conj games game) )))))
 
