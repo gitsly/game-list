@@ -14,9 +14,9 @@
 
 
 (rf/reg-event-db
-::initialize-db
-(fn [_ _]
-  db/default-db))
+ ::initialize-db
+ (fn [_ _]
+   db/default-db))
 
 (rf/reg-event-db
 ::test
@@ -54,21 +54,23 @@
 (defn new-game [name]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
-  (let [url (base-url "addgame")
-        game {:name name}
-        payload (json-request game)
-        response (http/post url payload)]
-    (:body response)))
+  
+  (go (let [url (base-url "addgame")
+            game {:name name}
+            payload (json-request game)
+            req (<! (http/post url payload))]
+        (:body req))))
+
 
 (rf/reg-event-db
-::add-game
-(fn [db
-     [event-name game-name]]
-  (let [game (new-game game-name)
-        games (:games db)]
-    (prn game)
-    (-> db
-        (assoc :games (conj games game) )))))
+ ::add-game
+ (fn [db
+      [event-name game-name]]
+   (let [game (new-game game-name)
+         games (:games db)]
+     (prn game)
+     (-> db
+         (assoc :games (conj games game) )))))
 
 (rf/reg-event-db
 ::delete-selected-game

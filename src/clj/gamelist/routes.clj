@@ -20,7 +20,7 @@
         db                    (mg/get-db conn "test")]
     db))
 
-;; (mc/insert-and-return (test-connect) "documents" {:name "Kikana" :age 32})
+(mc/insert-and-return (test-connect) "games" { :name "Kikana" })
 ;; (test-connect)
 
 (dissoc {:id 0, :name "Kepler"} :id)
@@ -38,34 +38,38 @@
   (if-let [type (get-in request [:headers "content-type"])]
     (not (empty? (re-find #"^application/(.+\+)?json" type)))))
 
+(defn log
+  [msg]
+  (spit "server.log" msg :append true))
+
+(log "------- Start -------\n")
 
 (defn add-game-handler
   [request]
   (let [db (test-connect)
         game (json/read-str (str (:body request)) :key-fn keyword)
-        game (dissoc game :id)
-        game (assoc game :id)
         db-result (mc/insert-and-return (test-connect) "games" game)
-        obj-id (:_id db-result)]
+        obj-id (:_id db-result)
+        logres (log (str game ", Got ID: " obj-id "\n"))]
     (str "obj-id: " obj-id)))
 
 ;; (str "Insert: " ", ID: " obj-id)
 
 
 (defn home-routes [endpoint]
-(routes
+  (routes
 
- (POST "/addgame" request
-   (add-game-handler request))
+   (POST "/addgame" request
+     (add-game-handler request))
 
- (GET "/" _
-   (-> "public/index.html"
-       io/resource
-       io/input-stream
-       response
-       (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+   (GET "/" _
+     (-> "public/index.html"
+         io/resource
+         io/input-stream
+         response
+         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
- (GET "/test/:var1" [var1]
-   (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
+   (GET "/test/:var1" [var1]
+     (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
 
- (resources "/")))
+   (resources "/")))
