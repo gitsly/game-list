@@ -77,13 +77,12 @@
          (assoc :loading? true)))))
 
 (rf/reg-event-db
- "event callback after getting stuff from db"
  ::add-game-response 
- (fn-traced
-  [db [_ game]]
-  (println "client: add-game-response: " game)
-  (-> db
-      (assoc :loading? false)))) ;; take away that modal 
+ (fn
+   [db [_ game]]
+   (println "client: add-game-response: " game)
+   (-> db
+       (assoc :loading? false)))) ;; take away that modal 
 
 (rf/reg-event-db
 ::delete-selected-game
