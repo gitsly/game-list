@@ -22,6 +22,7 @@
                  [compojure "1.6.1"]
                  [re-frame "0.10.6"]
                  [day8.re-frame/tracing "0.5.1"]
+                 [day8.re-frame/re-frame-10x "0.3.7"]
                  [com.novemberain/monger "3.1.0"]
                  [org.clojure/core.async "0.4.490"]
                  [lambdaisland/garden-watcher "0.3.3"]]
@@ -58,6 +59,10 @@
                            :asset-path "js/compiled/out"
                            :output-to "dev-target/public/js/compiled/gamelist.js"
                            :output-dir "dev-target/public/js/compiled/out"
+                           :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
+                           :preloads             [day8.re-frame-10x.preload]
+                           ;; document.querySelector('#--re-frame-10x--') ->
+                           ;; should no go null
                            :source-map-timestamp true}}
 
                {:id "test"
