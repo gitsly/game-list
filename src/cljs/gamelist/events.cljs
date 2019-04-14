@@ -65,7 +65,7 @@
             game {:name name}
             payload (json-request game)
             response (<! (http/post url payload))]
-        (rf/dispatch [::add-game-response]))))
+        (rf/dispatch [::add-game-response (assoc game :_id "blarg")]))))
 
 (rf/reg-event-db
  ::add-game
@@ -74,15 +74,15 @@
    (println "client: add-game")
    (let [game (new-game game-name)]
      (-> db
-         (assoc :workdam true)))))
+         (assoc :loading? true)))))
 
 (rf/reg-event-db
  ::add-game-response 
  (fn-traced
-  [db [_]]
-  (println "eventhandler")
+  [db [_ game]]
+  (println "client: add-game-response: " game)
   (-> db
-      (assoc :workdam false)))) ;; take away that modal 
+      (assoc :loading? false)))) ;; take away that modal 
 
 (rf/reg-event-db
 ::delete-selected-game
