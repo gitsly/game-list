@@ -67,16 +67,22 @@
     add-game-text]
    ])
 
+(defn div-loading
+  []
+  (let [loading (rf/subscribe [::subs/loading])]
+    [:div "Loading: " @loading]))
+
 (defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
-    [:div
-     [:h1 "Game list: " @name]
-     (div-game-list)
-     (div-add-game)
-     [:div {:style {:background-color "#e0e0eb"}}
-      [:p "Test button"]
-      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-     ]))
+(let [name (rf/subscribe [::subs/name])]
+  [:div
+   [:h1 "Game list: " @name]
+   (div-loading)
+   (div-game-list)
+   (div-add-game)
+   [:div {:style {:background-color "#e0e0eb"}}
+    [:p "Test button"]
+    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+   ]))
 
 
 
@@ -89,7 +95,7 @@
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
-  both)
+both)
 
 
 (let [id 1
@@ -97,5 +103,5 @@
             {:id 1 :name "alice"}
             {:id 2 :name "lisa"}]
       modded (remove #(= id (:id %)) data)]
-  modded
-  )
+modded
+)

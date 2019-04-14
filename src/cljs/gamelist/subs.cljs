@@ -13,6 +13,11 @@
    (:games db)))
 
 (rf/reg-sub
+ ::loading
+ (fn [db]
+   (:loading db)))
+
+(rf/reg-sub
  ::selected-game
  (fn [db]
    (:selected-game db)))

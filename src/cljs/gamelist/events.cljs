@@ -60,22 +60,29 @@
   "Perform cljs-http request,
    Create the new game on remote host using http post"
   
-  (let [url (base-url "addgame")
-        game {:name name}
-        payload (json-request game)
-        response (go (<! (http/post url payload)))]
-    (:body response)))
+  (go (let [url (base-url "addgame")
+            game {:name name}
+            payload (json-request game)
+            response (<! (http/post url payload))]
+        #(rf/dispatch [::add-game-response]))))
 
 (rf/reg-event-db
  ::add-game
  (fn [db
       [event-name game-name]]
+   (println "client: add-game")
    (let [game (new-game game-name)
-         trace (println "clientside: " game)
          game {:name "Fake" :_id "98u21da"}
          games (:games db)]
-     (-> db
-         (assoc :games (conj games game) )))))
+     db)))
+
+(rf/register-handler
+ ::add-game-response 
+ (fn
+   [db [_]]
+   (println "eventhandler")
+   (-> db
+       (assoc :loading false)))) ;; take away that modal 
 
 (rf/reg-event-db
 ::delete-selected-game
