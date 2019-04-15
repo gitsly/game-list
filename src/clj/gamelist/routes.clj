@@ -77,6 +77,7 @@
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
    (GET "/test" request
-     (test-handler request))
+     (-> request
+         test-handler))
    
    (resources "/")))
