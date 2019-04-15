@@ -76,6 +76,9 @@
          response
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-  (GET "/wrap" request
-    (wrap-json-body (wrap-handler request))
-    (resources "/")))
+   (GET "/wrap" request
+     (-> request
+         wrap-handler
+         wrap-json-body))
+   
+   (resources "/")))
