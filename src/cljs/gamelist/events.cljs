@@ -65,7 +65,7 @@
             game {:name name}
             payload (json-request game)
             response (<! (http/post url payload))]
-        (rf/dispatch [::add-game-response (assoc game :_id "blarg")]))))
+        (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
  ::add-game

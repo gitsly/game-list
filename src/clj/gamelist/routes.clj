@@ -27,9 +27,12 @@
 (json/read-str (str {"id" 16, "name" "Abatorrr21"}) :key-fn keyword)
 
 ;; This will work as reload after modifying routes (server-side)
-;; (do
-;;   (user/stop)
-;;   (user/go))
+(defn restart-server
+  []
+  (user/stop)
+  (user/go))
+
+;; (restart-server)
 
 ;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
@@ -43,17 +46,21 @@
 (log "------- Start -------\n")
 
 (defn add-game-handler
-  [request]
-  (Thread/sleep 1000) ; fake processing time
-  (let [db (test-connect)
-        game (json/read-str (str (:body request)) :key-fn keyword)
-        db-result (mc/insert-and-return (test-connect) "games" game)
-        obj-id (:_id db-result)
-        logres (log (str game ", Got ID: " obj-id "\n"))]
-    (str "obj-id: " obj-id)))
+[request]
+(Thread/sleep 1000) ; fake some processing time
+(let [db (test-connect)
+      game (json/read-str (str (:body request)) :key-fn keyword)
+      db-result (mc/insert-and-return (test-connect) "games" game)
+      obj-id (:_id db-result)
+      logres (log (str game ", Got ID: " obj-id "\n"))]
+  response))
+;; (assoc :headers {"Content-Type" "application/json"})
+;; (assoc :body db-result))))
 
 ;; (str "Insert: " ", ID: " obj-id)
-
+(defn wrap-handler
+  [request]
+  {:json "test"})
 
 (defn home-routes [endpoint]
   (routes
@@ -68,7 +75,6 @@
          response
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-   (GET "/test/:var1" [var1]
-     (str "<html> <body> <p>var1: " var1 "</p> </body> </html>"))
-
-   (resources "/")))
+  (GET "/wrap" request
+    (wrap-json-body (wrap-handler request))
+    (resources "/")))
