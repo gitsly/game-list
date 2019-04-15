@@ -60,7 +60,8 @@
 ;; (str "Insert: " ", ID: " obj-id)
 (defn wrap-handler
   [request]
-  {:json "test"})
+  {:headers {"Content-Type" "application/json"}
+   :body {:hep "test" }})
 
 (defn home-routes [endpoint]
   (routes
