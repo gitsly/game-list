@@ -46,19 +46,19 @@
 (log "------- Start -------\n")
 
 (defn add-game-handler
-[request]
-(Thread/sleep 1000) ; fake some processing time
-(let [db (test-connect)
-      game (json/read-str (str (:body request)) :key-fn keyword)
-      db-result (mc/insert-and-return (test-connect) "games" game)
-      obj-id (:_id db-result)
-      logres (log (str game ", Got ID: " obj-id "\n"))]
-  response))
+  [request]
+  (Thread/sleep 1000) ; fake some processing time
+  (let [db (test-connect)
+        game (json/read-str (str (:body request)) :key-fn keyword)
+        db-result (mc/insert-and-return (test-connect) "games" game)
+        obj-id (:_id db-result)
+        logres (log (str game ", Got ID: " obj-id "\n"))]
+    response))
 ;; (assoc :headers {"Content-Type" "application/json"})
 ;; (assoc :body db-result))))
 
 ;; (str "Insert: " ", ID: " obj-id)
-(defn wrap-handler
+(defn test-handler
   [request]
   {:headers {"Content-Type" "application/json"}
    :body {:hep "test" }})
@@ -76,6 +76,7 @@
          response
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-  (GET "/wrap" request
-    (wrap-json-body (wrap-handler request))
-    (resources "/")))
+   (GET "/test" request
+     (test-handler request))
+   
+   (resources "/")))
