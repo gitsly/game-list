@@ -32,7 +32,6 @@
   (user/stop)
   (user/go))
 
-;; (restart-server)
 
 ;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
@@ -52,6 +51,10 @@
   {:headers {"Content-Type" "application/json"}
    :body content})
 
+;;-----------------------------------------------------------------------------
+;; Handlers
+;;-----------------------------------------------------------------------------
+
 (defn add-game-handler
   [request]
   (Thread/sleep 1000) ; fake some processing time
@@ -60,20 +63,27 @@
         db-result (mc/insert-and-return (test-connect) "games" game)
         obj-id (:_id db-result)
         logres (log (str game ", Got ID: " obj-id "\n"))]
-    response))
+    (-> db-result
+        json-response)))
 ;; (assoc :headers {"Content-Type" "application/json"})
 ;; (assoc :body db-result))))
 
 ;; (str "Insert: " ", ID: " obj-id)
 (defn test-handler
   [request]
-  (json-response {:hep "test" }))
+  (-> {:hep "test" }
+      json-response))
+
+;;-----------------------------------------------------------------------------
+;; Define routing
+;;-----------------------------------------------------------------------------
 
 (defn home-routes [endpoint]
   (routes
 
    (POST "/addgame" request
-     (add-game-handler request))
+     (-> request
+         add-game-handler))
 
    (GET "/" _
      (-> "public/index.html"
@@ -87,3 +97,5 @@
          test-handler))
    
    (resources "/")))
+
+;; (restart-server)
