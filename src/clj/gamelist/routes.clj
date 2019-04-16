@@ -61,10 +61,10 @@
   (let [db (test-connect)
         game (json/read-str (str (:body request)) :key-fn keyword)
         db-result (mc/insert-and-return (test-connect) "games" game)
-        obj-id (:_id db-result)
-        logres (log (str game ", Got ID: " obj-id "\n"))]
-    (-> db-result
+        obj-id (str (:_id db-result))]
+    (-> (assoc game :_id obj-id)
         json-response)))
+  
 ;; (assoc :headers {"Content-Type" "application/json"})
 ;; (assoc :body db-result))))
 
