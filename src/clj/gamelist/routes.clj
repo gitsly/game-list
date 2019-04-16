@@ -45,6 +45,13 @@
 
 (log "------- Start -------\n")
 
+(defn json-response
+  "add needed header and set body with json content (json middleware will
+  take care of the json formatting (from clj datatype to json string))"
+  [content]
+  {:headers {"Content-Type" "application/json"}
+   :body content})
+
 (defn add-game-handler
   [request]
   (Thread/sleep 1000) ; fake some processing time
@@ -60,8 +67,7 @@
 ;; (str "Insert: " ", ID: " obj-id)
 (defn test-handler
   [request]
-  {:headers {"Content-Type" "application/json"}
-   :body {:hep "test" }})
+  (json-response {:hep "test" }))
 
 (defn home-routes [endpoint]
   (routes
