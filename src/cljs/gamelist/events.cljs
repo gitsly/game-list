@@ -76,7 +76,7 @@
      (-> db
          (assoc :loading? true)))))
 
-(rf/reg-event-db
+(rf/register-handler
  ::add-game-response 
  (fn
    [db [_ response]]
@@ -85,7 +85,7 @@
      (println "client: add-game-response: " game)
      (-> db
          (assoc :loading? false)
-         (assoc :games (conj games game)))))) ;; take away that modal
+         (assoc :games (conj games game))))))
 
 (rf/reg-event-db
 ::delete-selected-game

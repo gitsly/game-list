@@ -9,7 +9,6 @@
     (map #(zipmap [:id :name] [%1 %2]) indices names)))
 
 
-
 (def default-db
   {:name "Bullen"
    ;; :games (take 7 default-games)
