@@ -27,10 +27,10 @@
 (json/read-str (str {"id" 16, "name" "Abatorrr21"}) :key-fn keyword)
 
 ;; This will work as reload after modifying routes (server-side)
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
 
 
 ;; Code taken from ring-json middleware impl.
