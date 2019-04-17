@@ -19,8 +19,6 @@
     db))
 
 
-
-
 ;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
   (if-let [type (get-in request [:headers "content-type"])]
@@ -59,6 +57,7 @@
     (-> games
         seq
         doall
+        str
         enbody)))
 ;; Cannot JSON encode object of class: class org.bson.types.ObjectId
 ;; https://stackoverflow.com/questions/37860825/how-to-pass-mongodb-objectid-in-http-request-json-body
@@ -112,9 +111,10 @@
    
    (resources "/")))
 
-This will work as reload after modifying routes (server-side)
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
-(restart-server)
+;; This will work as reload after modifying routes (server-side)
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
+;;
+;; (restart-server)
