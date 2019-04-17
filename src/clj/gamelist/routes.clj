@@ -19,11 +19,6 @@
     db))
 
 
-;; This will work as reload after modifying routes (server-side)
-;; (defn restart-server
-;;   []
-;;   (user/stop)
-;;   (user/go))
 
 
 ;; Code taken from ring-json middleware impl.
@@ -44,10 +39,31 @@
   {:headers {"Content-Type" "application/json"}
    :body content})
 
+(defn enbody
+  [content]
+  { :body content })
+
+
+(-> (mc/find (db-connect) "games" {:name "Upper2"})
+    seq)
 ;;-----------------------------------------------------------------------------
 ;; Handlers
 ;;-----------------------------------------------------------------------------
 
+(defn games-handler
+  "Get games collection"
+  [request]
+  (let [db (db-connect)
+        collection "games"
+        games (mc/find (db-connect) collection)]
+    (-> games
+        seq
+        doall
+        enbody)))
+;; Cannot JSON encode object of class: class org.bson.types.ObjectId
+;; https://stackoverflow.com/questions/37860825/how-to-pass-mongodb-objectid-in-http-request-json-body
+
+;; TODO: rid read-str on body and having to manually decode org.bson.types.ObjectId
 (defn add-game-handler
   [request]
   (Thread/sleep 1000) ; fake some processing time
@@ -64,9 +80,9 @@
 
 ;; Route handler for test button
 (defn test-handler
-  [request]
-  (-> {:hep "test" }
-      json-response))
+[request]
+(-> {:hep "test" }
+    json-response))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
@@ -78,6 +94,10 @@
    (POST "/addgame" request
      (-> request
          add-game-handler))
+   
+   (GET "/games" request
+     (-> request
+         games-handler))
 
    (GET "/" _
      (-> "public/index.html"
@@ -92,4 +112,9 @@
    
    (resources "/")))
 
-;; (restart-server)
+This will work as reload after modifying routes (server-side)
+(defn restart-server
+  []
+  (user/stop)
+  (user/go))
+(restart-server)
