@@ -71,26 +71,26 @@
   (routes
 
    (POST "/addgame" request
-     (-> request
-         add-game-handler))
+         (-> request
+             add-game-handler))
 
    (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+        (-> "public/index.html"
+            io/resource
+            io/input-stream
+            response
+            (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-           (GET "/test" request
-             (-> request
-                 test-handler))
-           
-           (resources "/")))
+   (GET "/test" request
+        (-> request
+            test-handler))
+   
+   (resources "/")))
 
-This will work as reload after modifying routes (server-side)
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
 
-(restart-server)
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
+
+;; (restart-server)
