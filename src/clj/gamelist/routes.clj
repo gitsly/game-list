@@ -19,11 +19,6 @@
     db))
 
 
-;; This will work as reload after modifying routes (server-side)
-;; (defn restart-server
-;;   []
-;;   (user/stop)
-;;   (user/go))
 
 
 ;; Code taken from ring-json middleware impl.
@@ -50,9 +45,10 @@
 
 (defn add-game-handler
   [request]
+  (log "Yo!")
   (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
-        game (json/read-str (str (:body request)) :key-fn keyword)
+        game (:body request)
         db-result (mc/insert-and-return (db-connect) "games" game)]
     (-> db-result
         json-response)))
@@ -85,10 +81,16 @@
          response
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-   (GET "/test" request
-     (-> request
-         test-handler))
-   
-   (resources "/")))
+           (GET "/test" request
+             (-> request
+                 test-handler))
+           
+           (resources "/")))
 
-;; (restart-server)
+This will work as reload after modifying routes (server-side)
+(defn restart-server
+  []
+  (user/stop)
+  (user/go))
+
+(restart-server)
