@@ -53,9 +53,8 @@
   (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
         game (json/read-str (str (:body request)) :key-fn keyword)
-        db-result (mc/insert-and-return (db-connect) "games" game)
-        obj-id (str (:_id db-result))]
-    (-> (assoc game :_id obj-id)
+        db-result (mc/insert-and-return (db-connect) "games" game)]
+    (-> db-result
         json-response)))
 
 ;; (assoc :headers {"Content-Type" "application/json"})
