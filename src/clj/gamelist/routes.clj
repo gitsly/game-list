@@ -88,9 +88,10 @@
            (resources "/")))
 
 This will work as reload after modifying routes (server-side)
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
 
-(restart-server)
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
+
+;; (restart-server)
