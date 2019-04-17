@@ -12,7 +12,6 @@
 
 ;; https://github.com/Day8/re-frame/wiki/Talking-To-Servers
 
-
 ;; TODO: Find out this programatically (if localhost 
 (defn base-url
   "prepends base-url to part"
