@@ -1,5 +1,7 @@
 (ns gamelist.config
   (:require [environ.core :refer [env]]
+            [cheshire.core :refer :all]
+            [monger.json :refer :all]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.gzip :refer [wrap-gzip]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]

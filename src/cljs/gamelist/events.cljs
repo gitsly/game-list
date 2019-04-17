@@ -30,7 +30,7 @@
  (fn [db
       [event-name params]]
 
-   (go (let [response (<! (http/get (base-url "test")))]
+   (go (let [response (<! (http/get (base-url "games")))]
          (println event-name "completed request: " params)
          (println  response))
        db)))

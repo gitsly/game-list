@@ -1,5 +1,7 @@
 # gamelist
 
+## Style inspirations
+https://clojurians-log.clojureverse.org/beginners/2018-04-05
 
 ## Development
 
