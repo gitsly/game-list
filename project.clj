@@ -14,17 +14,17 @@
                  [radicalzephyr/ring.middleware.logger "0.6.0"]
                  [clj-logging-config "1.9.12"]
                  [environ "1.1.0"]
-                 [com.stuartsierra/component "0.3.2"]
-                 [org.danielsz/system "0.4.1"]
+                 [com.stuartsierra/component "0.4.0"]
+                 [org.danielsz/system "0.4.2"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [http-kit "2.3.0"]
                  [cljs-http "0.1.46"]
                  [compojure "1.6.1"]
                  [re-frame "0.10.6"]
-                 [cheshire "5.8.1"] ;; http://clojuremongodb.info/articles/integration.html
+;;                 [cheshire "5.8.1"] ;; http://clojuremongodb.info/articles/integration.html
                  [day8.re-frame/tracing "0.5.1"]
-                 [day8.re-frame/re-frame-10x "0.3.7"]
-                 [com.novemberain/monger "3.1.0"]
+                 [day8.re-frame/re-frame-10x "0.4.0"]
+                 [com.novemberain/monger "3.5.0"]
                  [org.clojure/core.async "0.4.490"]
                  [lambdaisland/garden-watcher "0.3.3"]]
 
@@ -116,8 +116,8 @@
              {:dependencies [[figwheel "0.5.18"]
                              [figwheel-sidecar "0.5.18"]
                              [cider/piggieback "0.4.0"]
-                             [org.clojure/tools.nrepl "0.2.6"]
-                             [cider/cider-nrepl "0.18.0"]
+                             [org.clojure/tools.nrepl "0.2.13"]
+                             [cider/cider-nrepl "0.21.1"]
                              [lein-doo "0.1.11"]
                              [reloaded.repl "0.2.4"]]
 
