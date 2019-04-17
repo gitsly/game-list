@@ -81,14 +81,13 @@
          response
          (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-           (GET "/test" request
-             (-> request
-                 test-handler))
-           
-           (resources "/")))
+   (GET "/test" request
+     (-> request
+         test-handler))
+   
+   (resources "/")))
 
-This will work as reload after modifying routes (server-side)
-
+;;This will work as reload after modifying routes (server-side)
 ;; (defn restart-server
 ;;   []
 ;;   (user/stop)
