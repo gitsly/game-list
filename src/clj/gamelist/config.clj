@@ -10,7 +10,7 @@
 (defn config []
   {:http-port  (Integer. (or (env :port) 10555))
    :middleware [[wrap-defaults api-defaults]
-                wrap-json-body
+                wrap-json-body {:keywords? true}
                 wrap-json-response
                 wrap-with-logger
                 wrap-gzip]})

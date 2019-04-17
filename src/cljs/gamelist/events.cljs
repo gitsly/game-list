@@ -25,6 +25,16 @@
  (fn [_ _]
    db/default-db))
 
+;; (rf/reg-event-db
+;;  ::test
+;;  (fn [db
+;;       [event-name params]]
+
+;;    (go (let [response (<! (http/get (base-url "test")))]
+;;          (println event-name "completed request: " params)
+;;          (println  response))
+;;        db)))
+
 (rf/reg-event-db
  ::test
  (fn [db

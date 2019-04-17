@@ -39,13 +39,27 @@
   {:headers {"Content-Type" "application/json"}
    :body content})
 
+;;(-> (mc/find (db-connect) "games" {:name "Upper2"})
+;;    seq)
+
 ;;-----------------------------------------------------------------------------
 ;; Handlers
 ;;-----------------------------------------------------------------------------
 
+(defn games-handler
+  "Get games collection"
+  [request]
+  (let [db (db-connect)
+        collection "games"
+        games (mc/find (db-connect) collection)]
+    (-> games
+        seq
+        json-response)))
+;; Cannot JSON encode object of class: class org.bson.types.ObjectId
+;; https://stackoverflow.com/questions/37860825/how-to-pass-mongodb-objectid-in-http-request-json-body
+
 (defn add-game-handler
   [request]
-  (log "Yo!")
   (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
         game (:body request)
@@ -59,9 +73,9 @@
 
 ;; Route handler for test button
 (defn test-handler
-  [request]
-  (-> {:hep "test" }
-      json-response))
+[request]
+(-> {:hep "test" }
+    json-response))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
@@ -71,8 +85,12 @@
   (routes
 
    (POST "/addgame" request
-         (-> request
-             add-game-handler))
+     (-> request
+         add-game-handler))
+   
+   (GET "/games" request
+     (-> request
+         games-handler))
 
    (GET "/" _
         (-> "public/index.html"
