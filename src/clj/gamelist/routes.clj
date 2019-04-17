@@ -10,7 +10,7 @@
   (:import [com.mongodb MongoOptions ServerAddress]))
 
 
-(defn test-connect []
+(defn db-connect []
   (println "Testing connect to mongo db")
   (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
         ^ServerAddress address(mg/server-address "localhost" 27017)
@@ -18,13 +18,6 @@
         db                    (mg/get-db conn "test")]
     db))
 
-;; (mc/insert-and-return (test-connect) "games" { :name "Kikana" })
-;; (test-connect)
-
-(dissoc {:id 0, :name "Kepler"} :id)
-(dissoc {"id" 0, "name" "Kepler"} "id")
-(json/read-str "{\"a\":1,\"b\":2}" :key-fn keyword)
-(json/read-str (str {"id" 16, "name" "Abatorrr21"}) :key-fn keyword)
 
 ;; This will work as reload after modifying routes (server-side)
 ;; (defn restart-server
@@ -58,17 +51,18 @@
 (defn add-game-handler
   [request]
   (Thread/sleep 1000) ; fake some processing time
-  (let [db (test-connect)
+  (let [db (db-connect)
         game (json/read-str (str (:body request)) :key-fn keyword)
-        db-result (mc/insert-and-return (test-connect) "games" game)
+        db-result (mc/insert-and-return (db-connect) "games" game)
         obj-id (str (:_id db-result))]
     (-> (assoc game :_id obj-id)
         json-response)))
-  
+
 ;; (assoc :headers {"Content-Type" "application/json"})
 ;; (assoc :body db-result))))
 
-;; (str "Insert: " ", ID: " obj-id)
+
+;; Route handler for test button
 (defn test-handler
   [request]
   (-> {:hep "test" }
