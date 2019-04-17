@@ -21,6 +21,7 @@
                  [cljs-http "0.1.46"]
                  [compojure "1.6.1"]
                  [re-frame "0.10.6"]
+                 [cheshire "5.8.1"]
                  [day8.re-frame/tracing "0.5.1"]
                  [day8.re-frame/re-frame-10x "0.3.7"]
                  [com.novemberain/monger "3.1.0"]
