@@ -23,6 +23,7 @@
                  [re-frame "0.10.6"]
                  [day8.re-frame/tracing "0.5.1"]
                  [day8.re-frame/re-frame-10x "0.3.7"]
+                 [cheshire "5.3.1"] ;; http://clojuremongodb.info/articles/integration.html
                  [com.novemberain/monger "3.1.0"]
                  [org.clojure/core.async "0.4.490"]
                  [lambdaisland/garden-watcher "0.3.3"]]
