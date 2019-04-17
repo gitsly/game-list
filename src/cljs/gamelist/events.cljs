@@ -19,21 +19,26 @@
   [part]
   (str "http://localhost:10555/" part))
 
+(defn get-all-games
+  []
+  (go (let [response (<! (http/get (base-url "games")))]
+        (rf/dispatch [::get-all-games-response response]))))
 
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
+   (get-all-games)
    db/default-db))
 
-;; (rf/reg-event-db
-;;  ::test
-;;  (fn [db
-;;       [event-name params]]
-
-;;    (go (let [response (<! (http/get (base-url "test")))]
-;;          (println event-name "completed request: " params)
-;;          (println  response))
-;;        db)))
+(rf/register-handler
+ ::get-all-games-response 
+ (fn
+   [db [_ response]]
+   (let [games (:games db)
+         games (:body response)]
+     (println "client: get-all-games-response: " games)
+     (-> db
+         (assoc :games games)))))
 
 (rf/reg-event-db
  ::test
@@ -46,56 +51,55 @@
        db)))
 
 (rf/reg-event-db
- ::set-selected-game
- (fn [db
-      [event-name game]]
-   (println "set selected game: " game)
-   (assoc db :selected-game game)))
+::set-selected-game
+(fn [db
+     [event-name game]]
+  (println "set selected game: " game)
+  (assoc db :selected-game game)))
 
 
 (defn to-json
-  "Create json from clojure map"
-  [o]
-  (.stringify js/JSON (clj->js o)))
+"Create json from clojure map"
+[o]
+(.stringify js/JSON (clj->js o)))
 
 (defn json-request
-  "Takes a map or hash or vector an constructs a JSON request
+"Takes a map or hash or vector an constructs a JSON request
   that is parsable at server using compojure route and ring-json lib"
-  [data]
-  {:body (to-json data)
-   :content-type "application/json"
-   :json-opts {:date-format "yyyy-MM-dd"}
-   :accept :json})
+[data]
+{:body (to-json data)
+ :content-type "application/json"
+ :json-opts {:date-format "yyyy-MM-dd"}
+ :accept :json})
 
 (defn new-game [name]
-  "Perform cljs-http request,
+"Perform cljs-http request,
    Create the new game on remote host using http post"
-  
-  (go (let [url (base-url "addgame")
-            game {:name name}
-            payload (json-request game)
-            response (<! (http/post url payload))]
-        (rf/dispatch [::add-game-response response]))))
+(go (let [url (base-url "addgame")
+          game {:name name}
+          payload (json-request game)
+          response (<! (http/post url payload))]
+      (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
- ::add-game
- (fn [db
-      [event-name game-name]]
-   (println "client: add-game")
-   (let [game (new-game game-name)]
-     (-> db
-         (assoc :loading? true)))))
+::add-game
+(fn [db
+     [event-name game-name]]
+  (println "client: add-game")
+  (let [game (new-game game-name)]
+    (-> db
+        (assoc :loading? true)))))
 
 (rf/register-handler
- ::add-game-response 
- (fn
-   [db [_ response]]
-   (let [games (:games db)
-         game (:body response)]
-     (println "client: add-game-response: " game)
-     (-> db
-         (assoc :loading? false)
-         (assoc :games (conj games game))))))
+::add-game-response 
+(fn
+  [db [_ response]]
+  (let [games (:games db)
+        game (:body response)]
+    (println "client: add-game-response: " game)
+    (-> db
+        (assoc :loading? false)
+        (assoc :games (conj games game))))))
 
 (rf/reg-event-db
 ::delete-selected-game
