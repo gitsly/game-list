@@ -12,15 +12,17 @@
 
 ;; https://github.com/Day8/re-frame/wiki/Talking-To-Servers
 
+
+;; Dont need the baseurl!
 ;; TODO: Find out this programatically (if localhost 
-(defn base-url
-  "prepends base-url to part"
-  [part]
-  (str "http://localhost:10555/" part))
+;; (defn base-url
+;;   "prepends base-url to part"
+;;   [part]
+;;   (str "http://localhost:10555/" part))
 
 (defn get-all-games
   []
-  (go (let [response (<! (http/get (base-url "games")))]
+  (go (let [response (<! (http/get "games"))]
         (rf/dispatch [::get-all-games-response response]))))
 
 (rf/reg-event-db
@@ -43,8 +45,7 @@
  ::test
  (fn [db
       [event-name params]]
-
-   (go (let [response (<! (http/get (base-url "games")))]
+   (go (let [response (<! (http/get "test"))]
          (println event-name "completed request: " params)
          (println  response))
        db)))
@@ -72,13 +73,13 @@
  :accept :json})
 
 (defn new-game [name]
-"Perform cljs-http request,
+  "Perform cljs-http request,
    Create the new game on remote host using http post"
-(go (let [url (base-url "addgame")
-          game {:name name}
-          payload (json-request game)
-          response (<! (http/post url payload))]
-      (rf/dispatch [::add-game-response response]))))
+  (go (let [url "addgame"
+            game {:name name}
+            payload (json-request game)
+            response (<! (http/post url payload))]
+        (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
 ::add-game

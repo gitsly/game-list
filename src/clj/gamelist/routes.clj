@@ -67,15 +67,12 @@
     (-> db-result
         json-response)))
 
-;; (assoc :headers {"Content-Type" "application/json"})
-;; (assoc :body db-result))))
-
 
 ;; Route handler for test button
 (defn test-handler
-[request]
-(-> {:hep "test" }
-    json-response))
+  [request]
+  (-> {:hep "test" }
+      json-response))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
