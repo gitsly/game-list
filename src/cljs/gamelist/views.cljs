@@ -12,10 +12,21 @@
 (def delete-game-text "Remove")
 (def add-game-text "Add game")
 
+(def not-nil? (complement nil?))
+
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 (defn rand-color
   []
   nil)
+
+
+(defn div-game-common
+  "Display common game content"
+  [game]
+  (println "> " game)
+  [:div
+   (if (not-nil? (:votes game))
+     "gotvote")])
 
 (defn div-game-selected
   [game]
@@ -30,60 +41,62 @@
      ]))
 
 (defn div-game
-  [game
-   selected-game-id]
-  (let [id (:_id game)
-        name (:name game)]
-    (if (= id selected-game-id)
-      ^{:key id} [:div (div-game-selected game)]
-      ^{:key id} [:div
-                  {:on-click #(rf/dispatch [::events/set-selected-game game])}
-                  name])))
+[game
+ selected-game-id]
+
+(let [id (:_id game)
+      name (:name game)]
+  [:div (div-game-common game)
+   (if (= id selected-game-id)
+     ^{:key id} [:div (div-game-selected game)]
+     ^{:key id} [:div
+                 {:on-click #(rf/dispatch [::events/set-selected-game game])}
+                 name])]))
 
 (defn div-game-list
-  []
-  (let [games (rf/subscribe [::subs/games])
-        selected-game (rf/subscribe [::subs/selected-game])
-        selected-game-id (:_id @selected-game)]
-    (println "selected game: " @selected-game)
-    [:div
-     (for [game @games]
-       (div-game game selected-game-id))]))
+[]
+(let [games (rf/subscribe [::subs/games])
+      selected-game (rf/subscribe [::subs/selected-game])
+      selected-game-id (:_id @selected-game)]
+  (println "selected game: " @selected-game)
+  [:div
+   (for [game @games]
+     (div-game game selected-game-id))]))
 
 (defn div-add-game
-  []
-  [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
+[]
+[:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
-   [:input {:id "the-input" :class "text"}]
-   [:button
-    {:on-click
-     ;; Note, the .-target property refers to the event (javascript)
-     #(rf/dispatch [::events/add-game
-                    (-> %
-                        .-target
-                        .-parentNode
-                        (.querySelector "#the-input")
-                        .-value)])}
-    add-game-text]
-   ])
+ [:input {:id "the-input" :class "text"}]
+ [:button
+  {:on-click
+   ;; Note, the .-target property refers to the event (javascript)
+   #(rf/dispatch [::events/add-game
+                  (-> %
+                      .-target
+                      .-parentNode
+                      (.querySelector "#the-input")
+                      .-value)])}
+  add-game-text]
+ ])
 
 (defn div-loading
-  []
-  (let [loading (rf/subscribe [::subs/loading?])
-        games (rf/subscribe [::subs/games])]
-    [:div "loading: " (str @loading)]))
+[]
+(let [loading (rf/subscribe [::subs/loading?])
+      games (rf/subscribe [::subs/games])]
+  [:div "Loading: " (str @loading)]))
 
 (defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
-    [:div
-     [:h1 "Game list: " @name]
-     (div-loading)
-     (div-game-list)
-     (div-add-game)
-     [:div {:style {:background-color "#e0e0eb"}}
-      [:p "Test button"]
-      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-     ]))
+(let [name (rf/subscribe [::subs/name])]
+  [:div
+   [:h1 "Game list: " @name]
+   (div-game-list)
+   (div-add-game)
+   (div-loading)
+   [:div {:style {:background-color "#e0e0eb"}}
+    [:p "Test button"]
+    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+   ]))
 
 
 

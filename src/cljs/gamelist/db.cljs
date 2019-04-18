@@ -15,3 +15,5 @@
    :loading? false
    :selected-game nil
    })
+
+;; "votes": [{"David": "4"},{"Anna": "7"}]
