@@ -25,7 +25,7 @@
   [game]
   (println "> " game)
   [:div
-   (if (not-nil? (:votes game))
+   (if (not-nil? (:rating game))
      "gotvote")])
 
 (defn div-game-selected
@@ -41,17 +41,18 @@
      ]))
 
 (defn div-game
-[game
- selected-game-id]
+  [game
+   selected-game-id]
 
-(let [id (:_id game)
-      name (:name game)]
-  [:div (div-game-common game)
-   (if (= id selected-game-id)
-     ^{:key id} [:div (div-game-selected game)]
-     ^{:key id} [:div
-                 {:on-click #(rf/dispatch [::events/set-selected-game game])}
-                 name])]))
+  (let [id (:_id game)
+        name (:name game)]
+    [:div (div-game-common game)
+     (if (= id selected-game-id)
+       ^{:key id} [:div (div-game-selected game)]
+       ^{:key id} [:div
+                   {:class "game-name"
+                    :on-click #(rf/dispatch [::events/set-selected-game game])}
+                   name])]))
 
 (defn div-game-list
 []

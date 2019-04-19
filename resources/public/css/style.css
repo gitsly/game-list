@@ -1,3 +1,9 @@
 h1 {
-  text-decoration: underline;
+  text-decoration: bold;
+}
+
+/* class styles*/
+
+.game-name {
+  background-color: yellow;
 }
