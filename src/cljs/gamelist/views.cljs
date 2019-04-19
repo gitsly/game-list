@@ -9,6 +9,7 @@
 ;; TODO (ideas for re-frame components)
 ;; - Make a selected div component group
 
+(def rate-game-text "Rate")
 (def delete-game-text "Remove")
 (def add-game-text "Add game")
 
@@ -23,21 +24,23 @@
 (defn div-game-common
   "Display common game content"
   [game]
-  (println "> " game)
-  [:div
-   (if (not-nil? (:rating game))
-     "gotvote")])
+  (if (not-nil? (:rating game))
+    [:div {:class "game-rating"} "rated"]))
 
 (defn div-game-selected
   [game]
   (let [id (:_id game)
         name (:name game)]
-    [:div {:style {:font-weight "bold"
-                   :background-color "#ebe6e0"}}
+    [:div {:class "game-selected"}
      name
      [:div
-      {:on-click #(rf/dispatch [::events/delete-selected-game game])}
+      {:class "game-remove"
+       :on-click #(rf/dispatch [::events/delete-selected-game game])}
       delete-game-text]
+     [:div
+      {:class "game-rate"
+       :on-click #(rf/dispatch [::events/rate-selected-game game])}
+      rate-game-text]
      ]))
 
 (defn div-game
@@ -46,23 +49,23 @@
 
   (let [id (:_id game)
         name (:name game)]
-    [:div (div-game-common game)
+    [:div {:class "game"}
      (if (= id selected-game-id)
        ^{:key id} [:div (div-game-selected game)]
        ^{:key id} [:div
-                   {:class "game-name"
-                    :on-click #(rf/dispatch [::events/set-selected-game game])}
-                   name])]))
+                   {:on-click #(rf/dispatch [::events/set-selected-game game])}
+                   name])
+     (div-game-common game)]))
 
 (defn div-game-list
-[]
-(let [games (rf/subscribe [::subs/games])
-      selected-game (rf/subscribe [::subs/selected-game])
-      selected-game-id (:_id @selected-game)]
-  (println "selected game: " @selected-game)
-  [:div
-   (for [game @games]
-     (div-game game selected-game-id))]))
+  []
+  (let [games (rf/subscribe [::subs/games])
+        selected-game (rf/subscribe [::subs/selected-game])
+        selected-game-id (:_id @selected-game)]
+    (println "selected game: " @selected-game)
+    [:div
+     (for [game @games]
+       (div-game game selected-game-id))]))
 
 (defn div-add-game
 []

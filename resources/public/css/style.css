@@ -4,6 +4,29 @@ h1 {
 
 /* class styles*/
 
-.game-name {
-  background-color: yellow;
+div .game {
+  background-color: #123130;
+  color: #FFF8DC;
+  width: 270px;
+}
+
+div .game-selected {
+  background-color: #123130;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+div .game-remove {
+  background-color: #224110;
+  float: right
+}
+
+div .game-rate {
+  background-color: #024140;
+  float: right
+}
+
+div .game-rating {
+  background-color: #224110;
+  float: right
 }
