@@ -47,7 +47,7 @@
   [game]
   (let [id (:_id game)
         name (:name game)]
-    [:div "heppas"]))
+    ^{:key (:_id game)} [:div "heppas"]))
 
 (defn div-game-list
   []
@@ -57,7 +57,7 @@
     (println "selected game: " @selected-game)
     [:div
      (for [game @games]
-       ^{:key (:_id game)} (div-game game))]))
+       (div-game game))]))
 
 (defn div-add-game
   []
