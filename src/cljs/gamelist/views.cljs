@@ -49,13 +49,7 @@
 
   (let [id (:_id game)
         name (:name game)]
-    ;; (div-game-common game)
-    [:div {:class "game"}
-     (if (= id selected-game-id)
-       ^{:key id} [:div (div-game-selected game)]
-       ^{:key id} [:div
-                   {:on-click #(rf/dispatch [::events/set-selected-game game])}
-                   name])]))
+    [:div  id]))
 
 (defn div-game-list
   []
@@ -65,7 +59,7 @@
     (println "selected game: " @selected-game)
     [:div
      (for [game @games]
-       (div-game game selected-game-id))]))
+       ^{:key id} (:div "hep"))]))
 
 (defn div-add-game
 []
