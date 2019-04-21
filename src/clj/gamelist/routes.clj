@@ -92,6 +92,21 @@
 ;; (mc/insert-and-return (db-connect) "games" (dissoc test-game :_id))
 
 
+;;------------------------------------------------------------------------------
+
+(defn assoc-if
+  [cond
+   sec]
+  (map cond sec))
+
+(def test-data [{:name "heppas" :age 12}
+                {:name "ninjan" :age 23}])
+
+(def num-seq [1 2 3 3 5 ])
+
+(assoc-if #(+ %1 %1) num-seq)
+
+
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
