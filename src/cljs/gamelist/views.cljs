@@ -44,12 +44,10 @@
      ]))
 
 (defn div-game
-  [game
-   selected-game-id]
-
+  [game]
   (let [id (:_id game)
         name (:name game)]
-    [:div  id]))
+    (:div id)))
 
 (defn div-game-list
   []
@@ -59,24 +57,24 @@
     (println "selected game: " @selected-game)
     [:div
      (for [game @games]
-       ^{:key id} (:div "hep"))]))
+       ^{:key (:_id game)} [:div "heppas"])]))
 
 (defn div-add-game
-[]
-[:div {:id "the-div" :style {:background-color "#f3e0bb"}}
+  []
+  [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
- [:input {:id "the-input" :class "text"}]
- [:button
-  {:on-click
-   ;; Note, the .-target property refers to the event (javascript)
-   #(rf/dispatch [::events/add-game
-                  (-> %
-                      .-target
-                      .-parentNode
-                      (.querySelector "#the-input")
-                      .-value)])}
-  add-game-text]
- ])
+   [:input {:id "the-input" :class "text"}]
+   [:button
+    {:on-click
+     ;; Note, the .-target property refers to the event (javascript)
+     #(rf/dispatch [::events/add-game
+                    (-> %
+                        .-target
+                        .-parentNode
+                        (.querySelector "#the-input")
+                        .-value)])}
+    add-game-text]
+   ])
 
 (defn div-loading
 []
