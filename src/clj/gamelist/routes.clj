@@ -67,12 +67,30 @@
     (-> db-result
         json-response)))
 
-
 ;; Route handler for test button
 (defn test-handler
   [request]
   (-> {:hep "test" }
       json-response))
+
+(defn remove-game-handler
+  [request]
+  (log (str "remove: " request))
+  (Thread/sleep 1000) ; fake some processing time
+  (let [db (db-connect)
+        oid (:body request)
+        db-result (mc/remove-by-id (db-connect) "games" oid)]
+    (-> db-result
+        json-response)))
+
+
+;; Sample 'full' game entry (for testing etc)
+(def test-game {:_id "5cb807a48749801ddbd35cbd", :name "Karlsa", :test "12",
+                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
+                         {:user "Anna", :value "7", :date "2019-12-21"}]})
+
+;; (mc/insert-and-return (db-connect) "games" (dissoc test-game :_id))
+
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
@@ -81,25 +99,30 @@
 (defn home-routes [endpoint]
   (routes
 
-   (POST "/addgame" request
+   (GET "/" _
+     (-> "public/index.html"
+         io/resource
+         io/input-stream
+         response
+         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+
+   (PUT "/addgame" request
      (-> request
          add-game-handler))
-   
+
+   (PUT "/removegame" request
+     (-> request
+         remove-game-handler))
+
    (GET "/games" request
      (-> request
          games-handler))
 
-   (GET "/" _
-        (-> "public/index.html"
-            io/resource
-            io/input-stream
-            response
-            (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
    (GET "/test" request
-        (-> request
-            test-handler))
-   
+     (-> request
+         test-handler))
+
    (resources "/")))
 
 

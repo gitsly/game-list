@@ -31,7 +31,7 @@
    (get-all-games)
    db/default-db))
 
-(rf/register-handler
+(rf/reg-event-db ;; register-handler has been renamed to reg-event-db
  ::get-all-games-response 
  (fn
    [db [_ response]]
@@ -78,7 +78,7 @@
   (go (let [url "addgame"
             game {:name name}
             payload (json-request game)
-            response (<! (http/post url payload))]
+            response (<! (http/put url payload))]
         (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
@@ -90,22 +90,25 @@
     (-> db
         (assoc :loading? true)))))
 
-(rf/register-handler
-::add-game-response 
-(fn
-  [db [_ response]]
-  (let [games (:games db)
-        game (:body response)]
-    (println "client: add-game-response: " game)
-    (-> db
-        (assoc :loading? false)
-        (assoc :games (conj games game))))))
+(rf/reg-event-db
+ ::add-game-response 
+ (fn
+   [db [_ response]]
+   (let [games (:games db)
+         game (:body response)]
+     (println "client: add-game-response: " game)
+     (-> db
+         (assoc :loading? false)
+         (assoc :games (conj games game))))))
 
 (rf/reg-event-db
-::delete-selected-game
-(fn [db
-     [_ game]]
-  (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
-    (-> db
-        (assoc :selected-game nil)
-        (assoc :games pruned-games)))))
+ ::remove-selected-game
+ (fn [db
+      [_ game]]
+   ;; remove remotely
+   (go (<! (http/put "removegame" (:_id game))))
+   ;; Remove in local app-db (visually)
+   (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
+     (-> db
+         (assoc :selected-game nil)
+         (assoc :games pruned-games)))))

@@ -10,7 +10,7 @@
 ;; - Make a selected div component group
 
 (def rate-game-text "Rate")
-(def delete-game-text "Remove")
+(def remove-game-text "Remove")
 (def add-game-text "Add game")
 
 (def not-nil? (complement nil?))
@@ -35,8 +35,8 @@
      name
      [:div
       {:class "game-remove"
-       :on-click #(rf/dispatch [::events/delete-selected-game game])}
-      delete-game-text]
+       :on-click #(rf/dispatch [::events/remove-selected-game game])}
+      remove-game-text]
      [:div
       {:class "game-rate"
        :on-click #(rf/dispatch [::events/rate-selected-game game])}
@@ -49,13 +49,13 @@
 
   (let [id (:_id game)
         name (:name game)]
+    ;; (div-game-common game)
     [:div {:class "game"}
      (if (= id selected-game-id)
        ^{:key id} [:div (div-game-selected game)]
        ^{:key id} [:div
                    {:on-click #(rf/dispatch [::events/set-selected-game game])}
-                   name])
-     (div-game-common game)]))
+                   name])]))
 
 (defn div-game-list
   []
