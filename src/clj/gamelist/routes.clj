@@ -94,18 +94,14 @@
 
 ;;------------------------------------------------------------------------------
 
-(defn assoc-if
-  [cond
-   sec]
-  (map cond sec))
+(def test-data [{:_id 1231 :name "heppas" :age 12}
+                {:_id 8981 :name "ninjan" :age 23}])
 
-(def test-data [{:name "heppas" :age 12}
-                {:name "ninjan" :age 23}])
+(map #(assoc % :selected true) test-data)
 
-(def num-seq [1 2 3 3 5 ])
-
-(assoc-if #(+ %1 %1) num-seq)
-
+(let [selected 1231]
+  (map #(assoc % :selected
+               (= (:_id %) selected)) test-data))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
