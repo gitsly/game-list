@@ -51,17 +51,17 @@
        db)))
 
 (rf/reg-event-db
-::set-selected-game
-(fn [db
-     [event-name game]]
-  (println "set selected game: " game)
-  (assoc db :selected-game game)))
+ ::set-selected-game
+ (fn [db
+      [event-name game]]
+   (println "set selected game: " game)
+   (assoc db :selected-game game)))
 
 
 (defn to-json
-"Create json from clojure map"
-[o]
-(.stringify js/JSON (clj->js o)))
+  "Create json from clojure map"
+  [o]
+  (.stringify js/JSON (clj->js o)))
 
 (defn json-request
 "Takes a map or hash or vector an constructs a JSON request

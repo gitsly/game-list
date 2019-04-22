@@ -21,11 +21,6 @@
   nil)
 
 
-(defn div-game-common
-  "Display common game content"
-  [game]
-  (if (not-nil? (:rating game))
-    [:div {:class "game-rating"} "rated"]))
 
 (defn div-game-selected
   [game]
@@ -45,36 +40,42 @@
 
 (defn div-game
   [game]
-  (let [id (:_id game)
-        name (:name game)]
-    [:div name]))
+  [:div
+   {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)])
+
+(defn div-game-common
+  "Display common game content"
+  [game]
+  (if (-> game :selected = not)
+    (div-game-selected game)
+    (div-game game)))
 
 (defn div-game-list
-  []
-  (let [games (rf/subscribe [::subs/games])
-        selected-game (rf/subscribe [::subs/selected-game])
-        selected-game-id (:_id @selected-game)]
-    (println "selected game: " @selected-game)
-    [:div
-     (for [game @games]
-       ^{:key (:_id game)} [:div (div-game game)])]))
+[]
+(let [games (rf/subscribe [::subs/games])
+      selected-game (rf/subscribe [::subs/selected-game])
+      selected-game-id (:_id @selected-game)]
+  (println "selected game: " @selected-game)
+  [:div
+   (for [game @games]
+     ^{:key (:_id game)} [:div (div-game-common game)])]))
 
 (defn div-add-game
-  []
-  [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
+[]
+[:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
-   [:input {:id "the-input" :class "text"}]
-   [:button
-    {:on-click
-     ;; Note, the .-target property refers to the event (javascript)
-     #(rf/dispatch [::events/add-game
-                    (-> %
-                        .-target
-                        .-parentNode
-                        (.querySelector "#the-input")
-                        .-value)])}
-    add-game-text]
-   ])
+ [:input {:id "the-input" :class "text"}]
+ [:button
+  {:on-click
+   ;; Note, the .-target property refers to the event (javascript)
+   #(rf/dispatch [::events/add-game
+                  (-> %
+                      .-target
+                      .-parentNode
+                      (.querySelector "#the-input")
+                      .-value)])}
+  add-game-text]
+ ])
 
 (defn div-loading
 []
@@ -105,7 +106,7 @@
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
-both)
+  both)
 
 
 (let [id 1
@@ -113,5 +114,5 @@ both)
             {:id 1 :name "alice"}
             {:id 2 :name "lisa"}]
       modded (remove #(= id (:id %)) data)]
-modded
-)
+  modded
+  )
