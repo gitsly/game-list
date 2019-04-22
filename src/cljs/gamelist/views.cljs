@@ -41,12 +41,13 @@
 (defn div-game
   [game]
   [:div
-   {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)])
+   {:class "game"
+    :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)])
 
 (defn div-game-common
   "Display common game content"
   [game]
-  (if (-> game :selected = not)
+  (if (:selected game)
     (div-game-selected game)
     (div-game game)))
 

@@ -50,13 +50,20 @@
          (println  response))
        db)))
 
+(defn select-games
+  [games
+   selected-id]
+  (map #(assoc % :selected
+               (= (:_id %) selected-id)) games))
+
 (rf/reg-event-db
  ::set-selected-game
- (fn [db
-      [event-name game]]
-   (println "set selected game: " game)
-   (assoc db :selected-game game)))
-
+ (fn[db
+     [event-name game]]
+   (let [games (:games db)
+         id (:_id game)]
+     (println "set selected game: " id)
+     (assoc db :games (select-games games id)))))
 
 (defn to-json
   "Create json from clojure map"
