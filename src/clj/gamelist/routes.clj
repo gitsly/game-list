@@ -28,7 +28,7 @@
 
 (defn log
   [msg]
-  (spit "server.log" msg :append true))
+  (spit "server.log" (str msg "\n") :append true))
 
 (log "------- Start -------\n")
 
@@ -75,11 +75,13 @@
 
 (defn remove-game-handler
   [request]
-  (log (str "remove: " request))
+  ;; (log (str "remove: " request))
   (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
-        oid (:body request)
+        game (:body request)
+        oid (:_id game)
         db-result (mc/remove-by-id (db-connect) "games" oid)]
+    (log (str "OID: " oid ", Db: " db-result))
     (-> db-result
         json-response)))
 

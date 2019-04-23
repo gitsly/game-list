@@ -113,7 +113,7 @@
  (fn [db
       [_ game]]
    ;; remove remotely
-   (go (<! (http/put "removegame" (:_id game))))
+   (go (<! (http/put "removegame" (json-request game))))
    ;; Remove in local app-db (visually)
    (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
      (-> db
