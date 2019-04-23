@@ -7,16 +7,17 @@
             [ring.util.response :refer [response]]
             [monger.core :as mg]
             [monger.collection :as mc])
-  (:import [com.mongodb MongoOptions ServerAddress]))
+  (:import [com.mongodb MongoOptions ServerAddress]
+           [org.bson.types ObjectId]))
 
 
 (defn db-connect []
-  (println "Testing connect to mongo db")
-  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-        ^ServerAddress address(mg/server-address "localhost" 27017)
-        conn                  (mg/connect address options)
-        db                    (mg/get-db conn "test")]
-    db))
+(println "Testing connect to mongo db")
+(let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
+      ^ServerAddress address(mg/server-address "localhost" 27017)
+      conn                  (mg/connect address options)
+      db                    (mg/get-db conn "test")]
+  db))
 
 
 
@@ -73,15 +74,16 @@
   (-> {:hep "test" }
       json-response))
 
+
 (defn remove-game-handler
   [request]
   ;; (log (str "remove: " request))
   (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
         game (:body request)
-        oid (:_id game)
+        oid (-> game :_id (ObjectId.))
         db-result (mc/remove-by-id (db-connect) "games" oid)]
-    (log (str "OID: " oid ", Db: " db-result))
+    ;; (log (str "OID: " oid ", Db: " db-result))
     (-> db-result
         json-response)))
 

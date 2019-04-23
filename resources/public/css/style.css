@@ -1,33 +1,3 @@
 h1 {
-  text-decoration: bold;
-}
-
-/* class styles*/
-
-div .game {
-  background-color: #123130;
-  color: #FFF8DC;
-  width: 270px;
-}
-
-div .game-selected {
-  background-color: #123130;
-  font-weight: bold;
-  color: #FFFFFF;
-  width: 270px;
-}
-
-div .game-remove {
-  background-color: #224110;
-  float: right
-}
-
-div .game-rate {
-  background-color: #024140;
-  float: right
-}
-
-div .game-rating {
-  background-color: #224110;
-  float: right
+  text-decoration: underline;
 }
