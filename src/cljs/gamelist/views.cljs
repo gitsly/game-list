@@ -52,14 +52,11 @@
     (div-game game)))
 
 (defn div-game-list
-[]
-(let [games (rf/subscribe [::subs/games])
-      selected-game (rf/subscribe [::subs/selected-game])
-      selected-game-id (:_id @selected-game)]
-  (println "selected game: " @selected-game)
-  [:div
-   (for [game @games]
-     ^{:key (:_id game)} [:div (div-game-common game)])]))
+  []
+  (let [games (rf/subscribe [::subs/games])]
+    [:div
+     (for [game @games]
+       ^{:key (:_id game)} [:div (div-game-common game)])]))
 
 (defn div-add-game
 []

@@ -50,7 +50,7 @@
          (println  response))
        db)))
 
-(defn select-games
+(defn select-game
   [games
    selected-id]
   (map #(assoc % :selected
@@ -63,7 +63,7 @@
    (let [games (:games db)
          id (:_id game)]
      (println "set selected game: " id)
-     (assoc db :games (select-games games id)))))
+     (assoc db :games (select-game games id)))))
 
 (defn to-json
   "Create json from clojure map"
@@ -113,9 +113,9 @@
  (fn [db
       [_ game]]
    ;; remove remotely
-   (go (<! (http/put "removegame" (json-request game))))
-   ;; Remove in local app-db (visually)
+   ;; (go (<! (http/put "removegame" (json-request game))))
+   (http/put "removegame" (json-request game))
+   ;; Remove in client app-db (visually)
    (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
      (-> db
-         (assoc :selected-game nil)
          (assoc :games pruned-games)))))

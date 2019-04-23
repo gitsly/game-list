@@ -7,11 +7,6 @@
  (fn [db]
    (:name db)))
 
-
-
-
-
-
 (rf/reg-sub
  ::games
  (fn [db]
@@ -21,8 +16,3 @@
  ::loading?
  (fn [db]
    (:loading? db)))
-
-(rf/reg-sub
- ::selected-game
- (fn [db]
-   (:selected-game db)))

@@ -40,8 +40,12 @@
   {:headers {"Content-Type" "application/json"}
    :body content})
 
-;;(-> (mc/find (db-connect) "games" {:name "Upper2"})
-;;    seq)
+;; Sample 'full' game entry (for testing etc)
+(def test-game {:_id "5cb807a48749801ddbd35cbd", :name "Karlsa", :test "12",
+                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
+                         {:user "Anna", :value "7", :date "2019-12-21"}]})
+;; And it's insertion
+;; (mc/insert-and-return (db-connect) "games" (dissoc test-game :_id))
 
 ;;-----------------------------------------------------------------------------
 ;; Handlers
@@ -61,7 +65,7 @@
 
 (defn add-game-handler
   [request]
-  (Thread/sleep 1000) ; fake some processing time
+  ;; (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
         game (:body request)
         db-result (mc/insert-and-return (db-connect) "games" game)]
@@ -74,38 +78,16 @@
   (-> {:hep "test" }
       json-response))
 
-
 (defn remove-game-handler
   [request]
   ;; (log (str "remove: " request))
-  (Thread/sleep 1000) ; fake some processing time
   (let [db (db-connect)
         game (:body request)
         oid (-> game :_id (ObjectId.))
         db-result (mc/remove-by-id (db-connect) "games" oid)]
-    ;; (log (str "OID: " oid ", Db: " db-result))
-    (-> db-result
-        json-response)))
+    (log (str "Remove game with OID: " oid ", Db: " db-result)
+         "done")))
 
-
-;; Sample 'full' game entry (for testing etc)
-(def test-game {:_id "5cb807a48749801ddbd35cbd", :name "Karlsa", :test "12",
-                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
-                         {:user "Anna", :value "7", :date "2019-12-21"}]})
-
-;; (mc/insert-and-return (db-connect) "games" (dissoc test-game :_id))
-
-
-;;------------------------------------------------------------------------------
-
-(def test-data [{:_id 1231 :name "heppas" :age 12}
-                {:_id 8981 :name "ninjan" :age 23}])
-
-(map #(assoc % :selected true) test-data)
-
-(let [selected 1231]
-  (map #(assoc % :selected
-               (= (:_id %) selected)) test-data))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing

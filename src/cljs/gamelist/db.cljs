@@ -8,14 +8,10 @@
         names games/game-list]
     (map #(zipmap [:id :name] [%1 %2]) indices names)))
 
-
-
-
 (def default-db
   {:name "Bullen"
    :games []
    :loading? false
-   :selected-game nil
    })
 
 ;; "votes": [{"David": "4"},{"Anna": "7"}]
