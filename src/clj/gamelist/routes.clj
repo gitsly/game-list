@@ -4,7 +4,7 @@
             [compojure.core :refer [ANY GET PUT POST DELETE routes]]
             [compojure.handler :as handler]
             [compojure.route :refer [resources]]
-            [ring.util.response :refer [response]]
+            [ring.util.response :refer [response status]]
             [monger.core :as mg]
             [monger.collection :as mc])
   (:import [com.mongodb MongoOptions ServerAddress]
@@ -80,28 +80,26 @@
 
 (defn remove-game-handler
   [request]
-  ;; (log (str "remove: " request))
   (let [db (db-connect)
         game (:body request)
         oid (-> game :_id (ObjectId.))
         db-result (mc/remove-by-id (db-connect) "games" oid)]
-    (log (str "Remove game with OID: " oid ", Db: " db-result)
-         "done")))
-
+    (log (str "Remove game with OID: " oid ", Db: " db-result)))
+  "done")
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
 
 (defn home-routes [endpoint]
-  (routes
+(routes
 
-   (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+ (GET "/" _
+   (-> "public/index.html"
+       io/resource
+       io/input-stream
+       response
+       (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
    (PUT "/addgame" request
      (-> request
