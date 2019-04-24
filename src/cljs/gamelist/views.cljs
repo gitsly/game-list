@@ -4,7 +4,10 @@
    [gamelist.subs :as subs]
    [gamelist.events :as events]
    [goog.object :as gobject]
-   [clojure.string :as string]))
+   [clojure.string :as string]
+   [re-com.core   :refer [h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
+   [re-com.misc   :refer [slider-args-desc]]
+   [reagent.core :as reagent]))
 
 ;; TODO (ideas for re-frame components)
 ;; - Make a selected div component group
@@ -15,11 +18,11 @@
 
 (def not-nil? (complement nil?))
 
+
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 (defn rand-color
   []
   nil)
-
 
 
 (defn div-game-selected
@@ -35,7 +38,15 @@
      [:div
       {:class "game-rate"
        :on-click #(rf/dispatch [::events/rate-selected-game game])}
-      rate-game-text]
+
+      [slider
+       :model     12
+       :min       0
+       :max       100
+       :step      1
+       :width     "300px"
+       :on-change #(println %)
+       :disabled? false]]
      ]))
 
 (defn div-game
