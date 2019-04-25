@@ -10,24 +10,24 @@
             [ring.middleware.logger :refer [wrap-with-logger]]
             [buddy.auth.middleware :refer [wrap-authentication]]))
 
-(defn test
-  []
-  (log "test"))
+(defn wrap-mine-internal
+  [request]
+  (log (str "wrap-mine: " (:remote-addr request) ": " (:uri request))))
 
 (defn wrap-mine
   [handler & params]
   (fn
     ([request]
      (do
-       (test)
+       (wrap-mine-internal request)
        (handler request)))))
 
 (defn config []
-  {:http-port  (Integer. (or (env :port) 10555))
-   :middleware [[wrap-defaults api-defaults]
-                ;; [wrap-authentication backend]
-                [wrap-mine]
-                [wrap-json-body {:keywords? true }]
-                [wrap-json-response {:keywords? true}]
-                wrap-with-logger
-                wrap-gzip]})
+{:http-port  (Integer. (or (env :port) 10555))
+ :middleware [[wrap-defaults api-defaults]
+              ;; [wrap-authentication backend]
+              [wrap-mine]
+              [wrap-json-body {:keywords? true }]
+              [wrap-json-response {:keywords? true}]
+              wrap-with-logger
+              wrap-gzip]})
