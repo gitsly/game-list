@@ -23,11 +23,11 @@
        (handler request)))))
 
 (defn config []
-{:http-port  (Integer. (or (env :port) 10555))
- :middleware [[wrap-defaults api-defaults]
-              ;; [wrap-authentication backend]
-              [wrap-mine]
-              [wrap-json-body {:keywords? true }]
-              [wrap-json-response {:keywords? true}]
-              wrap-with-logger
-              wrap-gzip]})
+  {:http-port  (Integer. (or (env :port) 10555))
+   :middleware [[wrap-defaults api-defaults]
+                [wrap-authentication backend]
+                [wrap-mine]
+                [wrap-json-body {:keywords? true }]
+                [wrap-json-response {:keywords? true}]
+                wrap-with-logger
+                wrap-gzip]})

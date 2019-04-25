@@ -29,11 +29,11 @@
 (log "------- Start -------")
 
 (defn json-response
-"add needed header and set body with json content (json middleware will
+  "add needed header and set body with json content (json middleware will
                                                           take care of the json formatting (from clj datatype to json string))"
-[content]
-{:headers {"Content-Type" "application/json"}
- :body content})
+  [content]
+  {:headers {"Content-Type" "application/json"}
+   :body content})
 
 ;; Sample 'full' game entry (for testing etc)
 (def test-game {:_id "5cb807a48749801ddbd35cbd", :name "Karlsa", :test "12",
@@ -47,52 +47,51 @@
 ;;-----------------------------------------------------------------------------
 
 (defn games-handler
-"Get games collection"
-[request]
-(let [db (db-connect)
-      collection "games"
-      games (mc/find (db-connect) collection)]
-  (-> games
-      seq
-      json-response)))
+  "Get games collection"
+  [request]
+  (let [db (db-connect)
+        collection "games"
+        games (mc/find (db-connect) collection)]
+    (-> games
+        seq
+        json-response)))
 ;; Cannot JSON encode object of class: class org.bson.types.ObjectId
 ;; https://stackoverflow.com/questions/37860825/how-to-pass-mongodb-objectid-in-http-request-json-body
 
 (defn add-game-handler
-[request]
-;; (Thread/sleep 1000) ; fake some processing time
-(let [db (db-connect)
-      game (:body request)
-      db-result (mc/insert-and-return (db-connect) "games" game)]
-  (-> db-result
-      json-response)))
+  [request]
+  ;; (Thread/sleep 1000) ; fake some processing time
+  (let [db (db-connect)
+        game (:body request)
+        db-result (mc/insert-and-return (db-connect) "games" game)]
+    (-> db-result
+        json-response)))
 
 ;; Route handler for test button
 (defn test-handler
-[request]
-(-> {:hep "test" }
-    json-response))
+  [request]
+  (-> {:hep "test" }
+      json-response))
 
 (defn remove-game-handler
-[request]
-(let [db (db-connect)
-      game (:body request)
-      oid (-> game :_id (ObjectId.))
-      db-result (mc/remove-by-id (db-connect) "games" oid)]
-  (log (str "Remove game with OID: " oid ", Db: " db-result)))
-"done")
+  [request]
+  (let [db (db-connect)
+        game (:body request)
+        oid (-> game :_id (ObjectId.))
+        db-result (mc/remove-by-id (db-connect) "games" oid)]
+    (log (str "Remove game with OID: " oid ", Db: " db-result)))
+  "done")
 
 (defn buddy-handler
-[request]
-(log "GET buddy")
-(if (:identity request)
-  (format "Hello %s" (:identity request))
-  "Anonymous"))
+  [request]
+  (log "GET buddy")
+  (if (:identity request)
+    (format "Hello %s" (:identity request))
+    "Anonymous"))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
-
 (defn home-routes [endpoint]
   (routes
 
@@ -124,7 +123,7 @@
      (-> request
          buddy-handler))
 
-   (resources "/")))
+   resources "/"))
 
 
 (defn restart-server
