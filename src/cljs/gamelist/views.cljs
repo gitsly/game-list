@@ -14,7 +14,7 @@
 
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
-(def add-game-text "Add game")
+(def add-game-text "Lo ")
 
 (def not-nil? (complement nil?))
 
@@ -27,8 +27,10 @@
 
 (defn div-game-selected
   [game]
-  (let [id (:_id game)
-        name (:name game)]
+  (let [slider-test (rf/subscribe [::subs/slider-test])
+        id (:_id game)
+        name (:name game)
+        slider-val (reagent/atom 50)]
     [:div {:class "game-selected"}
      name
      [:div
@@ -36,16 +38,13 @@
        :on-click #(rf/dispatch [::events/remove-selected-game game])}
       remove-game-text]
      [:div
-      {:class "game-rate"
-       :on-click #(rf/dispatch [::events/rate-selected-game game])}
-
+      {:class "game-rate" }
       [slider
-       :model     12
-       :min       0
-       :max       100
-       :step      1
-       :width     "300px"
-       :on-change #(println %)
+       :model     slider-val
+       :min 0, :max 100, :step 1, :width "300px"
+       ;; :on-change #(rf/dispatch [::events/set-rating game %])
+       :on-change #(do (println "slider: " %)
+                       (reset! slider-val %))
        :disabled? false]]
      ]))
 

@@ -11,6 +11,7 @@
 (def default-db
   {:name "Bullen"
    :games []
+   :slider-test 10
    :loading? false
    })
 

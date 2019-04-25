@@ -119,3 +119,11 @@
    (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
      (-> db
          (assoc :games pruned-games)))))
+
+(rf/reg-event-db
+ ::set-rating
+ (fn [db
+      [game rating]]
+   (println rating)
+   (-> db
+       (assoc :slider-test rating))))

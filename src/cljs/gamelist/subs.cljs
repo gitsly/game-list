@@ -16,3 +16,8 @@
  ::loading?
  (fn [db]
    (:loading? db)))
+
+(rf/reg-sub
+ ::slider-test
+ (fn [db]
+   (:slider-test db)))
