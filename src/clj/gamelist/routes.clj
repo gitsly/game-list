@@ -85,6 +85,12 @@
     (log (str "Remove game with OID: " oid ", Db: " db-result)))
   "done")
 
+(defn buddy-handler
+  [request]
+  (if (:identity request)
+    (format "Hello %s" (:identity request))
+    "Anonymous"))
+
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
@@ -99,24 +105,28 @@
        response
        (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-   (PUT "/addgame" request
-     (-> request
-         add-game-handler))
+ (PUT "/addgame" request
+   (-> request
+       add-game-handler))
 
-   (PUT "/removegame" request
-     (-> request
-         remove-game-handler))
+ (PUT "/removegame" request
+   (-> request
+       remove-game-handler))
 
-   (GET "/games" request
-     (-> request
-         games-handler))
+ (GET "/games" request
+   (-> request
+       games-handler))
 
 
-   (GET "/test" request
-     (-> request
-         test-handler))
+ (GET "/test" request
+   (-> request
+       test-handler))
 
-   (resources "/")))
+ (GET "/buddy" request
+   (-> request
+       buddy-handler))
+
+ (resources "/")))
 
 
 ;; (defn restart-server

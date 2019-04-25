@@ -27,7 +27,8 @@
                  [day8.re-frame/re-frame-10x "0.3.7"]
                  [com.novemberain/monger "3.1.0"]
                  [org.clojure/core.async "0.4.490"]
-                 [lambdaisland/garden-watcher "0.3.3"]]
+                 [lambdaisland/garden-watcher "0.3.3"]
+                 [buddy/buddy-auth "2.1.0"]]
 
 
   :plugins [[lein-cljsbuild "1.1.7"]

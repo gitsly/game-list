@@ -27,8 +27,7 @@
 
 (defn div-game-selected
   [game]
-  (let [slider-test (rf/subscribe [::subs/slider-test])
-        id (:_id game)
+  (let [id (:_id game)
         name (:name game)
         slider-val (reagent/atom 50)]
     [:div {:class "game-selected"}
@@ -42,7 +41,6 @@
       [slider
        :model     slider-val
        :min 0, :max 100, :step 1, :width "300px"
-       ;; :on-change #(rf/dispatch [::events/set-rating game %])
        :on-change #(do (println "slider: " %)
                        (reset! slider-val %))
        :disabled? false]]
