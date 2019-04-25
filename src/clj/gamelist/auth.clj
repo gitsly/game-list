@@ -9,9 +9,10 @@
 ;; it will be called only if step 1 (parse) returns something
 (defn my-authfn
   [request authdata]
-  (log "my-authfn called")
+
   (let [username (:username authdata)
         password (:password authdata)]
+    (log "my-authfn called")
     username))
 
 (def backend (backends/basic {:realm "MyApi"

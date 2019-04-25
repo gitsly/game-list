@@ -12,7 +12,8 @@
 
 (defn wrap-mine-internal
   [request]
-  (log (str "wrap-mine: " (:remote-addr request) ": " (:uri request))))
+  ;; (log (str "wrap-mine: " (:remote-addr request) ": " (:uri request)))
+  )
 
 (defn wrap-mine
   [handler & params]
@@ -21,6 +22,16 @@
      (do
        (wrap-mine-internal request)
        (handler request)))))
+
+
+
+(defn my-authfn
+  [request authdata]
+  (log "Super!")
+  (let [username (:username authdata)
+        password (:password authdata)]
+    username))
+
 
 (defn config []
   {:http-port  (Integer. (or (env :port) 10555))
@@ -31,3 +42,6 @@
                 [wrap-json-response {:keywords? true}]
                 wrap-with-logger
                 wrap-gzip]})
+
+
+(log "heppas " "was" "a ninja")

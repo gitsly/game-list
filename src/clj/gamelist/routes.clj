@@ -126,9 +126,9 @@
    resources "/"))
 
 
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
 
-(restart-server)
+;; (restart-server)
