@@ -85,9 +85,10 @@
 
 (defn buddy-handler
   [request]
-  (if-not (authenticated? request)
-    (throw-unauthorized)
-    "authed"))
+  (let [ident (:identity request)]
+    (if-not (authenticated? request)
+      (throw-unauthorized)
+      (str "authed: " ident))))
 
 
 
