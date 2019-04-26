@@ -7,7 +7,8 @@
             [ring.util.response :refer [response status]]
             [monger.core :as mg]
             [gamelist.utils :refer [log]]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [buddy.auth :refer [authenticated? throw-unauthorized]])
   (:import [com.mongodb MongoOptions ServerAddress]
            [org.bson.types ObjectId]))
 
@@ -84,10 +85,11 @@
 
 (defn buddy-handler
   [request]
-  (log "GET buddy")
-  (if (:identity request)
-    (format "Hello %s" (:identity request))
-    "Anonymous"))
+  (if-not (authenticated? request)
+    (throw-unauthorized)
+    "authed"))
+
+
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing

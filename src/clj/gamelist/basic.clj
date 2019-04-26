@@ -6,6 +6,7 @@
             [buddy.auth.http :as http]
             [buddy.auth :refer [authenticated?]]
             [buddy.core.codecs :as codecs]
+            [gamelist.utils :refer [log]]
             [buddy.core.codecs.base64 :as b64]
             [cuerdas.core :as str]))
 
@@ -13,6 +14,7 @@
   "Given a request, try to extract and parse
   the http basic header."
   [request]
+  (log "camer herer any weerer")
   (let [pattern (re-pattern "^Basic (.+)$")
         decoded (some->> (http/-get-header request "authorization")
                          (re-find pattern)
@@ -31,7 +33,9 @@
     (-parse [_ request]
       (parse-header request))
     (-authenticate [_ request data]
-      (authfn request data))
+      (do
+        (log "-authenticate")
+        (authfn request data)))
 
     proto/IAuthorization
     (-handle-unauthorized [_ request metadata]
@@ -39,5 +43,5 @@
         (unauthorized-handler request (assoc metadata :realm realm))
         (if (authenticated? request)
           (http/response "Permission denied" 403)
-          (http/response "Unauthorized" 401
+          (http/response "Unauthorized-tresh" 401
                          {"WWW-Authenticate" (format "Basic realm=\"%s\"" realm)}))))))
