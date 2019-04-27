@@ -28,6 +28,7 @@
                  [com.novemberain/monger "3.1.0"]
                  [org.clojure/core.async "0.4.490"]
                  [lambdaisland/garden-watcher "0.3.3"]
+                 [clj-time "0.15.0"]
                  [buddy/buddy-auth "2.1.0"]]
 
 

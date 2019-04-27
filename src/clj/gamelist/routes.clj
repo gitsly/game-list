@@ -5,11 +5,10 @@
             [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response status]]
-            [gamelist.utils :refer [log]]
+            [gamelist.utils :refer [log now]]
             [gamelist.db :as db]
             [monger.collection :as mc]
             [buddy.auth :refer [authenticated? throw-unauthorized]]))
-
 
 ;; Code taken from ring-json middleware impl.
 (defn json-request? [request]
@@ -39,37 +38,30 @@
 (defn games-handler
   "Get games collection"
   [request]
-  (let [db (db/connect)
-        collection "games"
-        games (mc/find (db/connect) collection)]
-    (-> games
-        seq
-        json-response)))
-;; Cannot JSON encode object of class: class org.bson.types.ObjectId
-;; https://stackoverflow.com/questions/37860825/how-to-pass-mongodb-objectid-in-http-request-json-body
+  (-> (db/collection "games")
+      seq
+      json-response))
 
 (defn add-game-handler
   [request]
-  ;; (Thread/sleep 1000) ; fake some processing time
-  (let [db (db/connect)
-        game (:body request)
-        db-result (mc/insert-and-return (db/connect) "games" game)]
-    (-> db-result
-        json-response)))
+  (Thread/sleep 1000) ; fake some processing time
+  (-> request
+      :body
+      ;; (assoc :added (db/now))
+      db/add-game
+      json-response))
 
 ;; Route handler for test button
 (defn test-handler
-  [request]
-  (-> {:hep "test" }
-      json-response))
+[request]
+(-> {:hep "test" }
+    json-response))
 
 (defn remove-game-handler
   [request]
-  (let [db (db/connect)
-        game (:body request)
-        oid (-> game :_id (ObjectId.))
-        db-result (mc/remove-by-id (db/connect) "games" oid)]
-    (log (str "Remove game with OID: " oid ", Db: " db-result)))
+  (-> request
+      :body 
+      db/remove-game)
   "done")
 
 (defn buddy-handler
@@ -80,43 +72,41 @@
       (str "authed: " ident))))
 
 
-
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
-  (routes
+(routes
 
-   (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+(GET "/" _
+(-> "public/index.html"
+    io/resource
+    io/input-stream
+    response
+    (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-   (PUT "/addgame" request
-     (-> request
-         add-game-handler))
+(PUT "/addgame" request
+(-> request
+    add-game-handler))
 
-   (PUT "/removegame" request
-     (-> request
-         remove-game-handler))
+(PUT "/removegame" request
+(-> request
+    remove-game-handler))
 
-   (GET "/games" request
-     (-> request
-         games-handler))
+(GET "/games" request
+(-> request
+    games-handler))
 
 
-   (GET "/test" request
-     (-> request
-         test-handler))
+(GET "/test" request
+(-> request
+    test-handler))
 
-   (GET "/buddy" request
-     (-> request
-         buddy-handler))
+(GET "/buddy" request
+(-> request
+    buddy-handler))
 
-   resources "/"))
-
+resources "/"))
 
 ;; (defn restart-server
 ;;   []
