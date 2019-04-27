@@ -13,3 +13,8 @@
   "Generates a unique GUID with format: 'f16f9df5-c9eb-4430-bdef-dcced522c951'"
   []
   (str (java.util.UUID/randomUUID)))
+
+;; Code taken from ring-json middleware impl.
+(defn json-request? [request]
+  (if-let [type (get-in request [:headers "content-type"])]
+    (not (empty? (re-find #"^application/(.+\+)?json" type)))))

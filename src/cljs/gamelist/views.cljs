@@ -9,8 +9,6 @@
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
 
-;; TODO (ideas for re-frame components)
-;; - Make a selected div component group
 
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
@@ -43,8 +41,7 @@
        :min 0, :max 100, :step 1, :width "300px"
        :on-change #(do (println "slider: " %)
                        (reset! slider-val %))
-       :disabled? false]]
-     ]))
+       :disabled? false]]]))
 
 (defn div-game
   [game]
