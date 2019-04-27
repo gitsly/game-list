@@ -5,21 +5,10 @@
             [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response status]]
-            [monger.core :as mg]
             [gamelist.utils :refer [log]]
+            [gamelist.db :as db]
             [monger.collection :as mc]
-            [buddy.auth :refer [authenticated? throw-unauthorized]])
-  (:import [com.mongodb MongoOptions ServerAddress]
-           [org.bson.types ObjectId]))
-
-
-(defn db-connect []
-  (println "Testing connect to mongo db")
-  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-        ^ServerAddress address(mg/server-address "localhost" 27017)
-        conn                  (mg/connect address options)
-        db                    (mg/get-db conn "test")]
-    db))
+            [buddy.auth :refer [authenticated? throw-unauthorized]]))
 
 
 ;; Code taken from ring-json middleware impl.
@@ -41,7 +30,7 @@
                 :rating [{:user "Martin", :value "4", :date "2019-12-20"}
                          {:user "Anna", :value "7", :date "2019-12-21"}]})
 ;; And it's insertion
-;; (mc/insert-and-return (db-connect) "games" (dissoc test-game :_id))
+;; (mc/insert-and-return (db/connect) "games" (dissoc test-game :_id))
 
 ;;-----------------------------------------------------------------------------
 ;; Handlers
@@ -50,9 +39,9 @@
 (defn games-handler
   "Get games collection"
   [request]
-  (let [db (db-connect)
+  (let [db (db/connect)
         collection "games"
-        games (mc/find (db-connect) collection)]
+        games (mc/find (db/connect) collection)]
     (-> games
         seq
         json-response)))
@@ -62,9 +51,9 @@
 (defn add-game-handler
   [request]
   ;; (Thread/sleep 1000) ; fake some processing time
-  (let [db (db-connect)
+  (let [db (db/connect)
         game (:body request)
-        db-result (mc/insert-and-return (db-connect) "games" game)]
+        db-result (mc/insert-and-return (db/connect) "games" game)]
     (-> db-result
         json-response)))
 
@@ -76,10 +65,10 @@
 
 (defn remove-game-handler
   [request]
-  (let [db (db-connect)
+  (let [db (db/connect)
         game (:body request)
         oid (-> game :_id (ObjectId.))
-        db-result (mc/remove-by-id (db-connect) "games" oid)]
+        db-result (mc/remove-by-id (db/connect) "games" oid)]
     (log (str "Remove game with OID: " oid ", Db: " db-result)))
   "done")
 
