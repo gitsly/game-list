@@ -1,10 +1,4 @@
-(ns gamelist.utils
-  )
-
-(defn now
-  "Returns joda time now"
-  []
-  "-")
+(ns gamelist.utils)
 
 ;; 2019-04-27T07:30:35.706
 
