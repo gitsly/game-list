@@ -9,7 +9,8 @@
             [ring.middleware.gzip :refer [wrap-gzip]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.logger :refer [wrap-with-logger]]
-            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
+            [buddy.auth.accessrules :refer [wrap-access-rules success error]]))
 
 
 (defn wrap-mine-internal
@@ -26,19 +27,31 @@
        (handler request)))))
 
 
+;;------------------------------------------------------------------------------
+;; Access rules section
+;;------------------------------------------------------------------------------
+(defn authenticated-user
+  [request]
+  (if (:identity request)
+    true
+    (error "Only authenticated users allowed")))
 
-(defn my-authfn
-  [request authdata]
-  (log "Super!")
-  (let [username (:username authdata)
-        password (:password authdata)]
-    username))
+
+(def rules [{:pattern #"^/.*"
+             :handler authenticated-user}])
+
+(defn on-error
+  [request value]
+  {:status 403
+   :headers {}
+   :body "Not authorized"})
+
+;;------------------------------------------------------------------------------
 
 (defn config []
   {:http-port  (Integer. (or (env :port) 10555))
    :middleware [[wrap-defaults api-defaults]
-                ;; [wrap-authentication (http-basic-backend {:realm "MyApi"
-                ;;                                           :authfn my-authfn})]
+                [wrap-access-rules {:rules rules :on-error on-error}]
                 [wrap-authentication backend]
                 [wrap-authorization backend]
                 [wrap-mine]
