@@ -53,6 +53,14 @@
       db/remove-game)
   "done")
 
+(defn main-handler
+  [request]
+  (-> "public/index.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+
 (defn login-handler
   [request]
   (let [ident (:identity request)]
@@ -61,14 +69,6 @@
       (do
         (log "Successfully logged in: " ident)
         (main-handler request)))))
-
-(defn main-handler
-  [request]
-  (-> "public/index.html"
-      io/resource
-      io/input-stream
-      response
-      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
 (defn not-auth-handler
   [request value]
