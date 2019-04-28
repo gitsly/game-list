@@ -42,9 +42,9 @@
 
 ;; Route handler for test button
 (defn test-handler
-[request]
-(-> {:hep "test" }
-    json-response))
+  [request]
+  (-> {:hep "test" }
+      json-response))
 
 (defn remove-game-handler
   [request]
@@ -53,13 +53,30 @@
       db/remove-game)
   "done")
 
-(defn buddy-handler
+(defn login-handler
   [request]
   (let [ident (:identity request)]
     (if-not (authenticated? request)
       (throw-unauthorized)
-      (str "authed: " ident))))
+      (do
+        (log "Successfully logged in: " ident)
+        (main-handler request)))))
 
+(defn main-handler
+  [request]
+  (-> "public/index.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+
+(defn not-auth-handler
+  [request value]
+  (-> "public/noauth.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :status 403)))
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
@@ -67,33 +84,30 @@
 (defn home-routes [endpoint]
   (routes
 
-   (GET "/" _
-     (-> "public/index.html"
-         io/resource
-         io/input-stream
-         response
-         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+   (GET "/" request
+     (-> request
+         main-handler))
 
-   (PUT "/addgame" request
+   (PUT "/list/addgame" request
      (-> request
          add-game-handler))
 
-   (PUT "/removegame" request
+   (PUT "/list/removegame" request
      (-> request
          remove-game-handler))
 
-   (GET "/games" request
+   (GET "/list/games" request
      (-> request
          games-handler))
 
 
-   (GET "/test" request
+   (GET "/list/test" request
      (-> request
          test-handler))
 
-   (GET "/buddy" request
+   (GET "/login" request
      (-> request
-         buddy-handler))
+         login-handler))
 
    resources "/"))
 
@@ -102,4 +116,4 @@
 ;;   (user/stop)
 ;;   (user/go))
 
-(restart-server)
+;; (restart-server)

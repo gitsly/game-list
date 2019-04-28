@@ -22,7 +22,7 @@
 
 (defn get-all-games
   []
-  (go (let [response (<! (http/get "games"))]
+  (go (let [response (<! (http/get "list/games"))]
         (rf/dispatch [::get-all-games-response response]))))
 
 (rf/reg-event-db
@@ -45,7 +45,7 @@
  ::test
  (fn [db
       [event-name params]]
-   (go (let [response (<! (http/get "test"))]
+   (go (let [response (<! (http/get "list/test"))]
          (println event-name "completed request: " params)
          (println  response))
        db)))
@@ -82,7 +82,7 @@
 (defn new-game [name]
   "Perform cljs-http request,
    Create the new game on remote host using http post"
-  (go (let [url "addgame"
+  (go (let [url "list/addgame"
             game {:name name}
             payload (json-request game)
             response (<! (http/put url payload))]
@@ -114,7 +114,7 @@
       [_ game]]
    ;; remove remotely
    ;; (go (<! (http/put "removegame" (json-request game))))
-   (http/put "removegame" (json-request game))
+   (http/put "list/removegame" (json-request game))
    ;; Remove in client app-db (visually)
    (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
      (-> db

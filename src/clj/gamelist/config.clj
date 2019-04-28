@@ -4,6 +4,7 @@
             [gamelist.auth :refer [backend]]
             [buddy.auth.backends.httpbasic :refer [http-basic-backend]]
             [gamelist.utils :refer [log]]
+            [gamelist.routes :refer [not-auth-handler]]
             [monger.json :refer :all]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.gzip :refer [wrap-gzip]]
@@ -30,21 +31,24 @@
 ;;------------------------------------------------------------------------------
 ;; Access rules section
 ;;------------------------------------------------------------------------------
-(defn authenticated-user
+(defn authenticated-access
   [request]
   (if (:identity request)
     true
     (error "Only authenticated users allowed")))
 
+(defn any-access
+  [request]
+  true)
 
-(def rules [{:pattern #"^/.*"
-             :handler authenticated-user}])
+(def rules [{:pattern #"^/login$"
+             :handler any-access}
+            {:pattern #"^/.*"
+             :handler authenticated-access}])
 
 (defn on-error
   [request value]
-  {:status 403
-   :headers {}
-   :body "Not authorized"})
+  (not-auth-handler request value))
 
 ;;------------------------------------------------------------------------------
 
