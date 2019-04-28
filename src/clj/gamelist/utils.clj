@@ -18,3 +18,9 @@
 (defn json-request? [request]
   (if-let [type (get-in request [:headers "content-type"])]
     (not (empty? (re-find #"^application/(.+\+)?json" type)))))
+
+;;------------------------------------------------------------------------------
+;; To learn
+;;------------------------------------------------------------------------------
+
+(when-let [apa 1] apa)

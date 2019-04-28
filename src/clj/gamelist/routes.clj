@@ -5,7 +5,7 @@
             [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response status]]
-            [gamelist.utils :refer [log now]]
+            [gamelist.utils :refer [log]]
             [gamelist.db :as db]
             [monger.collection :as mc]
             [clj-time.core :as time]
@@ -66,37 +66,37 @@
 ;; Define routing
 ;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
-(routes
+  (routes
 
-(GET "/" _
-(-> "public/index.html"
-    io/resource
-    io/input-stream
-    response
-    (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+   (GET "/" _
+     (-> "public/index.html"
+         io/resource
+         io/input-stream
+         response
+         (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-(PUT "/addgame" request
-(-> request
-    add-game-handler))
+   (PUT "/addgame" request
+     (-> request
+         add-game-handler))
 
-(PUT "/removegame" request
-(-> request
-    remove-game-handler))
+   (PUT "/removegame" request
+     (-> request
+         remove-game-handler))
 
-(GET "/games" request
-(-> request
-    games-handler))
+   (GET "/games" request
+     (-> request
+         games-handler))
 
 
-(GET "/test" request
-(-> request
-    test-handler))
+   (GET "/test" request
+     (-> request
+         test-handler))
 
-(GET "/buddy" request
-(-> request
-    buddy-handler))
+   (GET "/buddy" request
+     (-> request
+         buddy-handler))
 
-resources "/"))
+   resources "/"))
 
 ;; (defn restart-server
 ;;   []
