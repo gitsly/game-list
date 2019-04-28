@@ -8,12 +8,12 @@
            [org.joda.time DateTimeZone]))
 
 (defn connect []
-  "Connect to mongo db"
-  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-        ^ServerAddress address(mg/server-address "localhost" 27017)
-        conn                  (mg/connect address options)
-        db                    (mg/get-db conn "test")]
-    db))
+"Connect to mongo db"
+(let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
+      ^ServerAddress address(mg/server-address "localhost" 27017)
+      conn                  (mg/connect address options)
+      db                    (mg/get-db conn "test")]
+  db))
 
 (defn collection
   "Retrieve collection by name"

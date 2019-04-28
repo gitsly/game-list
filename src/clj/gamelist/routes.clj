@@ -5,15 +5,11 @@
             [compojure.handler :as handler]
             [compojure.route :refer [resources]]
             [ring.util.response :refer [response status]]
-            [gamelist.utils :refer [log now]]
+            [gamelist.utils :refer [log]]
             [gamelist.db :as db]
             [monger.collection :as mc]
+            [clj-time.core :as time]
             [buddy.auth :refer [authenticated? throw-unauthorized]]))
-
-;; Code taken from ring-json middleware impl.
-(defn json-request? [request]
-  (if-let [type (get-in request [:headers "content-type"])]
-    (not (empty? (re-find #"^application/(.+\+)?json" type)))))
 
 (log "------- Start -------")
 
@@ -24,12 +20,6 @@
   {:headers {"Content-Type" "application/json"}
    :body content})
 
-;; Sample 'full' game entry (for testing etc)
-(def test-game {:_id "5cb807a48749801ddbd35cbd", :name "Karlsa", :test "12",
-                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
-                         {:user "Anna", :value "7", :date "2019-12-21"}]})
-;; And it's insertion
-;; (mc/insert-and-return (db/connect) "games" (dissoc test-game :_id))
 
 ;;-----------------------------------------------------------------------------
 ;; Handlers
@@ -47,7 +37,7 @@
   (Thread/sleep 1000) ; fake some processing time
   (-> request
       :body
-      ;; (assoc :added (db/now))
+      (assoc :added (time/now))
       db/add-game
       json-response))
 
