@@ -8,28 +8,47 @@
            [org.joda.time DateTimeZone]))
 
 (defn connect []
-"Connect to mongo db"
-(let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-      ^ServerAddress address(mg/server-address "localhost" 27017)
-      conn                  (mg/connect address options)
-      db                    (mg/get-db conn "test")]
-  db))
+  "Connect to mongo db"
+  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
+        ^ServerAddress address(mg/server-address "localhost" 27017)
+        conn                  (mg/connect address options)
+        db                    (mg/get-db conn "test")]
+    db))
 
 (defn collection
   "Retrieve collection by name"
   [collection]
   (let [db (connect)
         result(mc/find db collection)]
-    result))
+    (-> result
+        seq)))
+
+;; (defn by-id
+;;   "Get in collection by id, return keywordized"
+;;   [collection oid]
+;;   (mc/find-one-as-map (connect) collection { :_id (ObjectId. oid)}))
+
+;; (-> "5cc45839874980367d40cd33"
+;;     (ObjectId.))
+
+;; (by-id "Users" "5cc45839874980367d40cd33")
+;; (user "David")
+
+(defn user
+  "Get single user (keywordized)"
+  [user]
+  (mc/find-one-as-map (connect) "users" {:user user}))
+
+
 
 (defn add-game
-  [game]
-  (mc/insert-and-return (connect) "games" game))
+[game]
+(mc/insert-and-return (connect) "games" game))
 
 (defn remove-game
-  [game]
-  (let [oid (-> game :_id (ObjectId.))]
-    (mc/remove-by-id (connect) "games" oid)))
+[game]
+(let [oid (-> game :_id (ObjectId.))]
+  (mc/remove-by-id (connect) "games" oid)))
 
 
 ;;------------------------------------------------------------------------------

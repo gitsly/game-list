@@ -1,5 +1,6 @@
 (ns gamelist.auth
   (:require [buddy.auth.backends :as backends]
+            [gamelist.db :as db]
             [gamelist.utils :refer [log]]))
 ;; http://funcool.github.io/buddy-auth/latest/
 
@@ -23,12 +24,19 @@
 ;;     (when (= password user-password)
 ;;       (keyword username))))
 
-(defn my-authfn
-  [request authdata]
-  (let [username (:username authdata)
-        password (:password authdata)]
-    (log "OldNewAuth: " username ", pass: " password)
-    username))
+
+(defn user-valid
+  [username password]
+  (log "auth attempt: " username ", pass: " password)
+  (let [lookup (:secret (db/user username))]
+    (if (= lookup password)
+      username)))
+
+(defn authfn
+[request authdata]
+(let [username (:username authdata)
+      password (:password authdata)]
+  (user-valid username password)))
 
 (def backend (backends/basic {:realm "MyApi"
-                              :authfn my-authfn}))
+                              :authfn authfn}))

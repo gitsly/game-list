@@ -29,7 +29,6 @@
   "Get games collection"
   [request]
   (-> (db/collection "games")
-      seq
       json-response))
 
 (defn add-game-handler
