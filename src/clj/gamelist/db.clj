@@ -1,7 +1,8 @@
 (ns gamelist.db
   (:require [monger.core :as mg]
             [monger.joda-time :as jt]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [clj-time.core :as time])
   (:import [com.mongodb MongoOptions ServerAddress]
            [org.bson.types ObjectId]
            [org.joda.time DateTimeZone]))
@@ -29,3 +30,24 @@
   [game]
   (let [oid (-> game :_id (ObjectId.))]
     (mc/remove-by-id (connect) "games" oid)))
+
+
+;;------------------------------------------------------------------------------
+;; Sample data
+;;------------------------------------------------------------------------------
+
+;; Sample 'full' game entry (for testing etc)
+(def test-game {:_id "5cb807a48749801ddbd35cbd",
+                :name "Karlsa",
+                :test "12",
+                :added (time/now)
+                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
+                         {:user "Anna", :value "7", :date "2019-12-21"}]})
+;; And it's insertion
+;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
+
+(def bullen-users [{:user "David" :secret "flink" }
+                   {:user "Anna" :secret "powermästare sill" }
+                   {:user "Simon" :secret "zander" }
+                   {:user "Martin" :secret "kristall katarina" :moredata {:strength "testas sub"}}])
+;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)

@@ -17,11 +17,14 @@
 ;; should return a value that can be considered a "user" instance
 ;; and should be a logical true.
 
+
 (defn my-authfn
-[request {:keys [username password]}]
-(when-let [user-password (get authdata (keyword username))]
-  (when (= password user-password)
-    (keyword username))))
+  [request {:keys [username password]}]
+  (log "Auth: " username ", pass: " password)
+
+  (when-let [user-password (get authdata (keyword username))]
+    (when (= password user-password)
+      (keyword username))))
 
 
 (def backend (backends/basic {:realm "MyApi"
