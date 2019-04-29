@@ -14,7 +14,7 @@
 
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
-(def add-game-text "Lo ")
+(def add-game-text "Add game")
 
 (def not-nil? (complement nil?))
 
@@ -23,7 +23,6 @@
 (defn rand-color
   []
   nil)
-
 
 (defn div-game-selected
   [game]
@@ -90,16 +89,18 @@
   [:div "Loading: " (str @loading)]))
 
 (defn main-panel []
-(let [name (rf/subscribe [::subs/name])]
-  [:div
-   [:h1 "Game list: " @name]
-   (div-game-list)
-   (div-add-game)
-   (div-loading)
-   [:div {:style {:background-color "#e0e0eb"}}
-    [:p "Test button"]
-    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-   ]))
+  (let [name (rf/subscribe [::subs/name])
+        user (rf/subscribe [::subs/user])]
+    [:div
+     [:h1 "Game list: " @name]
+     [:h2 "User: " @user]
+     (div-game-list)
+     (div-add-game)
+     (div-loading)
+     [:div {:style {:background-color "#e0e0eb"}}
+      [:p "Test button"]
+      [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
+     ]))
 
 
 

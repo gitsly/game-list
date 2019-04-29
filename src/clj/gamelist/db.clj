@@ -39,17 +39,14 @@
   [user]
   (mc/find-one-as-map (connect) "users" {:user user}))
 
-
-
 (defn add-game
-[game]
-(mc/insert-and-return (connect) "games" game))
+  [game]
+  (mc/insert-and-return (connect) "games" game))
 
 (defn remove-game
-[game]
-(let [oid (-> game :_id (ObjectId.))]
-  (mc/remove-by-id (connect) "games" oid)))
-
+  [game]
+  (let [oid (-> game :_id (ObjectId.))]
+    (mc/remove-by-id (connect) "games" oid)))
 
 ;;------------------------------------------------------------------------------
 ;; Sample data

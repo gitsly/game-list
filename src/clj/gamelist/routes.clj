@@ -26,19 +26,21 @@
 ;;-----------------------------------------------------------------------------
 
 (defn games-handler
-  "Get games collection"
+  "Get initial db state"
   [request]
-  (-> (db/collection "games")
+  (-> {:user (:identity request)
+       :games (db/collection "games")}
       json-response))
 
 (defn add-game-handler
-  [request]
-  (Thread/sleep 1000) ; fake some processing time
-  (-> request
-      :body
-      (assoc :added (time/now))
-      db/add-game
-      json-response))
+[request]
+;; (Thread/sleep 1000) ; fake some processing time
+(-> request
+    :body
+    (assoc :added (time/now))
+    (assoc :added-by (:identity request))
+    db/add-game
+    json-response))
 
 ;; Route handler for test button
 (defn test-handler
