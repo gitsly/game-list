@@ -25,7 +25,7 @@
 ;; Handlers
 ;;-----------------------------------------------------------------------------
 
-(defn games-handler
+(defn initial-state-handler
   "Get initial db state"
   [request]
   (-> {:user (:identity request)
@@ -98,9 +98,9 @@
      (-> request
          remove-game-handler))
 
-   (GET "/list/games" request
+   (GET "/list/initial" request
      (-> request
-         games-handler))
+         initial-state-handler))
 
 
    (GET "/list/test" request

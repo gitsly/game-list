@@ -20,19 +20,19 @@
 ;;   [part]
 ;;   (str "http://localhost:10555/" part))
 
-(defn get-all-games
+(defn get-initial-state
   []
   (go (let [response (<! (http/get "list/games"))]
-        (rf/dispatch [::get-all-games-response response]))))
+        (rf/dispatch [::initial-state-response response]))))
 
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
-   (get-all-games)
+   (get-initial-state)
    db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
- ::get-all-games-response 
+ ::initial-state-response 
  (fn
    [db [_ response]]
    (let [body (:body response)
