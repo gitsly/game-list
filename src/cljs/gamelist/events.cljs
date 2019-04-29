@@ -35,10 +35,9 @@
  ::get-all-games-response 
  (fn
    [db [_ response]]
-   (let [body (:body response)
-         games (:games body)
-         user (:user body)]
-     (println "client: get-all-games-response identity: " user)
+   (let [games (:games db)
+         games (:body response)]
+     (println "client: get-all-games-response: " games)
      (-> db
          (assoc :games games)))))
 

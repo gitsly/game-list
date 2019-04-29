@@ -28,9 +28,10 @@
 (defn games-handler
   "Get games collection"
   [request]
-  (-> {:games (db/collection "games")
-       :user (:identity request) }
-      json-response))
+  (let [games (db/collection "games")]
+    (-> [{:games games
+          :user "apan"}]
+        json-response)))
 
 (defn add-game-handler
   [request]
@@ -41,7 +42,7 @@
       db/add-game
       json-response))
 
-;; Route handler for test button
+  ;; Route handler for test button
 (defn test-handler
   [request]
   (-> {:hep "test" }
@@ -54,61 +55,61 @@
       db/remove-game)
   "done")
 
-(defn main-handler
-  [request]
-  (-> "public/index.html"
-      io/resource
-      io/input-stream
-      response
-      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+  (defn main-handler
+    [request]
+    (-> "public/index.html"
+        io/resource
+        io/input-stream
+        response
+        (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
-(defn login-handler
-  [request]
-  (let [ident (:identity request)]
-    (if-not (authenticated? request)
-      (throw-unauthorized)
-      (do
-        (log "Successfully logged in: " ident)
-        (main-handler request)))))
+  (defn login-handler
+    [request]
+    (let [ident (:identity request)]
+      (if-not (authenticated? request)
+        (throw-unauthorized)
+        (do
+          (log "Successfully logged in: " ident)
+          (main-handler request)))))
 
-(defn not-auth-handler
-  [request value]
-  (-> "public/noauth.html"
-      io/resource
-      io/input-stream
-      response
-      (assoc :status 403)))
+  (defn not-auth-handler
+    [request value]
+    (-> "public/noauth.html"
+        io/resource
+        io/input-stream
+        response
+        (assoc :status 403)))
 
-;;-----------------------------------------------------------------------------
-;; Define routing
-;;-----------------------------------------------------------------------------
+  ;;-----------------------------------------------------------------------------
+  ;; Define routing
+  ;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
   (routes
 
    (GET "/" request
-     (-> request
-         main-handler))
+        (-> request
+            main-handler))
 
    (PUT "/list/addgame" request
-     (-> request
-         add-game-handler))
+        (-> request
+            add-game-handler))
 
    (PUT "/list/removegame" request
-     (-> request
-         remove-game-handler))
+        (-> request
+            remove-game-handler))
 
    (GET "/list/games" request
-     (-> request
-         games-handler))
+        (-> request
+            games-handler))
 
 
    (GET "/list/test" request
-     (-> request
-         test-handler))
+        (-> request
+            test-handler))
 
    (GET "/login" request
-     (-> request
-         login-handler))
+        (-> request
+            login-handler))
 
    resources "/"))
 
