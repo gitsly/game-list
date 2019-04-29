@@ -28,7 +28,8 @@
 (defn games-handler
   "Get games collection"
   [request]
-  (-> (db/collection "games")
+  (-> {:games (db/collection "games")
+       :user (:identity request) }
       json-response))
 
 (defn add-game-handler
