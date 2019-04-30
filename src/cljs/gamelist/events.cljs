@@ -61,7 +61,9 @@
  (fn[db
      [event-name game]]
    (let [games (:games db)
-         id (:_id game)]
+         id (:_id game)
+         old-game (first (filter :selected games))]
+     (println "old selected game: " old-game)
      (println "set selected game: " id)
      (assoc db :games (select-game games id)))))
 
@@ -123,7 +125,8 @@
 (rf/reg-event-db
  ::set-rating
  (fn [db
-      [game rating]]
-   (println rating)
-   (-> db
-       (assoc :slider-test rating))))
+      [_ game rating]]
+   (println "Set rating: " rating " for game:" (:name game))
+   (let [rated-game nil]
+     (-> db
+         (assoc :rating rating)))))

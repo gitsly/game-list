@@ -39,7 +39,7 @@
       [slider
        :model     slider-val
        :min 0, :max 100, :step 1, :width "300px"
-       :on-change #(do (println "slider: " %)
+       :on-change #(do (rf/dispatch [::events/set-rating game %])
                        (reset! slider-val %))
        :disabled? false]]]))
 
