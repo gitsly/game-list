@@ -38,7 +38,7 @@
       {:class "game-rate" }
       [slider
        :model     slider-val
-       :min 0, :max 100, :step 1, :width "300px"
+       :min 0, :max 10, :step 1
        :on-change #(do (rf/dispatch [::events/set-rating game %])
                        (reset! slider-val %))
        :disabled? false]]]))
@@ -59,9 +59,9 @@
 (defn div-game-list
   []
   (let [games (rf/subscribe [::subs/games])]
-    [:div
-     (for [game @games]
-       ^{:key (:_id game)} [:div (div-game-common game)])]))
+    [h-box
+     :children [(for [game @games]
+                  ^{:key (:_id game)} [:div (div-game-common game)])]]))
 
 (defn div-add-game
 []
