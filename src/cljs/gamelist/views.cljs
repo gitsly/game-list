@@ -14,7 +14,7 @@
 
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
-(def add-game-text "Lo ")
+(def add-game-text "Add game")
 
 (def not-nil? (complement nil?))
 
@@ -48,9 +48,11 @@
 
 (defn div-game
   [game]
-  [:div
-   {:class "game"
-    :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)])
+  [h-box
+   :height "20px"
+   :width "120px"
+   :children [[:div {:class "game"
+                     :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
 (defn div-game-common
   "Display common game content"
@@ -62,9 +64,9 @@
 (defn div-game-list
   []
   (let [games (rf/subscribe [::subs/games])]
-    [:div
-     (for [game @games]
-       ^{:key (:_id game)} [:div (div-game-common game)])]))
+    [v-box
+     :children [(for [game @games]
+                  ^{:key (:_id game)} [:div (div-game-common game)])]]))
 
 (defn div-add-game
 []
