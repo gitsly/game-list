@@ -126,7 +126,9 @@
  ::set-rating
  (fn [db
       [_ game rating]]
-   (println "Set rating: " rating " for game:" (:name game))
-   (let [rated-game nil]
-     (-> db
-         (assoc :rating rating)))))
+   (let [user (:user db)
+         rating-info {:value rating
+                      :user user }
+         rated-game (assoc game :rating rating-info)]
+     (println user " rated: " rated-game)
+     (-> db))))
