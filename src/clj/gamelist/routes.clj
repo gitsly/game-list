@@ -26,7 +26,7 @@
 ;;-----------------------------------------------------------------------------
 
 (defn games-handler
-  "Get games collection"
+  "Get games collection, for some strange reason leaving out the outer [] in the json causes repl jack-in timout would work if evaling online!"
   [request]
   (let [games (db/collection "games")]
     (-> [{:games games
