@@ -24,3 +24,16 @@
 ;;------------------------------------------------------------------------------
 
 (when-let [apa 1] apa)
+
+;; Ideomatic way of updating specific item in clojure.
+;; https://www.reddit.com/r/Clojure/comments/7wgjty/idiomatic_way_to_find_and_update_an_element_in/
+(def users [{:name "James" :age 26}  {:name "John" :age 43}])
+;; cheat with javas indexof
+(def selected-user (first (filter #(= "John" (:name %)) users)))
+(update users (.indexOf users selected-user) assoc :age 8)
+
+;; Better would prob be to use a hash-map instead
+(def users2 {"James" {:name "James" :age 26}
+             "John" {:name "John" :age 43}})
+;;You can then use assoc-in
+(assoc-in users2 ["John" :age] 8)
