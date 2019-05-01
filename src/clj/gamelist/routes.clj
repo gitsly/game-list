@@ -30,7 +30,7 @@
   [request]
   (let [games (db/collection "games")]
     (-> [{:games games
-          :user "apan"}]
+          :user (:identity request)}]
         json-response)))
 
 (defn add-game-handler

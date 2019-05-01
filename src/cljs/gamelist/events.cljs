@@ -40,6 +40,7 @@
          user (:user body)]
      (println "client: get-all-games-response: " games ", User:" user)
      (-> db
+         (assoc :user user)
          (assoc :games games)))))
 
 (rf/reg-event-db
