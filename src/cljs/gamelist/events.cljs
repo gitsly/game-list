@@ -124,7 +124,10 @@
 (rf/reg-event-db
  ::set-rating
  (fn [db
-      [game rating]]
-   (println rating)
-   (-> db
-       (assoc :slider-test rating))))
+      [_ game rating]]
+   (let [user (:user db)
+         rating-info {:value rating
+                      :user user }
+         rated-game (assoc game :rating rating-info)]
+     (println user " rated: " rated-game)
+     (-> db))))
