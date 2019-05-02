@@ -56,16 +56,12 @@
 
 (defn make-hash
   [games]
-  (-> (map #(let [game %]
-              {(:name game) game })
-           games)))
+  (zipmap (map #(:name %) games) games))
 
+;; (apply + [1 2 3 4])
 (-> some-games make-hash)
 
-(hash-set 1 2 3)
-{1 nil 2 nil 3 nil}
-
-(assoc-in (make-hash some-games) ["TimeCops" :added] "2019-04-27")
+(println (assoc-in (make-hash some-games) ["TimeCops" :added] "2011-04-27"))
 
 ;;------------------------------------------------------------------------------
 
