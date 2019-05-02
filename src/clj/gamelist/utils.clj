@@ -22,50 +22,57 @@
 ;;------------------------------------------------------------------------------
 ;; To learn
 ;;------------------------------------------------------------------------------
+(comment
 
-(when-let [apa 1] apa)
+  (when-let [apa 1] apa)
 
-;; Ideomatic way of updating specific item in clojure.
-;; https://www.reddit.com/r/Clojure/comments/7wgjty/idiomatic_way_to_find_and_update_an_element_in/
-(def users [{:name "James" :age 26}  {:name "John" :age 43}])
-;; cheat with javas indexof
-(def selected-user (first (filter #(= "John" (:name %)) users)))
-(update users (.indexOf users selected-user) assoc :age 8)
+  ;; Ideomatic way of updating specific item in clojure.
+  ;; https://www.reddit.com/r/Clojure/comments/7wgjty/idiomatic_way_to_find_and_update_an_element_in/
+  (def users [{:name "James" :age 26}  {:name "John" :age 43}])
+  ;; cheat with javas indexof
+  (def selected-user (first (filter #(= "John" (:name %)) users)))
+  (update users (.indexOf users selected-user) assoc :age 8)
 
-;; Better would prob be to use a hash-map instead
-(def users2 {"James" {:name "James" :age 26}
-             "John" {:name "John" :age 43}})
+  ;; Better would prob be to use a hash-map instead
+  (def users2 {"James" {:name "James" :age 26}
+               "John" {:name "John" :age 43}})
 
-;;You can then use assoc-in
-(assoc-in users2 ["John" :age] 8)
-
-
+  ;;You can then use assoc-in
+  (assoc-in users2 ["John" :age] 8)
 
 
-;; Lets build the hash-map
-(def some-games [{:_id "5cbc18df8749801ddbd35d49", :name "Alchemists", :rating [{:user "Martin", :value 4, :date "2019-12-20"}
-                                                                                {:user "Anna", :value 7, :date "2019-12-21"}]}
-                 {:_id "5cbe05788749801ab5520635", :name "Peleponnies"}
-                 {:_id "5cbf74b58749804098663fce", :name "Agricola"}
-                 {:_id "5cc3e7718749802ff873aa7a", :name "Threader"}
-                 {:_id "5cc3f2c2874980367d40cd18", :name "TimeCops", :added "2019-04-27T06:12:18Z" }])
 
-(map #(let [game %]
-        {(:name game) game })
-     some-games)
 
-(defn make-hash
-  [games]
-  (zipmap (map #(:name %) games) games))
+  ;; Lets build the hash-map
+  (def some-games [{:_id "5cbc18df8749801ddbd35d49", :name "Alchemists", :rating [{:user "Martin", :value 4, :date "2019-12-20"}
+                                                                                  {:user "Anna", :value 7, :date "2019-12-21"}]}
+                   {:_id "5cbe05788749801ab5520635", :name "Peleponnies"}
+                   {:_id "5cbf74b58749804098663fce", :name "Agricola"}
+                   {:_id "5cc3e7718749802ff873aa7a", :name "Threader"}
+                   {:_id "5cc3f2c2874980367d40cd18", :name "TimeCops", :added "2019-04-27T06:12:18Z" }])
 
-;; (apply + [1 2 3 4])
-(-> some-games make-hash)
+  (map #(let [game %]
+          {(:name game) game })
+       some-games)
 
-(println (assoc-in (make-hash some-games) ["TimeCops" :added] "2011-04-27"))
+  (defn make-hash
+    [games]
+    (zipmap (map #(:name %) games) games))
 
-;;------------------------------------------------------------------------------
+  (-> (zipmap (map #(:name %) some-games) some-games)
+      (assoc-in ["TimeCops" :added] "2011-04-27")
+      vals)
 
-(defn make-entry
-  [game]
-  {(:name game) game})
-(map #(make-entry %) some-games)
+  ;; (apply + [1 2 3 4])
+  (-> some-games make-hash)
+
+  (println (assoc-in (make-hash some-games) ["TimeCops" :added] "2011-04-27"))
+
+  ;;------------------------------------------------------------------------------
+
+  (defn make-entry
+    [game]
+    {(:name game) game})
+  (map #(make-entry %) some-games)
+
+  ); EndComment

@@ -125,10 +125,13 @@
 (rf/reg-event-db
  ::set-rating
  (fn [db
-      [_ game rating]]
+      [_ game value]]
    (let [user (:user db)
-         rating-info {:value rating
-                      :user user }
-         rated-game (assoc game :rating rating-info)]
-     (println user " rated: " rated-game)
-     (-> db))))
+         game-id (:_id game)
+         games (:games db)
+         rating {user { :value value }}
+         new-game-list (-> (zipmap (map #(:_id %) games) games)
+                           (assoc-in [game-id :rating] rating)
+                           vals)]
+     (-> db
+         (assoc :games new-game-list)))))
