@@ -42,6 +42,8 @@
                                  (reset! slider-val %))
                  :disabled? false]]]))
 
+;; (rf/dispatch [::events/set-rating game %])
+
 (defn div-game
   [game]
   [h-box
@@ -112,7 +114,7 @@
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-(map #(zipmap [:digit :letter] [% %2]) a b))
+  (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
