@@ -30,27 +30,21 @@
   (let [id (:_id game)
         name (:name game)
         slider-val (reagent/atom 50)]
-    [:div {:class "game-selected"}
-     name
-     [:div
-      {:class "game-remove"
-       :on-click #(rf/dispatch [::events/remove-selected-game game])}
-      remove-game-text]
-     [:div
-      {:class "game-rate" }
-      [slider
-       :model     slider-val
-       :min 0, :max 100, :step 10, :width "300px"
-       :on-change #(do (rf/dispatch [::events/set-rating game %])
-                       (reset! slider-val %))
-       :disabled? false]]
-     ]))
+    [h-box
+     :children [[box :child name]
+                [:p {:class "game-remove"
+                     :on-click #(rf/dispatch [::events/remove-selected-game game])}
+                 remove-game-text]
+                [slider
+                 :model     slider-val
+                 :min 0, :max 100, :step 10
+                 :on-change #(do (rf/dispatch [::events/set-rating game %])
+                                 (reset! slider-val %))
+                 :disabled? false]]]))
 
 (defn div-game
   [game]
   [h-box
-   :height "20px"
-   :width "120px"
    :children [[:div {:class "game"
                      :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
@@ -69,52 +63,62 @@
                   ^{:key (:_id game)} [:div (div-game-common game)])]]))
 
 (defn div-add-game
-[]
-[:div {:id "the-div" :style {:background-color "#f3e0bb"}}
+  []
+  [:div {:id "the-div" :style {:background-color "#f3e0bb"}}
 
- [:input {:id "the-input" :class "text"}]
- [:button
-  {:on-click
-   ;; Note, the .-target property refers to the event (javascript)
-   #(rf/dispatch [::events/add-game
-                  (-> %
-                      .-target
-                      .-parentNode
-                      (.querySelector "#the-input")
-                      .-value)])}
-  add-game-text]
- ])
+   [:input {:id "the-input" :class "text"}]
+   [:button
+    {:on-click
+     ;; Note, the .-target property refers to the event (javascript)
+     #(rf/dispatch [::events/add-game
+                    (-> %
+                        .-target
+                        .-parentNode
+                        (.querySelector "#the-input")
+                        .-value)])}
+    add-game-text]
+   ])
 
 (defn div-loading
-[]
-(let [loading (rf/subscribe [::subs/loading?])
-      games (rf/subscribe [::subs/games])]
-  [:div "Loading: " (str @loading)]))
+  []
+  (let [loading (rf/subscribe [::subs/loading?])
+        games (rf/subscribe [::subs/games])]
+    [:div "Loading: " (str @loading)]))
+
+(comment
+  (defn main-panel []
+    (let [name (rf/subscribe [::subs/name])]
+      [v-box
+       :children [[:h1 "Game list: " @name]
+                  (div-game-list)
+                  (div-add-game)
+                  (div-loading)
+                  [h-box :children ["apan " "bepan " "cepan "]]]])))
+
 
 (defn main-panel []
-(let [name (rf/subscribe [::subs/name])]
-  [:div
-   [:h1 "Game list: " @name]
-   (div-game-list)
-   (div-add-game)
-   (div-loading)
-   [:div {:style {:background-color "#e0e0eb"}}
-    [:p "Test button"]
-    [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]] ; Button should change @name
-   ]))
+  [v-box
+   :children [[box :child "Header"]
+              [h-box
+               :height "100px"
+               :children [[box :size "70px" :child "Nav"]
+                          [box :size "1" :child "Content"]]]
+              [box :child "Footer"]]])
 
 
-
+;; [:p "Test button"]
+;; [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]
+;; ]]
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-(map #(zipmap [:digit :letter] [% %2]) a b))
+  (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
       [only-a only-b both] (clojure.data/diff a b)]
-  both)
+both)
 
 
 (let [id 1
@@ -122,5 +126,5 @@
             {:id 1 :name "alice"}
             {:id 2 :name "lisa"}]
       modded (remove #(= id (:id %)) data)]
-  modded
-  )
+modded
+)
