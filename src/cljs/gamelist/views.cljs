@@ -85,27 +85,26 @@
         games (rf/subscribe [::subs/games])]
     [:div "Loading: " (str @loading)]))
 
+(defn main-panel []
+  (let [name (rf/subscribe [::subs/name])]
+    [v-box
+     :children [[:h1 "Game list: " @name]
+                (div-game-list)
+                (div-add-game)
+                (div-loading)
+                [h-box :children ["apan " "bepan " "cepan "]]]]))
+
+
 (comment
   (defn main-panel []
-    (let [name (rf/subscribe [::subs/name])]
-      [v-box
-       :children [[:h1 "Game list: " @name]
-                  (div-game-list)
-                  (div-add-game)
-                  (div-loading)
-                  [h-box :children ["apan " "bepan " "cepan "]]]])))
-
-
-(defn main-panel []
-  [v-box
-   :children [[box :child "Header"]
-              [h-box
-               :height "100px"
-               :children [[box :size "70px" :child "Nav"]
-                          [box :size "1" :child "Content"]]]
-              [box :child "Footer"]]])
-
-
+    [v-box
+     :children [[box :child "Header"]
+                [h-box
+                 :height "100px"
+                 :children [[box :size "70px" :child "Nav"]
+                            [box :size "1" :child "Content"]]]
+                [box :child "Footer"]]])
+  )
 ;; [:p "Test button"]
 ;; [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]
 ;; ]]
@@ -113,7 +112,7 @@
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-  (map #(zipmap [:digit :letter] [% %2]) a b))
+(map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
