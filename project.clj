@@ -41,7 +41,7 @@
 
   :test-paths ["test/clj" "test/cljc"]
 
-  :clean-targets ^{:protect false} [:target-path :compile-path "resources/public/js" "dev-target"]
+  :clean-targets ^{:protect false} [:target-path :compile-path "resources/public/js"]
 
   :uberjar-name "gamelist.jar"
 
@@ -61,8 +61,8 @@
 
                 :compiler {:main cljs.user
                            :asset-path "js/compiled/out"
-                           :output-to "dev-target/public/js/compiled/gamelist.js"
-                           :output-dir "dev-target/public/js/compiled/out"
+                           :output-to "resources/public/js/compiled/gamelist.js"
+                           :output-dir "resources/public/js/compiled/out"
                            :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
                            :preloads             [day8.re-frame-10x.preload]
                            ;; document.querySelector('#--re-frame-10x--') ->
@@ -71,7 +71,7 @@
 
                {:id "test"
                 :source-paths ["src/cljs" "test/cljs" "src/cljc" "test/cljc"]
-                :compiler {:output-to "dev-target/public/js/compiled/testable.js"
+                :compiler {:output-to "resources/public/js/compiled/testable.js"
                            :main gamelist.test-runner
                            :optimizations :none}}
 

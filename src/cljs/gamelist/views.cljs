@@ -7,7 +7,7 @@
   [v-box
    :style {:background-color "#AAAAAA" }
    :gap "2px"
-   :children [[box :child "Header"]
+   :children [[box :child "Da Main header"]
               [h-box
                :style {:background-color "#AAAAFF" }
                :height "100px"

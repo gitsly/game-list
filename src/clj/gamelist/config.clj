@@ -52,6 +52,7 @@
 
 ;;------------------------------------------------------------------------------
 
+;; Strange, flexbox seems to work at 3449 now...
 (defn config []
   {:http-port  (Integer. (or (env :port) 10555))
    :middleware [[wrap-defaults api-defaults]
