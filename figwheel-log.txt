@@ -1,0 +1,17 @@
+Warning: implicit hook found: lein-environ.plugin/hooks 
+Hooks are deprecated and will be removed in a future version.
+Figwheel: Cutting some fruit, just a sec ...
+WARNING: any? already refers to: #'clojure.core/any? in namespace: monger.collection, being replaced by: #'monger.collection/any?
+Figwheel: Validating the configuration found in project.clj
+Figwheel: Configuration Valid ;)
+Figwheel: Starting server at http://0.0.0.0:3449
+Figwheel: Watching build - app
+Figwheel: Cleaning build - app
+Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from ["src/cljs" "src/cljc" "dev"]...
+WARNING: Use of undeclared Var gamelist.games/agricola at line 5 /home/mco/code/clojure/gamelist/src/cljs/gamelist/games.cljs
+WARNING: var: cljs.tools.reader/read-token is not public at line 181 dev-target/public/js/compiled/out/rewrite_clj/reader.cljs
+WARNING: var: rewrite-clj.reader/whitespace? is not public at line 149 dev-target/public/js/compiled/out/rewrite_clj/parser/core.cljs
+Successfully compiled build :app to "dev-target/public/js/compiled/gamelist.js" in 23.333 seconds.
+Figwheel: Starting CSS Watcher for paths  ["resources/public/css"]
+Launching ClojureScript REPL for build: app
+
