@@ -42,13 +42,13 @@
 
 
 (defn add-game
-[game]
-(mc/insert-and-return (connect) "games" game))
+  [game]
+  (mc/insert-and-return (connect) "games" game))
 
 (defn remove-game
-[game]
-(let [oid (-> game :_id (ObjectId.))]
-  (mc/remove-by-id (connect) "games" oid)))
+  [game]
+  (let [oid (-> game :_id (ObjectId.))]
+    (mc/remove-by-id (connect) "games" oid)))
 
 
 ;;------------------------------------------------------------------------------
@@ -70,3 +70,18 @@
                    {:user "Simon" :secret "zander" }
                    {:user "Martin" :secret "kristall katarina" :moredata {:strength "testas sub"}}])
 ;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)
+
+;;------------------------------------------------------------------------------
+;; Real life data
+;;------------------------------------------------------------------------------
+
+;; Time is in hours
+(count [{:date "2019-05-03"
+         :game "Alchemists"
+         :time 4.0
+         :participants ["David" "Anna" "Simon" "Martin"]}
+        {:date "2019-05-03"
+         :game "Tiny epic defenders"
+         :time 1.0
+         :participants ["David" "Anna" "Simon" "Martin"]}
+        ])
