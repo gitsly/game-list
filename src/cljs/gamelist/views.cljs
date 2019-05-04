@@ -122,6 +122,9 @@
                  :child "Footer"]]]))
 
 
+;; Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from
+;; ["src/cljs" "src/cljc" "dev"]...
+
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
