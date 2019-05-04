@@ -11,5 +11,11 @@
 
 (defn main-panel
   []
-  [:p "Test"])
+  [v-box
+   :children [[box :child "Header"]
+              [h-box
+               :height "100px"
+               :children [[box :size "70px" :child "Nav"]
+                          [box :size "1" :child "Content"]]]
+              [box :child "Footer"]]])
 
