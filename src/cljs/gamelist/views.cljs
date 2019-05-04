@@ -5,7 +5,7 @@
    [gamelist.events :as events]
    [goog.object :as gobject]
    [clojure.string :as string]
-   [re-com.core   :refer [h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
+   [re-com.core   :refer [button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
 
@@ -87,29 +87,41 @@
         games (rf/subscribe [::subs/games])]
     [:div "Loading: " (str @loading)]))
 
-(defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
-    [v-box
-     :children [[:h1 "Game list: " @name]
-                (div-game-list)
-                (div-add-game)
-                (div-loading)
-                [h-box :children ["apan " "bepan " "cepan "]]]]))
 
+;; (defn main-panel []
+;;   (let [name (rf/subscribe [::subs/name])]
+;;     [v-box
+;;      :children [[:h1 "Game list: " @name]
+;;                 (div-game-list)
+;;                 (div-add-game)
+;;                 (div-loading)
+;;                 [v-box :children ["apan " "bepan " "cepan "]]]]))
 
-(comment
-  (defn main-panel []
+(defn main-panel
+  []
+  (let [name (rf/subscribe [::subs/name])
+        games (rf/subscribe [::subs/games])
+        game (first @games)]
     [v-box
-     :children [[box :child "Header"]
+     :style {:background-color "#AAAAAA" }
+     :gap "2px"
+     :children [[box :child (str "Test:" @name) ]
                 [h-box
+                 :style {:background-color "#AAAAFF" }
                  :height "100px"
+
                  :children [[box :size "70px" :child "Nav"]
-                            [box :size "1" :child "Content"]]]
-                [box :child "Footer"]]])
-  )
-;; [:p "Test button"]
-;; [:button  {:on-click #(rf/dispatch [::events/test "Bullen"])} "Test"]
-;; ]]
+                            [button
+                             :label "Test"
+                             :on-click #(rf/dispatch [::events/test "Bullen"])]
+                            [box
+                             :style {:background-color "#AAFFAA" }
+                             :size "1" :child "Content"]]]
+                [box
+                 :style {:background-color "#FFAAAA" }
+                 :child "Footer"]]]))
+
+
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
@@ -117,15 +129,15 @@
   (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
-      b {:name "ninja" :stamina 15 }
-      [only-a only-b both] (clojure.data/diff a b)]
+b {:name "ninja" :stamina 15 }
+[only-a only-b both] (clojure.data/diff a b)]
 both)
 
 
 (let [id 1
-      data [{:id 0 :name "bength"}
-            {:id 1 :name "alice"}
-            {:id 2 :name "lisa"}]
-      modded (remove #(= id (:id %)) data)]
+data [{:id 0 :name "bength"}
+      {:id 1 :name "alice"}
+      {:id 2 :name "lisa"}]
+modded (remove #(= id (:id %)) data)]
 modded
 )
