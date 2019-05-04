@@ -15,11 +15,13 @@
   (let [config (config)]
     (assoc (gamelist.application/app-system config)
            :middleware (new-middleware
-                        {:middleware (into [[wrap-file "dev-target/public"]]
+                        {:middleware (into [[wrap-file "dev-target/public"]
+                                            ;; [wrap-file "dev-target/public"]
+                                            ]
                                            (:middleware config))})
            :figwheel-system (fw-sys/figwheel-system (fw-config/fetch-config))
            :css-watcher (fw-sys/css-watcher {:watch-paths ["resources/public/css"]})
-    :garden-watcher (new-garden-watcher ['gamelist.styles]))))
+           :garden-watcher (new-garden-watcher ['gamelist.styles]))))
 
 (reloaded.repl/set-init! #(dev-system))
 
