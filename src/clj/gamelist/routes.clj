@@ -87,29 +87,29 @@
   (routes
 
    (GET "/" request
-        (-> request
-            main-handler))
+     (-> request
+         main-handler))
 
    (PUT "/list/addgame" request
-        (-> request
-            add-game-handler))
+     (-> request
+         add-game-handler))
 
    (PUT "/list/removegame" request
-        (-> request
-            remove-game-handler))
+     (-> request
+         remove-game-handler))
 
    (GET "/list/games" request
-        (-> request
-            games-handler))
+     (-> request
+         games-handler))
 
 
    (GET "/list/test" request
-        (-> request
-            test-handler))
+     (-> request
+         test-handler))
 
    (GET "/login" request
-        (-> request
-            login-handler))
+     (-> request
+         login-handler))
 
    resources "/"))
 

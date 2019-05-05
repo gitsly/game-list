@@ -6,6 +6,7 @@
             [reloaded.repl :refer [system init]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.file :refer [wrap-file]]
+            [ring.middleware.resource :refer [wrap-resource]]
             [system.components.middleware :refer [new-middleware]]
             [figwheel-sidecar.repl-api :as figwheel]
             [garden-watcher.core :refer [new-garden-watcher]]
@@ -16,7 +17,7 @@
     (assoc (gamelist.application/app-system config)
            :middleware (new-middleware
                         {:middleware (into [[wrap-file "dev-target/public"]
-                                            ;; [wrap-file "dev-target/public"]
+                                            ;; [wrap-resource "dev-target/public"]
                                             ]
                                            (:middleware config))})
            :figwheel-system (fw-sys/figwheel-system (fw-config/fetch-config))
