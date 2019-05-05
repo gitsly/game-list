@@ -112,22 +112,21 @@
             id  (:id item)]
 
         (println "Render-" id ": " @mouse-over?)
-        ^{:key id} [:div
-                    ;; {:style (when @mouse-over? {:font-weight "bold"})
-                    {:style
-                     {:color (when @mouse-over? "#ff0000")}
+        [:div
+         ;; {:style (when @mouse-over? {:font-weight "bold"})
+         {:style
+          {:color (when @mouse-over? "#ff0000")}
 
-                     :on-mouse-over #(reset! mouse-over? true)
-                     :on-mouse-out #(reset! mouse-over? false)}
-                    label]))))
-
+          :on-mouse-over #(reset! mouse-over? true)
+          :on-mouse-out #(reset! mouse-over? false)}
+         label]))))
 
 
 (defn navigation-panel
   []
   (let [items panels]
     [v-box :children [(for [item items]
-                        [nav-item item])]]))
+                        ^{:key (:id item)} [nav-item item])]]))
 
 (defn main-panel
 []
