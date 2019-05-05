@@ -39,6 +39,7 @@
   (let [id (:_id game)
         name (:name game)
         delete-icon "zmdi-delete"
+        save-icon "zmdi-save"
         slider-val (reagent/atom 50)]
     [h-box
      ;; :padding "2px"
@@ -48,9 +49,13 @@
                  :width  "100px"
                  :model  slider-val
                  :min 0, :max 100, :step 10
-                 :on-change #(do (rf/dispatch [::events/set-rating game %])
-                                 (reset! slider-val %))
+                 :on-change #(reset! slider-val %)
                  :disabled? false]
+                [md-icon-button
+                 :md-icon-name save-icon
+                 :tooltip      "Spara"
+                 :size         :smaller
+                 :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
                 [md-icon-button
                  :md-icon-name delete-icon
                  :tooltip      "Ta bort spel"

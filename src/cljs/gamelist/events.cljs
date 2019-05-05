@@ -130,15 +130,16 @@
         (assoc :games pruned-games)))))
 
 (rf/reg-event-db
-::set-rating
-(fn [db
-     [_ game value]]
-  (let [user (:user db)
-        game-id (:_id game)
-        games (:games db)
-        rating {user { :value value }}
-        new-game-list (-> (zipmap (map #(:_id %) games) games)
-                          (assoc-in [game-id :rating] rating)
-                          vals)]
-    (-> db
-        (assoc :games new-game-list)))))
+ ::set-rating
+ (fn [db
+      [_ game value]]
+   (println "Rate game: " value) 
+   (let [user (:user db)
+         game-id (:_id game)
+         games (:games db)
+         rating {user { :value value }}
+         new-game-list (-> (zipmap (map #(:_id %) games) games)
+                           (assoc-in [game-id :rating] rating)
+                           vals)]
+     (-> db
+         (assoc :games new-game-list)))))
