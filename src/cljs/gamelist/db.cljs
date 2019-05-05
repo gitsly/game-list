@@ -8,7 +8,7 @@
         names games/game-list]
     (map #(zipmap [:id :name] [%1 %2]) indices names)))
 
-(def panels [:games, :add-game])
+(def panels [{:id 1 :name "Game list"}])
 
 (def default-db
   {:name "Bullen"

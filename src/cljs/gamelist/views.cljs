@@ -107,38 +107,56 @@
                  :style {:background-color "#FFAAAA" }
                  :child "Footer"]]]))
 
+;;--------------------------------------------------------------------------------
+;; Panels
+;;--------------------------------------------------------------------------------
+(defn about-panel
+  []
+  [box :child "Game list"])
+
+(defn games-panel
+  []
+  [box :child "Game list"])
+
+
+;; Vector of all panels
+(def panels [{:id 1 :name "Game list" :render games-panel }
+             {:id 2 :name "About" :render about-panel }])
+
+(defn nav-item
+  [item]
+  [box :child (:name item)])
+
 (defn navigation-panel
   []
-  [v-box :children [[box :child "Add game"]
-                    [box :child "da"]
-                    [box :child "opsda"]
-                    [box :child "asda"]
-                    ]])
+  (let [items panels]
+    [v-box :children [(for [item items]
+                        ^{:key (:id item)} (nav-item item))]]))
 
 (defn main-panel
-  []
-  (let [selected-panel (rf/subscribe [::subs/panel])]
-    [h-split
-     ;; Outer-most box height must be 100% to fill the entrie client height.
-     ;; This assumes that height of <body> is itself also set to 100%.
-     ;; width does not need to be set.
-     :height   "100%"
-     :initial-split 9
-     :margin "0px"
-     :panel-1 [scroller
-               :v-scroll :auto
-               :h-scroll :off
-               :child [v-box
-                       :size "1"
-                       :children [[box :child "Title"]
-                                  (navigation-panel)]]]
-     :panel-2 [scroller
-               :attr  {:id "right-panel"}
-               :child [v-box
-                       :size  "1"
-                       :children [[box
-                                   :padding "0px 0px 0px 50px"
-                                   :child "he"]]]]]))
+[]
+(let [selected-panel (rf/subscribe [::subs/panel])]
+  [h-split
+   ;; Outer-most box height must be 100% to fill the entrie client height.
+   ;; This assumes that height of <body> is itself also set to 100%.
+   ;; width does not need to be set.
+   :height   "100%"
+   :initial-split 9
+   :margin "0px"
+   :panel-1 [scroller
+             :v-scroll :auto
+             :h-scroll :off
+             :child [v-box
+                     :size "1"
+                     :children [[box :child "Title"]
+                                (navigation-panel)]]]
+   :panel-2 [scroller
+             :attr  {:id "right-panel"}
+             :child [v-box
+                     :size  "1"
+                     :children [[box
+                                 :padding "0px 0px 0px 50px"
+                                 :child "he"]]]]]))
 
 
 ;; Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from
@@ -148,7 +166,7 @@
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-  (map #(zipmap [:digit :letter] [% %2]) a b))
+(map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
