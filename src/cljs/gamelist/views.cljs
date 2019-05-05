@@ -5,7 +5,9 @@
    [gamelist.events :as events]
    [goog.object :as gobject]
    [clojure.string :as string]
-   [re-com.core   :refer [scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
+   [re-com.core
+    :refer [scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
+    :refer-macros [handler-fn]]
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
 
@@ -106,7 +108,13 @@
   (let [label (:name item)
         id  (:id item)
         mouse-over? (reagent/atom false)]
-    ^{:key id} [box :child label]))
+    ^{:key id} [:div
+                {
+                 :on-mouse-over (handler-fn((println "hepp" id)
+                                            reset! mouse-over? true))
+                 :on-mouse-out (handler-fn (reset! mouse-over? false))
+                 }
+                label]))
 
 (defn navigation-panel
   []
