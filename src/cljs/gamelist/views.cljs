@@ -82,31 +82,6 @@
      :on-change        #((rf/dispatch [::events/add-game %])
                          (reset! text-val %))]))
 
-(defn main-panel2
-  []
-  (let [name (rf/subscribe [::subs/name])
-        games (rf/subscribe [::subs/games])
-        game (first @games)]
-    [v-box
-     :style {:background-color "#AAAAAA" }
-     :gap "2px"
-     :children [[box :child (str "Haha:" @name) ]
-                [h-box
-                 :style {:background-color "#AAAAFF" }
-                 :height "100px"
-                 :children [[box :size "70px" :child "Nav"]
-                            [label :label "[input-textarea ... ]"]
-                            (add-game-box)
-                            [button
-                             :label "Test"
-                             :on-click #(rf/dispatch [::events/test "Bullen"])]
-                            [box
-                             :style {:background-color "#AAFFAA" }
-                             :size "1" :child "Content2"]]]
-                [box
-                 :style {:background-color "#FFAAAA" }
-                 :child "Footer"]]]))
-
 ;;--------------------------------------------------------------------------------
 ;; Panels
 ;;--------------------------------------------------------------------------------
@@ -130,7 +105,8 @@
   [item]
   (let [mouse-over? (reagent/atom false)
         selected? (reagent/atom false)
-        selected-tab-id (reagent/atom 2)]
+        selected-tab-id (reagent/atom 2)
+        id (reagent/atom (:id item))]
     [:div { :style {:white-space      "nowrap"
                     :line-height      "1.3em"
                     :padding-left     "32px"
@@ -141,7 +117,8 @@
                                            @mouse-over?) "#eaeaea")}
            :on-mouse-over #(reset! mouse-over? true)
            :on-mouse-out  #(reset! mouse-over? false)
-           :on-click      #(reset! selected-tab-id (:id item))
+           :on-click      #((println "Click on: " id)
+                            (reset! selected-tab-id id))
            :key (:id item)
            }
 
@@ -153,11 +130,12 @@
   []
   (let [items panels]
     [v-box :children [(for [item items]
-                        ^{:key (:id item)} (nav-item item))]]))
+                        (nav-item item))]]))
 
 (defn main-panel
   []
-  (let [selected-panel (rf/subscribe [::subs/panel])]
+  (let [selected-panel (rf/subscribe [::subs/panel])
+        page-name (rf/subscribe [::subs/name])]
     [h-split
      ;; Outer-most box height must be 100% to fill the entrie client height.
      ;; This assumes that height of <body> is itself also set to 100%.
@@ -170,7 +148,7 @@
                :h-scroll :off
                :child [v-box
                        :size "1"
-                       :children [[box :child "Title"]
+                       :children [[box :style {:font-weight "bold"} :child @page-name]
                                   (navigation-panel)]]]
      :panel-2 [scroller
                :attr  {:id "right-panel"}
@@ -178,7 +156,7 @@
                        :size  "1"
                        :children [[box
                                    :padding "0px 0px 0px 50px"
-                                   :child "he"]]]]]))
+                                   :child "TODO: Selected panel content"]]]]]))
 
 
 ;; Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from
