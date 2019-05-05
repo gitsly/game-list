@@ -24,43 +24,40 @@
   nil)
 
 
-(defn div-game-selected
+(defn game-selected-box
   [game]
   (let [id (:_id game)
         name (:name game)
         slider-val (reagent/atom 50)]
     [h-box
+     :padding "2px"
+     :gap "12px"
      :children [[box :child name]
-                [:p {:class "game-remove"
-                     :on-click #(rf/dispatch [::events/remove-selected-game game])}
-                 remove-game-text]
                 [slider
-                 :model     slider-val
+                 :width  "100px"
+                 :model  slider-val
                  :min 0, :max 100, :step 10
                  :on-change #(do (rf/dispatch [::events/set-rating game %])
                                  (reset! slider-val %))
-                 :disabled? false]]]))
+                 :disabled? false]
+                [:p {:class "game-remove"
+                     :on-click #(rf/dispatch [::events/remove-selected-game game])}
+                 remove-game-text]
+                ]]))
 
 
-(defn div-game
+(defn game-box
   [game]
   [h-box
    :children [[:div {:class "game"
                      :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
-(defn div-game-common
+(defn game-common-box
   "Display common game content"
   [game]
   (if (:selected game)
-    (div-game-selected game)
-    (div-game game)))
-
-(defn div-game-list
-  []
-  (let [games (rf/subscribe [::subs/games])]
-    [v-box
-     :children [(for [game @games]
-                  ^{:key (:_id game)} [:div (div-game-common game)])]]))
+    (game-selected-box game)
+    (game-box game)))
 
 
 (defn div-loading
@@ -89,7 +86,14 @@
 
 (defn games-panel
   []
-  [box :child "Listan över alla spel"])
+  (let [games (rf/subscribe [::subs/games])]
+    [v-box
+     :children [[:h3 "Listan över alla spel"]
+
+                [v-box
+                 :children [(for [game @games]
+                              ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
+
 
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
@@ -100,54 +104,54 @@
 ;;   [box :child (:name item)])
 
 (defn nav-item
-  "Returns a function to render a navigation item"
-  []
-  (let [mouse-over? (reagent/atom false)]
-    (fn [item]
-      (let [label (:name item)
-            id  (:id item)]
-        [:div
-         {:style (when @mouse-over? {:font-weight "bold"
-                                     :background-color "#CCCCCC"})
-          :on-click      #(rf/dispatch [::events/set-panel id])
-          :on-mouse-over #(reset! mouse-over? true)
-          :on-mouse-out  #(reset! mouse-over? false)}
-         label]))))
+"Returns a function to render a navigation item"
+[]
+(let [mouse-over? (reagent/atom false)]
+  (fn [item]
+    (let [label (:name item)
+          id  (:id item)]
+      [:div
+       {:style (when @mouse-over? {:font-weight "bold"
+                                   :background-color "#CCCCCC"})
+        :on-click      #(rf/dispatch [::events/set-panel id])
+        :on-mouse-over #(reset! mouse-over? true)
+        :on-mouse-out  #(reset! mouse-over? false)}
+       label]))))
 
 
 (defn navigation-panel
-  []
-  (let [items panels]
-    [v-box :children [(for [item items]
-                        ^{:key (:id item)} [nav-item item])]]))
+[]
+(let [items panels]
+  [v-box :children [(for [item items]
+                      ^{:key (:id item)} [nav-item item])]]))
 
 (defn main-panel
-  []
-  (let [panel-id (rf/subscribe [::subs/panel])
-        page-name (rf/subscribe [::subs/name])
-        selected-panel (nth panels @panel-id)
-        ;; selected-panel (first panels)
-        ]
-    (println "panel-id: " @panel-id
-             ", main-panel: " (:name selected-panel))
-    [h-split
-     ;; Outer-most box height must be 100% to fill the entrie client height.
-     ;; This assumes that height of <body> is itself also set to 100%.
-     ;; width does not need to be set.
-     :height   "100%"
-     :initial-split 12
-     :margin "0px"
-     :panel-1 [scroller
-               :v-scroll :auto
-               :h-scroll :off
-               :child [v-box
-                       :size "1"
-                       :children [[box :style {:font-weight "bold"} :child @page-name]
-                                  (navigation-panel)]]]
-     :panel-2 [scroller
-               :attr  {:id "right-panel"}
-               :child [v-box
-                       :size  "1"
-                       :children [[box
-                                   :padding "0px 0px 0px 50px"
-                                   :child [(:render selected-panel)]]]]]]))
+[]
+(let [panel-id (rf/subscribe [::subs/panel])
+      page-name (rf/subscribe [::subs/name])
+      selected-panel (nth panels @panel-id)
+      ;; selected-panel (first panels)
+      ]
+  (println "panel-id: " @panel-id
+           ", main-panel: " (:name selected-panel))
+  [h-split
+   ;; Outer-most box height must be 100% to fill the entrie client height.
+   ;; This assumes that height of <body> is itself also set to 100%.
+   ;; width does not need to be set.
+   :height   "100%"
+   :initial-split 12
+   :margin "0px"
+   :panel-1 [scroller
+             :v-scroll :auto
+             :h-scroll :off
+             :child [v-box
+                     :size "1"
+                     :children [[box :style {:font-weight "bold"} :child @page-name]
+                                (navigation-panel)]]]
+   :panel-2 [scroller
+             :attr  {:id "right-panel"}
+             :child [v-box
+                     :size  "1"
+                     :children [[box
+                                 :padding "0px 0px 0px 50px"
+                                 :child [(:render selected-panel)]]]]]]))
