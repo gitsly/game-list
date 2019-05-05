@@ -108,45 +108,43 @@
   (let [label (:name item)
         id  (:id item)
         mouse-over? (reagent/atom false)]
-    ^{:key id} [:div
-                {
-                 :on-mouse-over (handler-fn((println "hepp" id)
-                                            reset! mouse-over? true))
-                 :on-mouse-out (handler-fn (reset! mouse-over? false))
-                 }
+    ^{:key id} [:div {
+                      :on-mouse-over #((println "hepp" id)
+                                       reset! mouse-over? true)
+                      :on-mouse-out #(reset! mouse-over? false)}
                 label]))
 
 (defn navigation-panel
-  []
-  (let [items panels]
-    [v-box :children [(for [item items]
-                        (nav-item item))]]))
+[]
+(let [items panels]
+  [v-box :children [(for [item items]
+                      (nav-item item))]]))
 
 (defn main-panel
-  []
-  (let [selected-panel (rf/subscribe [::subs/panel])
-        page-name (rf/subscribe [::subs/name])]
-    [h-split
-     ;; Outer-most box height must be 100% to fill the entrie client height.
-     ;; This assumes that height of <body> is itself also set to 100%.
-     ;; width does not need to be set.
-     :height   "100%"
-     :initial-split 12
-     :margin "0px"
-     :panel-1 [scroller
-               :v-scroll :auto
-               :h-scroll :off
-               :child [v-box
-                       :size "1"
-                       :children [[box :style {:font-weight "bold"} :child @page-name]
-                                  (navigation-panel)]]]
-     :panel-2 [scroller
-               :attr  {:id "right-panel"}
-               :child [v-box
-                       :size  "1"
-                       :children [[box
-                                   :padding "0px 0px 0px 50px"
-                                   :child "TODO: Selected panel content"]]]]]))
+[]
+(let [selected-panel (rf/subscribe [::subs/panel])
+      page-name (rf/subscribe [::subs/name])]
+  [h-split
+   ;; Outer-most box height must be 100% to fill the entrie client height.
+   ;; This assumes that height of <body> is itself also set to 100%.
+   ;; width does not need to be set.
+   :height   "100%"
+   :initial-split 12
+   :margin "0px"
+   :panel-1 [scroller
+             :v-scroll :auto
+             :h-scroll :off
+             :child [v-box
+                     :size "1"
+                     :children [[box :style {:font-weight "bold"} :child @page-name]
+                                (navigation-panel)]]]
+   :panel-2 [scroller
+             :attr  {:id "right-panel"}
+             :child [v-box
+                     :size  "1"
+                     :children [[box
+                                 :padding "0px 0px 0px 50px"
+                                 :child "TODO: Selected panel content"]]]]]))
 
 
 ;; Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from
@@ -155,19 +153,19 @@
 ;;--------------- Snippets
 
 (let [a [ 1  2  3]
-b ["a" "b" "c"]]
+      b ["a" "b" "c"]]
 (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
-b {:name "ninja" :stamina 15 }
-[only-a only-b both] (clojure.data/diff a b)]
+      b {:name "ninja" :stamina 15 }
+      [only-a only-b both] (clojure.data/diff a b)]
 both)
 
 
 (let [id 1
-data [{:id 0 :name "bength"}
-{:id 1 :name "alice"}
-{:id 2 :name "lisa"}]
-modded (remove #(= id (:id %)) data)]
+      data [{:id 0 :name "bength"}
+            {:id 1 :name "alice"}
+            {:id 2 :name "lisa"}]
+      modded (remove #(= id (:id %)) data)]
 modded
 )
