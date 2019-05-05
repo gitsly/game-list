@@ -10,7 +10,7 @@
 
 (def default-db
   {:name "Bullen"
-   ;; :panel (first views/panels)
+   :panel 0
    :games []
    :loading? false
    })

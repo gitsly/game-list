@@ -11,15 +11,12 @@
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
 
-;; TODO (ideas for re-frame components)
-;; - Make a selected div component group
-
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
 (def add-game-text "Add game")
 
-(def not-nil? (complement nil?))
 
+(def not-nil? (complement nil?))
 
 ;; '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 (defn rand-color
@@ -44,7 +41,6 @@
                                  (reset! slider-val %))
                  :disabled? false]]]))
 
-;; (rf/dispatch [::events/set-rating game %])
 
 (defn div-game
   [game]
@@ -89,15 +85,15 @@
 ;;--------------------------------------------------------------------------------
 (defn about-panel
   []
-  [box :child "Content of the about panel"])
+  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
 
 (defn games-panel
   []
-  [box :child "Games content"])
+  [box :child "Listan över alla spel"])
 
 ;; Vector of all panels
-(def panels [{:id 1 :name "Game list" :render games-panel }
-             {:id 2 :name "About" :render about-panel }])
+(def panels [{:id 0 :name "Spellistan" :render games-panel }
+             {:id 1 :name "Om sidan" :render about-panel }])
 
 ;; (defn nav-item
 ;;   [item]
@@ -113,9 +109,9 @@
         [:div
          {:style (when @mouse-over? {:font-weight "bold"
                                      :background-color "#CCCCCC"})
-          :on-click      #(rf/dispatch [::events/set-panel item])
+          :on-click      #(rf/dispatch [::events/set-panel id])
           :on-mouse-over #(reset! mouse-over? true)
-          :on-mouse-out #(reset! mouse-over? false)}
+          :on-mouse-out  #(reset! mouse-over? false)}
          label]))))
 
 
@@ -127,10 +123,13 @@
 
 (defn main-panel
   []
-  (let [selected-panel (first panels)
-        ;; selected-panel (rf/subscribe [::subs/panel])
-        page-name (rf/subscribe [::subs/name])]
-    (println "main-panel: " (:name selected-panel))
+  (let [panel-id (rf/subscribe [::subs/panel])
+        page-name (rf/subscribe [::subs/name])
+        selected-panel (nth panels @panel-id)
+        ;; selected-panel (first panels)
+        ]
+    (println "panel-id: " @panel-id
+             ", main-panel: " (:name selected-panel))
     [h-split
      ;; Outer-most box height must be 100% to fill the entrie client height.
      ;; This assumes that height of <body> is itself also set to 100%.

@@ -56,7 +56,6 @@
  ::set-panel
  (fn [db
       [event-name selected-panel]]
-   (println "set panel: " (:name selected-panel))
    (-> db
        (assoc :panel selected-panel))))
 
