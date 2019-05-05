@@ -108,10 +108,12 @@
   (let [label (:name item)
         id  (:id item)
         mouse-over? (reagent/atom false)]
-    ^{:key id} [:div {
-                      :on-mouse-over #((println "hepp" id)
-                                       reset! mouse-over? true)
-                      :on-mouse-out #(reset! mouse-over? false)}
+    ^{:key id} [:div
+                ;; {:style (when @mouse-over? {:font-weight "bold"})
+                {:style (when @mouse-over? {:font-weight "bold"})
+                 :on-mouse-over #((println "hepp" id)
+                                  (reset! mouse-over? true))
+                 :on-mouse-out #(reset! mouse-over? false)}
                 label]))
 
 (defn navigation-panel
