@@ -108,19 +108,22 @@
   (let [label (:name item)
         id  (:id item)
         mouse-over? (reagent/atom false)]
+    (println "Re-render")
     ^{:key id} [:div
                 ;; {:style (when @mouse-over? {:font-weight "bold"})
-                {:style (when @mouse-over? {:font-weight "bold"})
-                 :on-mouse-over #((println "hepp" id)
-                                  (reset! mouse-over? true))
-                 :on-mouse-out #(reset! mouse-over? false)}
-                label]))
+                {:style
+                 {:font-weight (if @mouse-over? "bold" "normal")}
+                 :on-mouse-over #(do (reset! mouse-over? true)
+                                     (println "over : " id ", val: " @mouse-over?))
+                 :on-mouse-out #(do (reset! mouse-over? false)
+                                    (println "out : " id ", val: " @mouse-over?))}
+                (str label @mouse-over?)]))
 
 (defn navigation-panel
-[]
-(let [items panels]
-  [v-box :children [(for [item items]
-                      (nav-item item))]]))
+  []
+  (let [items panels]
+    [v-box :children [(doall (for [item items]
+                               (nav-item item)))]]))
 
 (defn main-panel
 []
