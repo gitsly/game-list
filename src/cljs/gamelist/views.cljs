@@ -89,11 +89,11 @@
 ;;--------------------------------------------------------------------------------
 (defn about-panel
   []
-  [box :child "Game list"])
+  [box :child "Content of the about panel"])
 
 (defn games-panel
   []
-  [box :child "Game list"])
+  [box :child "Games content"])
 
 ;; Vector of all panels
 (def panels [{:id 1 :name "Game list" :render games-panel }
@@ -110,13 +110,10 @@
     (fn [item]
       (let [label (:name item)
             id  (:id item)]
-
-        (println "Render-" id ": " @mouse-over?)
         [:div
-         ;; {:style (when @mouse-over? {:font-weight "bold"})
-         {:style
-          {:color (when @mouse-over? "#ff0000")}
-
+         {:style (when @mouse-over? {:font-weight "bold"
+                                     :background-color "#CCCCCC"})
+          :on-click      #(rf/dispatch [::events/set-panel item])
           :on-mouse-over #(reset! mouse-over? true)
           :on-mouse-out #(reset! mouse-over? false)}
          label]))))
@@ -130,8 +127,10 @@
 
 (defn main-panel
   []
-  (let [selected-panel (rf/subscribe [::subs/panel])
+  (let [selected-panel (first panels)
+        ;; selected-panel (rf/subscribe [::subs/panel])
         page-name (rf/subscribe [::subs/name])]
+    (println "main-panel: " (:name selected-panel))
     [h-split
      ;; Outer-most box height must be 100% to fill the entrie client height.
      ;; This assumes that height of <body> is itself also set to 100%.
@@ -152,4 +151,4 @@
                        :size  "1"
                        :children [[box
                                    :padding "0px 0px 0px 50px"
-                                   :child "TODO: Selected panel content"]]]]]))
+                                   :child [(:render selected-panel)]]]]]]))
