@@ -8,8 +8,11 @@
         names games/game-list]
     (map #(zipmap [:id :name] [%1 %2]) indices names)))
 
+(def panels [:games, :add-game])
+
 (def default-db
   {:name "Bullen"
+   :panel (first panels)
    :games []
    :loading? false
    })

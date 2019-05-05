@@ -7,6 +7,12 @@
  (fn [db]
    (:name db)))
 
+;; Currently selected panel
+(rf/reg-sub
+ ::panel
+ (fn [db]
+   (:panel db)))
+
 (rf/reg-sub
  ::games
  (fn [db]

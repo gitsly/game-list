@@ -5,7 +5,7 @@
    [gamelist.events :as events]
    [goog.object :as gobject]
    [clojure.string :as string]
-   [re-com.core   :refer [input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
+   [re-com.core   :refer [scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]]
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
 
@@ -82,30 +82,63 @@
      :on-change        #((rf/dispatch [::events/add-game %])
                          (reset! text-val %))]))
 
+(defn main-panel2
+  []
+  (let [name (rf/subscribe [::subs/name])
+        games (rf/subscribe [::subs/games])
+        game (first @games)]
+    [v-box
+     :style {:background-color "#AAAAAA" }
+     :gap "2px"
+     :children [[box :child (str "Haha:" @name) ]
+                [h-box
+                 :style {:background-color "#AAAAFF" }
+                 :height "100px"
+                 :children [[box :size "70px" :child "Nav"]
+                            [label :label "[input-textarea ... ]"]
+                            (add-game-box)
+                            [button
+                             :label "Test"
+                             :on-click #(rf/dispatch [::events/test "Bullen"])]
+                            [box
+                             :style {:background-color "#AAFFAA" }
+                             :size "1" :child "Content2"]]]
+                [box
+                 :style {:background-color "#FFAAAA" }
+                 :child "Footer"]]]))
+
+(defn navigation-panel
+  []
+  [v-box :children [[box :child "Add game"]
+                    [box :child "da"]
+                    [box :child "opsda"]
+                    [box :child "asda"]
+                    ]])
+
 (defn main-panel
-[]
-(let [name (rf/subscribe [::subs/name])
-      games (rf/subscribe [::subs/games])
-      game (first @games)]
-  [v-box
-   :style {:background-color "#AAAAAA" }
-   :gap "2px"
-   :children [[box :child (str "Haha:" @name) ]
-              [h-box
-               :style {:background-color "#AAAAFF" }
-               :height "100px"
-               :children [[box :size "70px" :child "Nav"]
-                          [label :label "[input-textarea ... ]"]
-                          (add-game-box)
-                          [button
-                           :label "Test"
-                           :on-click #(rf/dispatch [::events/test "Bullen"])]
-                          [box
-                           :style {:background-color "#AAFFAA" }
-                           :size "1" :child "Content2"]]]
-              [box
-               :style {:background-color "#FFAAAA" }
-               :child "Footer"]]]))
+  []
+  (let [selected-panel (rf/subscribe [::subs/panel])]
+    [h-split
+     ;; Outer-most box height must be 100% to fill the entrie client height.
+     ;; This assumes that height of <body> is itself also set to 100%.
+     ;; width does not need to be set.
+     :height   "100%"
+     :initial-split 9
+     :margin "0px"
+     :panel-1 [scroller
+               :v-scroll :auto
+               :h-scroll :off
+               :child [v-box
+                       :size "1"
+                       :children [[box :child "Title"]
+                                  (navigation-panel)]]]
+     :panel-2 [scroller
+               :attr  {:id "right-panel"}
+               :child [v-box
+                       :size  "1"
+                       :children [[box
+                                   :padding "0px 0px 0px 50px"
+                                   :child "he"]]]]]))
 
 
 ;; Compiling build :app to "dev-target/public/js/compiled/gamelist.js" from
@@ -115,7 +148,7 @@
 
 (let [a [ 1  2  3]
       b ["a" "b" "c"]]
-(map #(zipmap [:digit :letter] [% %2]) a b))
+  (map #(zipmap [:digit :letter] [% %2]) a b))
 
 (let [a {:name "ninja" :stamina 18 }
       b {:name "ninja" :stamina 15 }
