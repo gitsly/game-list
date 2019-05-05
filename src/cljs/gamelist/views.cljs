@@ -103,28 +103,10 @@
 
 (defn nav-item
   [item]
-  (let [mouse-over? (reagent/atom false)
-        selected? (reagent/atom false)
-        selected-tab-id (reagent/atom 2)
-        id (reagent/atom (:id item))]
-    [:div { :style {:white-space      "nowrap"
-                    :line-height      "1.3em"
-                    :padding-left     "32px"
-                    :border-right     (when selected? "4px #d0d0d0 solid")
-                    :color            (if selected? "#111" "#888")
-                    :background-color (if (or
-                                           (= @selected-tab-id (:id item))
-                                           @mouse-over?) "#eaeaea")}
-           :on-mouse-over #(reset! mouse-over? true)
-           :on-mouse-out  #(reset! mouse-over? false)
-           :on-click      #((println "Click on: " id)
-                            (reset! selected-tab-id id))
-           :key (:id item)
-           }
-
-     (:name item)
-
-     ]))
+  (let [label (:name item)
+        id  (:id item)
+        mouse-over? (reagent/atom false)]
+    ^{:key id} [box :child label]))
 
 (defn navigation-panel
   []
