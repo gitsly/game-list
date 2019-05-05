@@ -6,10 +6,20 @@
    [goog.object :as gobject]
    [clojure.string :as string]
    [re-com.core
-    :refer [scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
+    :refer [md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
     :refer-macros [handler-fn]]
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
+
+;; Material design icons
+(def icons
+  [{:id "zmdi-plus"    :label [:i {:class "zmdi zmdi-plus"}]}
+   {:id "zmdi-delete"  :label [:i {:class "zmdi zmdi-delete"}]}
+   {:id "zmdi-undo"    :label [:i {:class "zmdi zmdi-undo"}]}
+   {:id "zmdi-home"    :label [:i {:class "zmdi zmdi-home"}]}
+   {:id "zmdi-account" :label [:i {:class "zmdi zmdi-account"}]}
+   {:id "zmdi-info"    :label [:i {:class "zmdi zmdi-info"}]}])
+
 
 (def rate-game-text "Rate")
 (def remove-game-text "Remove")
@@ -28,9 +38,10 @@
   [game]
   (let [id (:_id game)
         name (:name game)
+        delete-icon "zmdi-delete"
         slider-val (reagent/atom 50)]
     [h-box
-     :padding "2px"
+     ;; :padding "2px"
      :gap "12px"
      :children [[box :child name]
                 [slider
@@ -40,11 +51,11 @@
                  :on-change #(do (rf/dispatch [::events/set-rating game %])
                                  (reset! slider-val %))
                  :disabled? false]
-                [:p {:class "game-remove"
-                     :on-click #(rf/dispatch [::events/remove-selected-game game])}
-                 remove-game-text]
-                ]]))
-
+                [md-icon-button
+                 :md-icon-name delete-icon
+                 :tooltip      "Ta bort spel"
+                 :size         :smaller
+                 :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
 (defn game-box
   [game]
@@ -53,46 +64,46 @@
                      :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
 (defn game-common-box
-  "Display common game content"
-  [game]
-  (if (:selected game)
-    (game-selected-box game)
-    (game-box game)))
+"Display common game content"
+[game]
+(if (:selected game)
+  (game-selected-box game)
+  (game-box game)))
 
 
 (defn div-loading
-  []
-  (let [loading (rf/subscribe [::subs/loading?])
-        games (rf/subscribe [::subs/games])]
-    [:div "Loading: " (str @loading)]))
+[]
+(let [loading (rf/subscribe [::subs/loading?])
+      games (rf/subscribe [::subs/games])]
+  [:div "Loading: " (str @loading)]))
 
 (defn add-game-box
-  []
-  (let [text-val (reagent/atom "")]
-    [input-text
-     :model            text-val
-     :width            "300px"
-     :placeholder      "Game name"
-     :change-on-blur?  true
-     :on-change        #((rf/dispatch [::events/add-game %])
-                         (reset! text-val %))]))
+[]
+(let [text-val (reagent/atom "")]
+  [input-text
+   :model            text-val
+   :width            "300px"
+   :placeholder      "Game name"
+   :change-on-blur?  true
+   :on-change        #((rf/dispatch [::events/add-game %])
+                       (reset! text-val %))]))
 
 ;;--------------------------------------------------------------------------------
 ;; Panels
 ;;--------------------------------------------------------------------------------
 (defn about-panel
-  []
-  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
+[]
+[box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
 
 (defn games-panel
-  []
-  (let [games (rf/subscribe [::subs/games])]
-    [v-box
-     :children [[:h3 "Listan över alla spel"]
+[]
+(let [games (rf/subscribe [::subs/games])]
+  [v-box
+   :children [[:h3 "Listan över alla spel"]
 
-                [v-box
-                 :children [(for [game @games]
-                              ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
+              [v-box
+               :children [(for [game @games]
+                            ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
 
 
 ;; Vector of all panels
@@ -120,38 +131,38 @@
 
 
 (defn navigation-panel
-[]
-(let [items panels]
-  [v-box :children [(for [item items]
-                      ^{:key (:id item)} [nav-item item])]]))
+  []
+  (let [items panels]
+    [v-box :children [(for [item items]
+                        ^{:key (:id item)} [nav-item item])]]))
 
 (defn main-panel
-[]
-(let [panel-id (rf/subscribe [::subs/panel])
-      page-name (rf/subscribe [::subs/name])
-      selected-panel (nth panels @panel-id)
-      ;; selected-panel (first panels)
-      ]
-  (println "panel-id: " @panel-id
-           ", main-panel: " (:name selected-panel))
-  [h-split
-   ;; Outer-most box height must be 100% to fill the entrie client height.
-   ;; This assumes that height of <body> is itself also set to 100%.
-   ;; width does not need to be set.
-   :height   "100%"
-   :initial-split 12
-   :margin "0px"
-   :panel-1 [scroller
-             :v-scroll :auto
-             :h-scroll :off
-             :child [v-box
-                     :size "1"
-                     :children [[box :style {:font-weight "bold"} :child @page-name]
-                                (navigation-panel)]]]
-   :panel-2 [scroller
-             :attr  {:id "right-panel"}
-             :child [v-box
-                     :size  "1"
-                     :children [[box
-                                 :padding "0px 0px 0px 50px"
-                                 :child [(:render selected-panel)]]]]]]))
+  []
+  (let [panel-id (rf/subscribe [::subs/panel])
+        page-name (rf/subscribe [::subs/name])
+        selected-panel (nth panels @panel-id)
+        ;; selected-panel (first panels)
+        ]
+    (println "panel-id: " @panel-id
+             ", main-panel: " (:name selected-panel))
+    [h-split
+     ;; Outer-most box height must be 100% to fill the entrie client height.
+     ;; This assumes that height of <body> is itself also set to 100%.
+     ;; width does not need to be set.
+     :height   "100%"
+     :initial-split 12
+     :margin "0px"
+     :panel-1 [scroller
+               :v-scroll :auto
+               :h-scroll :off
+               :child [v-box
+                       :size "1"
+                       :children [[box :style {:font-weight "bold"} :child @page-name]
+                                  (navigation-panel)]]]
+     :panel-2 [scroller
+               :attr  {:id "right-panel"}
+               :child [v-box
+                       :size  "1"
+                       :children [[box
+                                   :padding "0px 0px 0px 50px"
+                                   :child [(:render selected-panel)]]]]]]))
