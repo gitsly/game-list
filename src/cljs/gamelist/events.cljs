@@ -160,11 +160,12 @@
  ::set-rating
  (fn [db
       [_ game value]]
-   (let [user (:user db)
+   (let [user (keyword (:user db))
          game-id (:_id game)
          games (:games db)
-         rating {user { :value value }}
-         rated-game (assoc game :rating rating)]
+         old-rating (:rating game)
+         new-rating (assoc old-rating user { :value value }) 
+         rated-game (assoc game :rating new-rating)]
      (println "Rated game: " rated-game)
      (update-game rated-game)
      (-> db
