@@ -8,12 +8,15 @@
            [org.bson.types ObjectId]
            [org.joda.time DateTimeZone]))
 
+(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
+(def db-name "live") ; If using docker-compose, ensure this is referring to image name
+
 (defn connect []
   "Connect to mongo db"
   (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-        ^ServerAddress address(mg/server-address "localhost" 27017)
+        ^ServerAddress address(mg/server-address db-host 27017)
         conn                  (mg/connect address options)
-        db                    (mg/get-db conn "test")]
+        db                    (mg/get-db conn db-name)]
     db))
 
 (defn collection

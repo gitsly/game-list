@@ -1,4 +1,8 @@
 # Runs a sample mongodb service
+
+# Runs a gamelist server on port 80
+# Database can be monitored on 9090 (mongo-express)
+
 version: "3"
 services:
   gamelist:
@@ -12,25 +16,24 @@ services:
       # Data is used path within docker container
       - ./target:/data
 
-  # mongo:
-  #   restart: unless-stopped
-  #   networks:
-  #     - gamelist-net
-  #   ports:
-  #     - 27017:27017
-  #   volumes:
-  #     - ./mongo-db:/data/db
-  #   image: "mongo:latest"
+  mongo:
+    restart: unless-stopped
+    networks:
+      - gamelist-net
+    # Database not exposed externally
+    # ports:
+    #   - 27017:27017
+    volumes:
+      - ./mongo-db:/data/db
+    image: "mongo:latest"
 
-  # mongo-express:
-  #   restart: unless-stopped
-  #   networks:
-  #     - gamelist-net
-  #   ports:
-  #     - 9090:8081
-  #   image: "mongo-express:latest"
-  #   ports:
-  #       - 8081:8081
+  mongo-express:
+    restart: unless-stopped
+    networks:
+      - gamelist-net
+    ports:
+      - 9090:8081
+    image: "mongo-express:latest"
 
 networks:
   gamelist-net:
