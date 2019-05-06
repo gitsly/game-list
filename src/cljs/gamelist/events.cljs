@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [gamelist.db :as db]
+   [gamelist.utils :as utils]
    [cljs-http.client :as http]
    [day8.re-frame.tracing :refer-macros [fn-traced defn-traced]]
    [cljs.core.async :as async :refer [<! >!]]) 
@@ -43,6 +44,45 @@
          (assoc :user user)
          (assoc :games games)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Update game and wait for game in response
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn update-game [game]
+  "Update game on remote host using http post, get game back (from server)
+   with udpated data combined with latest info from server"
+  (go (let [url "list/updategame"
+            payload (utils/json-request game)
+            response (<! (http/put url payload))]
+        (rf/dispatch [::update-game-response response]))))
+;; TODO: test with response inline above
+
+(rf/reg-event-db
+ ::update-game
+ (fn [db
+      [event-name game]]
+   (println "client: update-game" (:name game))
+   (update-game game)
+   (-> db
+       (assoc :loading? true))))
+
+(rf/reg-event-db
+ ::update-game-response 
+ (fn
+   [db [_ response]]
+   (let [games (:games db)
+         game (:body response)
+         game-id (:_id game)
+         new-game-list (-> (zipmap (map #(:_id %) games) games)
+                           (assoc [game-id] game)
+                           vals)]
+     (println "client: update-game-response: " game)
+     (-> db
+         (assoc :loading? false)
+         (assoc :games new-game-list)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (rf/reg-event-db
  ::test
  (fn [db
@@ -66,45 +106,32 @@
                (= (:_id %) selected-id)) games))
 
 (rf/reg-event-db
-::set-selected-game
-(fn[db
-    [event-name game]]
-  (let [games (:games db)
-        id (:_id game)]
-    (println "set selected game: " id)
-    (assoc db :games (select-game games id)))))
+ ::set-selected-game
+ (fn[db
+     [event-name game]]
+   (let [games (:games db)
+         id (:_id game)]
+     (println "set selected game: " id)
+     (assoc db :games (select-game games id)))))
 
-(defn to-json
-"Create json from clojure map"
-[o]
-(.stringify js/JSON (clj->js o)))
-
-(defn json-request
-"Takes a map or hash or vector an constructs a JSON request
-  that is parsable at server using compojure route and ring-json lib"
-[data]
-{:body (to-json data)
- :content-type "application/json"
- :json-opts {:date-format "yyyy-MM-dd"}
- :accept :json})
 
 (defn new-game [name]
-"Perform cljs-http request,
+  "Perform cljs-http request,
    Create the new game on remote host using http post"
-(go (let [url "list/addgame"
-          game {:name name}
-          payload (json-request game)
-          response (<! (http/put url payload))]
-      (rf/dispatch [::add-game-response response]))))
+  (go (let [url "list/addgame"
+            game {:name name}
+            payload (utils/json-request game)
+            response (<! (http/put url payload))]
+        (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
-::add-game
-(fn [db
-     [event-name game-name]]
-  (println "client: add-game")
-  (let [game (new-game game-name)]
-    (-> db
-        (assoc :loading? true)))))
+ ::add-game
+ (fn [db
+      [event-name game-name]]
+   (println "client: add-game")
+   (let [game (new-game game-name)]
+     (-> db
+         (assoc :loading? true)))))
 
 (rf/reg-event-db
 ::add-game-response 
@@ -118,28 +145,27 @@
         (assoc :games (conj games game))))))
 
 (rf/reg-event-db
-::remove-selected-game
-(fn [db
-     [_ game]]
-  ;; remove remotely
-  ;; (go (<! (http/put "removegame" (json-request game))))
-  (http/put "list/removegame" (json-request game))
-  ;; Remove in client app-db (visually)
-  (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
-    (-> db
-        (assoc :games pruned-games)))))
+ ::remove-selected-game
+ (fn [db
+      [_ game]]
+   ;; remove remotely
+   ;; (go (<! (http/put "removegame" (json-request game))))
+   (http/put "list/removegame" (utils/json-request game))
+   ;; Remove in client app-db (visually)
+   (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
+     (-> db
+         (assoc :games pruned-games)))))
 
 (rf/reg-event-db
  ::set-rating
  (fn [db
       [_ game value]]
-   (println "Rate game: " value) 
    (let [user (:user db)
          game-id (:_id game)
          games (:games db)
          rating {user { :value value }}
-         new-game-list (-> (zipmap (map #(:_id %) games) games)
-                           (assoc-in [game-id :rating] rating)
-                           vals)]
+         rated-game (assoc game :rating rating)]
+     (println "Rated game: " rated-game)
+     (update-game game)
      (-> db
-         (assoc :games new-game-list)))))
+         (assoc :loading? true)))))

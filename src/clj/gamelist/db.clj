@@ -2,6 +2,7 @@
   (:require [monger.core :as mg]
             [monger.joda-time :as jt]
             [monger.collection :as mc]
+            [gamelist.utils :refer [log]]
             [clj-time.core :as time])
   (:import [com.mongodb MongoOptions ServerAddress]
            [org.bson.types ObjectId]
@@ -45,11 +46,25 @@
   [game]
   (mc/insert-and-return (connect) "games" game))
 
+(defn update-game
+  [game]
+  (let [oid (-> game :_id (ObjectId.))
+        game-no-id (dissoc game :_id)]
+    (log "Db update game: " game-no-id)
+    (mc/update-by-id (connect) "games" oid game-no-id)))
+
 (defn remove-game
   [game]
   (let [oid (-> game :_id (ObjectId.))]
     (mc/remove-by-id (connect) "games" oid)))
 
+
+;; Test update functionality
+;; (let [game {:_id "5ccfdc046734b02fc4acaffc",
+;;             :name "Test", :added "2019-05-06T07:02:28Z",
+;;             :selected true,
+;;             :rating {"Martin" {:value 40}}}]
+;;   (update-game game))
 
 ;;------------------------------------------------------------------------------
 ;; Sample data
