@@ -90,34 +90,34 @@
                              :on-click #(rf/dispatch [::events/remove-selected-game game])]]]
                 [box
                  :width "30px"
-                 :child (if rating [:p rating] "-")]
+                 :child (if (> rating 0) [:p rating] "-")]
                 [box
                  :width "30px"
                  :child (if total-rating [:p total-rating] "-")]]]))
 
 
 (defn game-box
-[game
- user]
-(let [rating (-> (get-rating game user)
-                 (/ 10)
-                 int)
-      total-rating (-> (get-total-rating game)
-                       (/ 10)
-                       int)]
-  ;; (println "Gmo: " (get-total-rating game))
+  [game
+   user]
+  (let [rating (-> (get-rating game user)
+                   (/ 10)
+                   int)
+        total-rating (-> (get-total-rating game)
+                         (/ 10)
+                         int)]
+    ;; (println "Gmo: " (get-total-rating game))
 
-  [h-box
-   :style { :background-color "#FFFFFF"}
-   :children [[box
-               :width "300px"
-               :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
-              [box
-               :width "30px"
-               :child (if rating [:p rating] "-")]
-              [box
-               :width "30px"
-               :child (if total-rating [:p total-rating] "-")]]]))
+    [h-box
+     :style { :background-color "#FFFFFF"}
+     :children [[box
+                 :width "300px"
+                 :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+                [box
+                 :width "30px"
+                 :child (if (> rating 0) [:p rating] "-")]
+                [box
+                 :width "30px"
+                 :child (if total-rating [:p total-rating] "-")]]]))
 
 (defn game-common-box
 "Display common game content"
@@ -148,7 +148,7 @@
                              :style { :background-color "#EEEEEE"}
                              :children [[box :width "300px" :child "Namn"]
                                         [box :width "30px" :child "Mitt"]
-                                        [box :width "30px" :child "To"]]]
+                                        [box :width "30px" :child "Tot"]]]
                             (for [game @games]
                               ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
 
