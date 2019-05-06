@@ -49,6 +49,7 @@
     (/ (reduce + rating-values) (count rating-values))))
 
 
+;; TODO: unify better with unselected box
 (defn game-selected-box
   [game
    user]
@@ -56,54 +57,67 @@
         name (:name game)
         delete-icon "zmdi-delete"
         save-icon "zmdi-save"
-        rating (get-rating game user)
-        slider-val (reagent/atom (if rating rating 50))]
-    [h-box
-     ;; :padding "2px"
-     :style { :background-color "#EEEFFE" }
-     :gap "12px"
-     :children [[box :child name]
-                [slider
-                 :width  "100px"
-                 :model  slider-val
-                 :min 0, :max 100, :step 10
-                 :on-change #(reset! slider-val %)
-                 :disabled? false]
-                [md-icon-button
-                 :md-icon-name save-icon
-                 :tooltip      "Spara"
-                 :size         :smaller
-                 :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
-                [md-icon-button
-                 :md-icon-name delete-icon
-                 :tooltip      "Ta bort spel"
-                 :size         :smaller
-                 :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
-
-
-
-(defn game-box
-  [game
-   user]
-  (let [rating (-> (get-rating game user)
+        curr-rating (get-rating game user)
+        slider-val (reagent/atom (if curr-rating curr-rating 50))
+        rating (-> (get-rating game user)
                    (/ 10)
                    int)
         total-rating (-> (get-total-rating game)
                          (/ 10)
                          int)]
-    ;; (println "Gmo: " (get-total-rating game))
-
     [h-box
-     :style { :background-color "#FFFFFF"}
-     :children [[box
+     ;; :padding "2px"
+     :style { :background-color "#EEEFFE" }
+     :gap "12px"
+     :children [[h-box
                  :width "300px"
-                 :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+                 :children [[box :child name]
+                            [slider
+                             :width  "90px"
+                             :model  slider-val
+                             :min 0, :max 100, :step 10
+                             :on-change #(reset! slider-val %)
+                             :disabled? false]
+                            [md-icon-button
+                             :md-icon-name save-icon
+                             :tooltip      "Spara"
+                             :size         :smaller
+                             :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
+                            [md-icon-button
+                             :md-icon-name delete-icon
+                             :tooltip      "Ta bort spel"
+                             :size         :smaller
+                             :on-click #(rf/dispatch [::events/remove-selected-game game])]]]
                 [box
                  :width "30px"
                  :child (if rating [:p rating] "-")]
                 [box
                  :width "30px"
                  :child (if total-rating [:p total-rating] "-")]]]))
+
+
+(defn game-box
+[game
+ user]
+(let [rating (-> (get-rating game user)
+                 (/ 10)
+                 int)
+      total-rating (-> (get-total-rating game)
+                       (/ 10)
+                       int)]
+  ;; (println "Gmo: " (get-total-rating game))
+
+  [h-box
+   :style { :background-color "#FFFFFF"}
+   :children [[box
+               :width "300px"
+               :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+              [box
+               :width "30px"
+               :child (if rating [:p rating] "-")]
+              [box
+               :width "30px"
+               :child (if total-rating [:p total-rating] "-")]]]))
 
 (defn game-common-box
 "Display common game content"
