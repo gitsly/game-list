@@ -62,15 +62,14 @@
 (mc/update-by-id (connect) "games" oid game-no-id)))
 
 (defn remove-game
-[game]
-(let [oid (-> game :_id (ObjectId.))]
-(mc/remove-by-id (connect) "games" oid)))
+  [game]
+  (let [oid (-> game :_id (ObjectId.))]
+    (mc/remove-by-id (connect) "games" oid)))
 
 
 ;; Test update functionality
 ;; (let [game {:_id "5ccfdc046734b02fc4acaffc",
 ;;             :name "Test", :added "2019-05-06T07:02:28Z",
-;;             :selected true,
 ;;             :rating {"Martin" {:value 40}}}]
 ;;   (update-game game))
 
@@ -80,11 +79,11 @@
 
 ;; Sample 'full' game entry (for testing etc)
 (def test-game {:_id "5cb807a48749801ddbd35cbd",
-:name "Karlsa",
-:test "12",
-:added (time/now)
-:rating [{ "Martin" { :value "4", :date "2019-12-20"}}
-         { "Anna" { :value "5", :date "2019-09-20"}}]})
+                :name "Karlsa",
+                :test "12",
+                :added (time/now)
+                :rating [{ "Martin" { :value "4", :date "2019-12-20"}}
+                         { "Anna" { :value "5", :date "2019-09-20"}}]})
 ;; And it's insertion
 ;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
 

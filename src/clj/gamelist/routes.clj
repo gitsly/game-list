@@ -48,9 +48,8 @@
                          :body
                          (assoc :updated (time/now)))]
     (log "update-game: " updated-game)
-    ;; TODO: Potentially have a nested entity for all 'UI only' data, strip this
-    ;; before saving to DB
-    (db/update-game (dissoc updated-game :selected))
+    ;; skip UI related data when persisting to db
+    (db/update-game (dissoc updated-game :ui))
     (-> updated-game
         json-response)))
 

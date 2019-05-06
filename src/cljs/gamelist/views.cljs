@@ -80,12 +80,12 @@
    user]
   (let [id (:_id game)
         name (:name game)
-        selected? (:selected game)
+        selected? (-> game :ui :selected)
         rating (-> (get-rating game user) (/ 10) int)
         total-rating (-> (get-total-rating game) (/ 10) int)]
     [h-box
      ;; :padding "2px"
-     :style { :background-color (if selected? "#EEEFFE" "FFFFFF")}
+     :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
      :gap "8px"
      :children [[box
                  :width "150px"
@@ -141,10 +141,16 @@
                  :on-change        #((rf/dispatch [::events/add-game %])
                                      (reset! text-val ""))]]]))
 
+(defn session-panel
+  []
+  (let [selected-session (reagent/atom nil)]
+    [:p "TODO: lista spel inför spelkväll och rösta"] ))
+
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
              {:id 1 :name "Lägg till spel" :render add-game-panel }
-             {:id 2 :name "Om sidan" :render about-panel }])
+             {:id 2 :name "Spelkväll" :render session-panel }
+             {:id 3 :name "Om sidan" :render about-panel }])
 
 ;; (defn nav-item
 ;;   [item]

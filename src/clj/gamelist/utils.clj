@@ -22,7 +22,6 @@
 ;;------------------------------------------------------------------------------
 ;; To learn
 ;;------------------------------------------------------------------------------
-
 (comment
 
   (when-let [apa 1] apa)
@@ -89,5 +88,13 @@
                {:name "John" :age 43}]
         hmap (zipmap (map #(:name %) users) users)]
     (get hmap "John" ))
+
+  ;; Assoc in depth
+  (let [user {:name "James" :age 26}
+        mod-user (assoc user :ui  {:selected 12})]
+    (-> mod-user :ui :selected ))
+
+  ;; Tvåskutt
+  (map #(* % 2) (range 1 101))
 
   ); EndComment

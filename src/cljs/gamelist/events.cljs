@@ -102,8 +102,7 @@
 (defn select-game
   [games
    selected-id]
-  (map #(assoc % :selected
-               (= (:_id %) selected-id)) games))
+  (map #(assoc % :ui { :selected (= (:_id %) selected-id)}) games))
 
 (rf/reg-event-db
  ::set-selected-game
