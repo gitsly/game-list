@@ -52,15 +52,10 @@
          games (:games db)]
      (map #(prep-game % user) games))))
 
-;; (rf/reg-sub
-;;  ::games
-;;  (fn [db]
-;;    (:games db)))
-
 (rf/reg-sub
-::user
-(fn [db]
-  (:user db)))
+ ::user
+ (fn [db]
+   (:user db)))
 
 (rf/reg-sub
 ::loading?

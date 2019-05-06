@@ -101,4 +101,10 @@
   (let [users [{:name "James" :age 26}
                {:name "John" :age 43}]]
     (map #(assoc % :test 12) users))
+
+  ;; Sorting
+  (let [users [{:name "James" :age 26 :order 2}
+               {:name "John" :age 43 :order 3}
+               {:name "Nike" :age 45 :order 1}]]
+    (sort-by :order users))
   ); EndComment
