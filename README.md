@@ -3,6 +3,16 @@
 ## Style inspirations
 https://clojurians-log.clojureverse.org/beginners/2018-04-05
 
+## Running compiled weblet
+Compile project to a jar file via:
+ 'lein uberjar'
+ 
+Server can then be started via:
+ 'java -jar target/gamelist.jar'
+ 
+## Starting project in docker container 
+ 
+
 ## Development
 
 Open a terminal and type `lein repl` to start a Clojure REPL
