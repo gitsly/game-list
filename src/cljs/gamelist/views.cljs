@@ -71,23 +71,25 @@
   (-> game
       :rating
       (get (keyword user))
-      :value
-      (/ 10)
-      int))
+      :value))
 
 (defn get-total-rating
   [game]
   (let [ratings (:rating game)
-        user-ratings (vals ratings)]
-    user-ratings))
-;; (map #(+ (:value %)))
+        user-ratings (vals ratings)
+        rating-values (map :value user-ratings)]
+    (/ (reduce + rating-values) (count rating-values))))
 
 (defn game-box
   [game
    user]
-  (let [rating (get-rating game user)
-        total-rating 1]
-    (println "Gmo: " (get-total-rating game))
+  (let [rating (-> (get-rating game user)
+                   (/ 10)
+                   int)
+        total-rating (-> (get-total-rating game)
+                         (/ 10)
+                         int)]
+    ;; (println "Gmo: " (get-total-rating game))
 
     [h-box
      :style { :background-color "#FFFFFF"}
