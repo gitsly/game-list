@@ -8,8 +8,13 @@
            [org.bson.types ObjectId]
            [org.joda.time DateTimeZone]))
 
-(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
-(def db-name "live") ; If using docker-compose, ensure this is referring to image name
+;; (if config/debug?
+;;   (do
+(def db-host "localhost")
+(def db-name "test")
+;; (do
+;;   (def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
+;;   (def db-name "live")))
 
 (defn connect []
   "Connect to mongo db"
@@ -20,12 +25,12 @@
     db))
 
 (defn collection
-  "Retrieve collection by name"
-  [collection]
-  (let [db (connect)
-        result(mc/find db collection)]
-    (-> result
-        seq)))
+"Retrieve collection by name"
+[collection]
+(let [db (connect)
+      result(mc/find db collection)]
+(-> result
+    seq)))
 
 ;; (defn by-id
 ;;   "Get in collection by id, return keywordized"
@@ -39,27 +44,27 @@
 ;; (user "David")
 
 (defn user
-  "Get single user (keywordized)"
-  [user]
-  (mc/find-one-as-map (connect) "users" {:user user}))
+"Get single user (keywordized)"
+[user]
+(mc/find-one-as-map (connect) "users" {:user user}))
 
 
 
 (defn add-game
-  [game]
-  (mc/insert-and-return (connect) "games" game))
+[game]
+(mc/insert-and-return (connect) "games" game))
 
 (defn update-game
-  [game]
-  (let [oid (-> game :_id (ObjectId.))
-        game-no-id (dissoc game :_id)]
-    ;; (log "Db update game: " game-no-id)
-    (mc/update-by-id (connect) "games" oid game-no-id)))
+[game]
+(let [oid (-> game :_id (ObjectId.))
+      game-no-id (dissoc game :_id)]
+;; (log "Db update game: " game-no-id)
+(mc/update-by-id (connect) "games" oid game-no-id)))
 
 (defn remove-game
-  [game]
-  (let [oid (-> game :_id (ObjectId.))]
-    (mc/remove-by-id (connect) "games" oid)))
+[game]
+(let [oid (-> game :_id (ObjectId.))]
+(mc/remove-by-id (connect) "games" oid)))
 
 
 ;; Test update functionality
@@ -75,18 +80,18 @@
 
 ;; Sample 'full' game entry (for testing etc)
 (def test-game {:_id "5cb807a48749801ddbd35cbd",
-                :name "Karlsa",
-                :test "12",
-                :added (time/now)
-                :rating [{ "Martin" { :value "4", :date "2019-12-20"}}
-                         { "Anna" { :value "5", :date "2019-09-20"}}]})
+:name "Karlsa",
+:test "12",
+:added (time/now)
+:rating [{ "Martin" { :value "4", :date "2019-12-20"}}
+         { "Anna" { :value "5", :date "2019-09-20"}}]})
 ;; And it's insertion
 ;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
 
 (def bullen-users [{:user "David" :secret "flink" }
-                   {:user "Anna" :secret "powermästare sill" }
-                   {:user "Simon" :secret "zander" }
-                   {:user "Martin" :secret "kristall katarina" :moredata {:strength "testas sub"}}])
+{:user "Anna" :secret "powermästare sill" }
+{:user "Simon" :secret "zander" }
+{:user "Martin" :secret "kristall katarina" :moredata {:strength "testas sub"}}])
 ;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)
 
 ;;------------------------------------------------------------------------------
@@ -98,8 +103,8 @@
          :game "Alchemists"
          :time 4.0
          :participants ["David" "Anna" "Simon" "Martin"]}
-        {:date "2019-05-03"
-         :game "Tiny epic defenders"
-         :time 1.0
-         :participants ["David" "Anna" "Simon" "Martin"]}
-        ])
+{:date "2019-05-03"
+ :game "Tiny epic defenders"
+ :time 1.0
+ :participants ["David" "Anna" "Simon" "Martin"]}
+])

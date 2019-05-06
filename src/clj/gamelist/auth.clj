@@ -17,5 +17,5 @@
       password (:password authdata)]
   (user-valid username password)))
 
-(def backend (backends/basic {:realm "MyApi"
+(def backend (backends/basic {:realm "gloomy"
                               :authfn authfn}))
