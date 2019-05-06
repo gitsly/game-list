@@ -215,7 +215,7 @@
                :child [v-box
                        :size "1"
                        :children [[box :style {:font-weight "bold"}
-                                   :child (str @page-name "(" @user ")")]
+                                   :child (str @page-name " (" @user ")")]
                                   (navigation-panel)]]]
      :panel-2 [scroller
                :attr  {:id "right-panel"}

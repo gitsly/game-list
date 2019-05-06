@@ -46,10 +46,11 @@
   ;; (Thread/sleep 1000) ; fake some processing time
   (let [updated-game (-> request
                          :body
-                         (dissoc :selected)
                          (assoc :updated (time/now)))]
     (log "update-game: " updated-game)
-    (db/update-game updated-game)
+    ;; TODO: Potentially have a nested entity for all 'UI only' data, strip this
+    ;; before saving to DB
+    (db/update-game (dissoc updated-game :selected))
     (-> updated-game
         json-response)))
 
