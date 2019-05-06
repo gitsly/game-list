@@ -99,13 +99,23 @@
    (-> db
        (assoc :panel selected-panel))))
 
+
+(defn set-as-selected
+  [game
+   selected-id]
+  "TODO: must be an easier way to modify nested ui->selected prop"
+  (let [ui (:ui game)
+        id (:_id game)
+        selected? (= id selected-id)
+        volatile-new (assoc ui :selected selected?)] ;(= (:_id game selected-id))
+    (assoc game :ui volatile-new)))
+
 (defn select-game
   [games
    selected-id]
   "Generate a collection with selected field set, will be true for one game in
   collection where id is matched"
-  (map #(assoc % :ui { :selected (= (:_id %)
-                                    selected-id)}) games))
+  (map #(set-as-selected % selected-id) games))
 
 (rf/reg-event-db
  ::set-selected-game
@@ -115,7 +125,6 @@
          id (:_id game)]
      (println "set selected game: " id)
      (assoc db :games (select-game games id)))))
-
 
 (defn new-game [name]
   "Perform cljs-http request,
