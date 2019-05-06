@@ -60,8 +60,8 @@
                 :name "Karlsa",
                 :test "12",
                 :added (time/now)
-                :rating [{:user "Martin", :value "4", :date "2019-12-20"}
-                         {:user "Anna", :value "7", :date "2019-12-21"}]})
+                :rating [{ "Martin" { :value "4", :date "2019-12-20"}}
+                         { "Anna" { :value "5", :date "2019-09-20"}}]})
 ;; And it's insertion
 ;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
 

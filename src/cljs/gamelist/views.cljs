@@ -43,6 +43,7 @@
         slider-val (reagent/atom 50)]
     [h-box
      ;; :padding "2px"
+     :style { :background-color "#EEEEEE" }
      :gap "12px"
      :children [[box :child name]
                 [slider
@@ -65,6 +66,7 @@
 (defn game-box
   [game]
   [h-box
+   :style { :background-color "#FFFFFF"}
    :children [[:div {:class "game"
                      :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
@@ -77,43 +79,46 @@
 
 
 (defn div-loading
-[]
-(let [loading (rf/subscribe [::subs/loading?])
-      games (rf/subscribe [::subs/games])]
-  [:div "Loading: " (str @loading)]))
+  []
+  (let [loading (rf/subscribe [::subs/loading?])
+        games (rf/subscribe [::subs/games])]
+    [:div "Loading: " (str @loading)]))
 
-(defn add-game-box
-[]
-(let [text-val (reagent/atom "")]
-  [input-text
-   :model            text-val
-   :width            "300px"
-   :placeholder      "Game name"
-   :change-on-blur?  true
-   :on-change        #((rf/dispatch [::events/add-game %])
-                       (reset! text-val %))]))
 
 ;;--------------------------------------------------------------------------------
 ;; Panels
 ;;--------------------------------------------------------------------------------
 (defn about-panel
-[]
-[box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
+  []
+  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
 
 (defn games-panel
-[]
-(let [games (rf/subscribe [::subs/games])]
-  [v-box
-   :children [[:h3 "Listan över alla spel"]
+  []
+  (let [games (rf/subscribe [::subs/games])]
+    [v-box
+     :children [[:h3 "Listan över alla spel"]
 
-              [v-box
-               :children [(for [game @games]
-                            ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
+                [v-box
+                 :children [(for [game @games]
+                              ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
 
+(defn add-game-panel
+  []
+  (let [text-val (reagent/atom "")]
+    [v-box
+     :children [[:h3 "Lägg till nytt spel"]
+                [input-text
+                 :model            text-val
+                 :width            "300px"
+                 :placeholder      "Spelnamn"
+                 :change-on-blur?  true
+                 :on-change        #((rf/dispatch [::events/add-game %])
+                                     (reset! text-val %))]]]))
 
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
-             {:id 1 :name "Om sidan" :render about-panel }])
+             {:id 1 :name "Lägg till spel" :render add-game-panel }
+             {:id 2 :name "Om sidan" :render about-panel }])
 
 ;; (defn nav-item
 ;;   [item]
@@ -155,7 +160,7 @@
      ;; This assumes that height of <body> is itself also set to 100%.
      ;; width does not need to be set.
      :height   "100%"
-     :initial-split 12
+     :initial-split 20.0
      :margin "0px"
      :panel-1 [scroller
                :v-scroll :auto
