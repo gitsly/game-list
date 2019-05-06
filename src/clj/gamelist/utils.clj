@@ -97,4 +97,8 @@
   ;; Tvåskutt
   (map #(* % 2) (range 1 101))
 
+  ;; Attach more data
+  (let [users [{:name "James" :age 26}
+               {:name "John" :age 43}]]
+    (map #(assoc % :test 12) users))
   ); EndComment

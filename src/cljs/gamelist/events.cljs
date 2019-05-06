@@ -39,7 +39,7 @@
    (let [body (-> response :body first)
          games (:games body)
          user (:user body)]
-     (println "client: get-all-games-response: " games ", User:" user)
+     ;; (println "client: get-all-games-response: " games ", User:" user)
      (-> db
          (assoc :user user)
          (assoc :games games)))))
@@ -61,7 +61,7 @@
  ::update-game
  (fn [db
       [event-name game]]
-   (println "client: update-game" (:name game))
+   ;; (println "client: update-game" (:name game))
    (update-game game)
    (-> db
        (assoc :loading? true))))
@@ -76,7 +76,7 @@
          new-game-list (-> (zipmap (map #(:_id %) games) games)
                            (assoc game-id updated-game)
                            vals)]
-     (println "client: update-game-response: " new-game-list)
+     ;; (println "client: update-game-response: " new-game-list)
      (-> db
          (assoc :loading? false)
          (assoc :games new-game-list)))))
@@ -102,7 +102,10 @@
 (defn select-game
   [games
    selected-id]
-  (map #(assoc % :ui { :selected (= (:_id %) selected-id)}) games))
+  "Generate a collection with selected field set, will be true for one game in
+  collection where id is matched"
+  (map #(assoc % :ui { :selected (= (:_id %)
+                                    selected-id)}) games))
 
 (rf/reg-event-db
  ::set-selected-game
