@@ -75,11 +75,20 @@
       (/ 10)
       int))
 
+(defn get-total-rating
+  [game]
+  (let [ratings (:rating game)
+        user-ratings (vals ratings)]
+    user-ratings))
+;; (map #(+ (:value %)))
+
 (defn game-box
   [game
    user]
-  (let [rating (get-rating game user)]
-    (println "Gmo: " rating)
+  (let [rating (get-rating game user)
+        total-rating 1]
+    (println "Gmo: " (get-total-rating game))
+
     [h-box
      :style { :background-color "#FFFFFF"}
      :children [[box
@@ -87,7 +96,10 @@
                  :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
                 [box
                  :width "20px"
-                 :child (if rating [:p rating] "-")]]]))
+                 :child (if rating [:p rating] "-")]
+                [box
+                 :width "20px"
+                 :child (if total-rating [:p total-rating] "-")]]]))
 
 (defn game-common-box
 "Display common game content"
