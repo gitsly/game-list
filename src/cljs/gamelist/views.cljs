@@ -48,6 +48,31 @@
         rating-values (map :value user-ratings)]
     (/ (reduce + rating-values) (count rating-values))))
 
+(defn game-rate-box
+  [game
+   user]
+  (let [delete-icon "zmdi-delete"
+        save-icon "zmdi-save"
+        curr-rating (get-rating game user)
+        slider-val (reagent/atom (if curr-rating curr-rating 50))]
+    [h-box
+     :width "300px"
+     :children [[slider
+                 :width  "90px"
+                 :model  slider-val
+                 :min 0, :max 100, :step 10
+                 :on-change #(reset! slider-val %)
+                 :disabled? false]
+                [md-icon-button
+                 :md-icon-name save-icon
+                 :tooltip      "Spara"
+                 :size         :smaller
+                 :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
+                [md-icon-button
+                 :md-icon-name delete-icon
+                 :tooltip      "Ta bort spel"
+                 :size         :smaller
+                 :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
 ;; TODO: unify better with unselected box
 (defn game-selected-box
@@ -55,10 +80,6 @@
    user]
   (let [id (:_id game)
         name (:name game)
-        delete-icon "zmdi-delete"
-        save-icon "zmdi-save"
-        curr-rating (get-rating game user)
-        slider-val (reagent/atom (if curr-rating curr-rating 50))
         rating (-> (get-rating game user)
                    (/ 10)
                    int)
@@ -69,25 +90,8 @@
      ;; :padding "2px"
      :style { :background-color "#EEEFFE" }
      :gap "12px"
-     :children [[h-box
-                 :width "300px"
-                 :children [[box :child name]
-                            [slider
-                             :width  "90px"
-                             :model  slider-val
-                             :min 0, :max 100, :step 10
-                             :on-change #(reset! slider-val %)
-                             :disabled? false]
-                            [md-icon-button
-                             :md-icon-name save-icon
-                             :tooltip      "Spara"
-                             :size         :smaller
-                             :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
-                            [md-icon-button
-                             :md-icon-name delete-icon
-                             :tooltip      "Ta bort spel"
-                             :size         :smaller
-                             :on-click #(rf/dispatch [::events/remove-selected-game game])]]]
+     :children [[box :child name]
+                (when :selected game (game-rate-box game user))
                 [box
                  :width "30px"
                  :child (if (> rating 0) [:p rating] "-")]
