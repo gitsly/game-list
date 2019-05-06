@@ -132,8 +132,8 @@
 ;; Panels
 ;;--------------------------------------------------------------------------------
 (defn about-panel
-[]
-[box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
+  []
+  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje."])
 
 ;; TODO: make TR's
 (defn games-panel
@@ -153,17 +153,17 @@
                               ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
 
 (defn add-game-panel
-[]
-(let [text-val (reagent/atom "")]
-  [v-box
-   :children [[:h3 "Lägg till nytt spel"]
-              [input-text
-               :model            text-val
-               :width            "300px"
-               :placeholder      "Spelnamn"
-               :change-on-blur?  true
-               :on-change        #((rf/dispatch [::events/add-game %])
-                                   (reset! text-val %))]]]))
+  []
+  (let [text-val (reagent/atom "")]
+    [v-box
+     :children [[:h3 "Lägg till nytt spel"]
+                [input-text
+                 :model            text-val
+                 :width            "300px"
+                 :placeholder      "Spelnamn"
+                 :change-on-blur?  true
+                 :on-change        #((rf/dispatch [::events/add-game %])
+                                     (reset! text-val ""))]]]))
 
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
