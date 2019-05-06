@@ -13,6 +13,7 @@
    :panel 0
    :games []
    :loading? false
+   :user nil
    })
 
 ;; "votes": [{"David": "4"},{"Anna": "7"}]

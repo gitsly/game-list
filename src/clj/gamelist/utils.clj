@@ -84,4 +84,10 @@
         hmap (zipmap (map #(:name %) users) users)]
     (assoc hmap "James" {:name "James" :age 12}))
 
+  ;; Get by key
+  (let [users [{:name "James" :age 26}
+               {:name "John" :age 43}]
+        hmap (zipmap (map #(:name %) users) users)]
+    (get hmap "John" ))
+
   ); EndComment

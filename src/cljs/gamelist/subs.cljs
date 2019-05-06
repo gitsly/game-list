@@ -19,6 +19,11 @@
    (:games db)))
 
 (rf/reg-sub
+ ::user
+ (fn [db]
+   (:user db)))
+
+(rf/reg-sub
  ::loading?
  (fn [db]
    (:loading? db)))

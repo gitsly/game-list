@@ -35,7 +35,8 @@
 
 
 (defn game-selected-box
-  [game]
+  [game
+   user]
   (let [id (:_id game)
         name (:name game)
         delete-icon "zmdi-delete"
@@ -64,49 +65,64 @@
                  :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
 (defn game-box
-  [game]
-  [h-box
-   :style { :background-color "#FFFFFF"}
-   :children [[:div {:class "game"
-                     :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
+  [game
+   user]
+  (let [rating (-> game
+                   :rating
+                   (get (keyword user))
+                   :value
+                   (/ 10)
+                   int)]
+    (println "Gmo: " rating)
+    [h-box
+     :style { :background-color "#FFFFFF"}
+     :children [[box
+                 :width "300px"
+                 :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+                [box
+                 :width "20px"
+                 :child (if rating [:p rating] "-")]]]))
 
 (defn game-common-box
-  "Display common game content"
-  [game]
-  (if (:selected game)
-    (game-selected-box game)
-    (game-box game)))
+"Display common game content"
+[game
+ user]
+(if (:selected game)
+  (game-selected-box game user)
+  (game-box game user)))
 
 
 ;;--------------------------------------------------------------------------------
 ;; Panels
 ;;--------------------------------------------------------------------------------
 (defn about-panel
-  []
-  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
+[]
+[box :child "Spellistan i digitalt format. En liten sida för ett stort nöje"])
 
+;; TODO: make TR's
 (defn games-panel
-  []
-  (let [games (rf/subscribe [::subs/games])]
-    [v-box
-     :children [[:h3 "Listan över alla spel"]
-
-                [v-box
-                 :children [(for [game @games]
-                              ^{:key (:_id game)} [:div (game-common-box game)])]]]]))
+[]
+(let [games (rf/subscribe [::subs/games])
+      user-sub   (rf/subscribe [::subs/user])
+      user @user-sub]
+  [v-box
+   :children [[:h3 "Listan över alla spel"]
+              [v-box
+               :children [(for [game @games]
+                            ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
 
 (defn add-game-panel
-  []
-  (let [text-val (reagent/atom "")]
-    [v-box
-     :children [[:h3 "Lägg till nytt spel"]
-                [input-text
-                 :model            text-val
-                 :width            "300px"
-                 :placeholder      "Spelnamn"
-                 :change-on-blur?  true
-                 :on-change        #((rf/dispatch [::events/add-game %])
-                                     (reset! text-val %))]]]))
+[]
+(let [text-val (reagent/atom "")]
+  [v-box
+   :children [[:h3 "Lägg till nytt spel"]
+              [input-text
+               :model            text-val
+               :width            "300px"
+               :placeholder      "Spelnamn"
+               :change-on-blur?  true
+               :on-change        #((rf/dispatch [::events/add-game %])
+                                   (reset! text-val %))]]]))
 
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
