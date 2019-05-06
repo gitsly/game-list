@@ -6,7 +6,7 @@
    [goog.object :as gobject]
    [clojure.string :as string]
    [re-com.core
-    :refer [md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
+    :refer [modal-panel md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
     :refer-macros [handler-fn]]
    [re-com.misc   :refer [slider-args-desc]]
    [reagent.core :as reagent]))
@@ -71,18 +71,11 @@
                      :on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]])
 
 (defn game-common-box
-"Display common game content"
-[game]
-(if (:selected game)
-  (game-selected-box game)
-  (game-box game)))
-
-
-(defn div-loading
-  []
-  (let [loading (rf/subscribe [::subs/loading?])
-        games (rf/subscribe [::subs/games])]
-    [:div "Loading: " (str @loading)]))
+  "Display common game content"
+  [game]
+  (if (:selected game)
+    (game-selected-box game)
+    (game-box game)))
 
 
 ;;--------------------------------------------------------------------------------
@@ -146,6 +139,17 @@
     [v-box :children [(for [item items]
                         ^{:key (:id item)} [nav-item item])]]))
 
+(defn loading-popover
+  []
+  (let [loading? (rf/subscribe [::subs/loading?])]
+    (when @loading?
+      [modal-panel
+       :backdrop-color   "grey"
+       :backdrop-opacity 0.4
+       ;; :style            {}
+       :child            [:p "Laddar..."]])))
+
+
 (defn main-panel
   []
   (let [panel-id (rf/subscribe [::subs/panel])
@@ -173,6 +177,7 @@
                :attr  {:id "right-panel"}
                :child [v-box
                        :size  "1"
-                       :children [[box
+                       :children [(loading-popover)
+                                  [box
                                    :padding "0px 0px 0px 50px"
                                    :child [(:render selected-panel)]]]]]]))
