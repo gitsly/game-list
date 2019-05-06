@@ -64,15 +64,21 @@
                  :size         :smaller
                  :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
+
+(defn get-rating
+  [game
+   user]
+  (-> game
+      :rating
+      (get (keyword user))
+      :value
+      (/ 10)
+      int))
+
 (defn game-box
   [game
    user]
-  (let [rating (-> game
-                   :rating
-                   (get (keyword user))
-                   :value
-                   (/ 10)
-                   int)]
+  (let [rating (get-rating game user)]
     (println "Gmo: " rating)
     [h-box
      :style { :background-color "#FFFFFF"}

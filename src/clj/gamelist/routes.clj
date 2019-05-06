@@ -43,9 +43,10 @@
 
 (defn update-game-handler
   [request]
-  (Thread/sleep 1000) ; fake some processing time
+  ;; (Thread/sleep 1000) ; fake some processing time
   (let [updated-game (-> request
                          :body
+                         (dissoc :selected)
                          (assoc :updated (time/now)))]
     (log "update-game: " updated-game)
     (db/update-game updated-game)
