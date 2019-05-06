@@ -59,7 +59,7 @@
         slider-val (reagent/atom (get-rating game user))]
     [h-box
      ;; :padding "2px"
-     :style { :background-color "#EEEEEE" }
+     :style { :background-color "#EEEFFE" }
      :gap "12px"
      :children [[box :child name]
                 [slider
@@ -98,10 +98,10 @@
                  :width "300px"
                  :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
                 [box
-                 :width "20px"
+                 :width "30px"
                  :child (if rating [:p rating] "-")]
                 [box
-                 :width "20px"
+                 :width "30px"
                  :child (if total-rating [:p total-rating] "-")]]]))
 
 (defn game-common-box
@@ -122,15 +122,20 @@
 
 ;; TODO: make TR's
 (defn games-panel
-[]
-(let [games (rf/subscribe [::subs/games])
-      user-sub   (rf/subscribe [::subs/user])
-      user @user-sub]
-  [v-box
-   :children [[:h3 "Listan över alla spel"]
-              [v-box
-               :children [(for [game @games]
-                            ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
+  []
+  (let [games (rf/subscribe [::subs/games])
+        user-sub   (rf/subscribe [::subs/user])
+        user @user-sub]
+    [v-box
+     :children [[:h3 "Listan över alla spel"]
+                [v-box
+                 :children [[h-box
+                             :style { :background-color "#EEEEEE"}
+                             :children [[box :width "300px" :child "Namn"]
+                                        [box :width "30px" :child "Mitt"]
+                                        [box :width "30px" :child "To"]]]
+                            (for [game @games]
+                              ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
 
 (defn add-game-panel
 []
@@ -155,19 +160,19 @@
 ;;   [box :child (:name item)])
 
 (defn nav-item
-"Returns a function to render a navigation item"
-[]
-(let [mouse-over? (reagent/atom false)]
-  (fn [item]
-    (let [label (:name item)
-          id  (:id item)]
-      [:div
-       {:style (when @mouse-over? {:font-weight "bold"
-                                   :background-color "#CCCCCC"})
-        :on-click      #(rf/dispatch [::events/set-panel id])
-        :on-mouse-over #(reset! mouse-over? true)
-        :on-mouse-out  #(reset! mouse-over? false)}
-       label]))))
+  "Returns a function to render a navigation item"
+  []
+  (let [mouse-over? (reagent/atom false)]
+    (fn [item]
+      (let [label (:name item)
+            id  (:id item)]
+        [:div
+         {:style (when @mouse-over? {:font-weight "bold"
+                                     :background-color "#CCCCCC"})
+          :on-click      #(rf/dispatch [::events/set-panel id])
+          :on-mouse-over #(reset! mouse-over? true)
+          :on-mouse-out  #(reset! mouse-over? false)}
+         label]))))
 
 
 (defn navigation-panel
@@ -191,6 +196,7 @@
   []
   (let [panel-id (rf/subscribe [::subs/panel])
         page-name (rf/subscribe [::subs/name])
+        user (rf/subscribe [::subs/user])
         selected-panel (nth panels @panel-id)
         ;; selected-panel (first panels)
         ]
@@ -208,7 +214,8 @@
                :h-scroll :off
                :child [v-box
                        :size "1"
-                       :children [[box :style {:font-weight "bold"} :child @page-name]
+                       :children [[box :style {:font-weight "bold"}
+                                   :child (str @page-name "(" @user ")")]
                                   (navigation-panel)]]]
      :panel-2 [scroller
                :attr  {:id "right-panel"}
