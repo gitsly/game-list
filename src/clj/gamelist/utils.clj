@@ -22,6 +22,7 @@
 ;;------------------------------------------------------------------------------
 ;; To learn
 ;;------------------------------------------------------------------------------
+
 (comment
 
   (when-let [apa 1] apa)
@@ -33,9 +34,6 @@
   (def selected-user (first (filter #(= "John" (:name %)) users)))
   (update users (.indexOf users selected-user) assoc :age 8)
 
-  ;; Better would prob be to use a hash-map instead
-  (def users2 {"James" {:name "James" :age 26}
-               "John" {:name "John" :age 43}})
 
   ;;You can then use assoc-in
   (assoc-in users2 ["John" :age] 8)
@@ -74,5 +72,16 @@
     [game]
     {(:name game) game})
   (map #(make-entry %) some-games)
+
+  (let [users [{:name "James" :age 26}
+               {:name "John" :age 43}]
+        hmap (zipmap (map #(:name %) users) users)]
+    (assoc-in hmap ["James" :age] 13))
+
+  ;; Replace entire user by key
+  (let [users [{:name "James" :age 26}
+               {:name "John" :age 43}]
+        hmap (zipmap (map #(:name %) users) users)]
+    (assoc hmap "James" {:name "James" :age 12}))
 
   ); EndComment

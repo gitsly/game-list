@@ -71,12 +71,12 @@
  (fn
    [db [_ response]]
    (let [games (:games db)
-         game (:body response)
-         game-id (:_id game)
+         updated-game (:body response)
+         game-id (:_id updated-game)
          new-game-list (-> (zipmap (map #(:_id %) games) games)
-                           (assoc [game-id] game)
+                           (assoc game-id updated-game)
                            vals)]
-     (println "client: update-game-response: " game)
+     (println "client: update-game-response: " new-game-list)
      (-> db
          (assoc :loading? false)
          (assoc :games new-game-list)))))
