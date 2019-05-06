@@ -104,11 +104,11 @@
   [game
    selected-id]
   "TODO: must be an easier way to modify nested ui->selected prop"
-  (let [ui (:ui game)
+  (let [volatile (:volatile game)
         id (:_id game)
         selected? (= id selected-id)
-        volatile-new (assoc ui :selected selected?)] ;(= (:_id game selected-id))
-    (assoc game :ui volatile-new)))
+        volatile-new (assoc volatile :selected selected?)]
+    (assoc game :volatile volatile-new)))
 
 (defn select-game
   [games
@@ -125,6 +125,7 @@
          id (:_id game)]
      (println "set selected game: " id)
      (assoc db :games (select-game games id)))))
+
 
 (defn new-game [name]
   "Perform cljs-http request,

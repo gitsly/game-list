@@ -66,7 +66,7 @@
    user]
   (let [id (:_id game)
         name (:name game)
-        selected? (-> game :ui :selected)
+        selected? (-> game :volatile :selected)
         rating (-> (subs/get-rating game user) (/ 10) int)
         total-rating (-> (subs/get-total-rating game) (/ 10) int)]
     [h-box

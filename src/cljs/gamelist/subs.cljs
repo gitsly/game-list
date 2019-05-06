@@ -35,21 +35,15 @@
  (fn [db]
    (:panel db)))
 
-
-;; (defn step1
-;;   [games]
-;;   (map #(assoc % :ui {:test "apan"}) games))
-
-;; TODO: rename ui to volatile
 (defn prep-game
   [game
    user]
   "Attach generated data before passing to views"
-  (let [ui (:ui game)
-        volatile-new (-> ui
+  (let [volatile (:volatile game)
+        volatile-new (-> volatile
                          (assoc :rating-user (get-rating game user))
                          (assoc :rating-total (get-total-rating game)))]
-    (assoc game :ui volatile-new)))
+    (assoc game :volatile volatile-new)))
 
 (rf/reg-sub
  ::games

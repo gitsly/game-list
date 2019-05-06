@@ -48,8 +48,8 @@
                          :body
                          (assoc :updated (time/now)))]
     (log "update-game: " updated-game)
-    ;; skip UI related data when persisting to db
-    (db/update-game (dissoc updated-game :ui))
+    ;; skip volatile related data when persisting to db
+    (db/update-game (dissoc updated-game :volatile))
     (-> updated-game
         json-response)))
 
