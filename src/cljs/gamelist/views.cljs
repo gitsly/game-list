@@ -56,9 +56,9 @@
         curr-rating (get-rating game user)
         slider-val (reagent/atom (if curr-rating curr-rating 50))]
     [h-box
-     :width "300px"
+     :width "150px"
      :children [[slider
-                 :width  "90px"
+                 :width  "80px"
                  :model  slider-val
                  :min 0, :max 100, :step 10
                  :on-change #(reset! slider-val %)
@@ -75,61 +75,32 @@
                  :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
 ;; TODO: unify better with unselected box
-(defn game-selected-box
+(defn game-box
   [game
    user]
   (let [id (:_id game)
         name (:name game)
-        rating (-> (get-rating game user)
-                   (/ 10)
-                   int)
-        total-rating (-> (get-total-rating game)
-                         (/ 10)
-                         int)]
+        selected? (:selected game)
+        rating (-> (get-rating game user) (/ 10) int)
+        total-rating (-> (get-total-rating game) (/ 10) int)]
     [h-box
      ;; :padding "2px"
-     :style { :background-color "#EEEFFE" }
-     :gap "12px"
-     :children [[box :child name]
-                (when :selected game (game-rate-box game user))
-                [box
-                 :width "30px"
-                 :child (if (> rating 0) [:p rating] "-")]
-                [box
-                 :width "30px"
-                 :child (if total-rating [:p total-rating] "-")]]]))
-
-
-(defn game-box
-  [game
-   user]
-  (let [rating (-> (get-rating game user)
-                   (/ 10)
-                   int)
-        total-rating (-> (get-total-rating game)
-                         (/ 10)
-                         int)]
-    ;; (println "Gmo: " (get-total-rating game))
-
-    [h-box
-     :style { :background-color "#FFFFFF"}
+     :style { :background-color (if selected? "#EEEFFE" "FFFFFF")}
+     :gap "8px"
      :children [[box
-                 :width "300px"
+                 :width "150px"
                  :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+                (if selected?
+                  (game-rate-box game user)
+                  [box
+                   :width "150px"
+                   :child ""])
                 [box
                  :width "30px"
                  :child (if (> rating 0) [:p rating] "-")]
                 [box
                  :width "30px"
                  :child (if total-rating [:p total-rating] "-")]]]))
-
-(defn game-common-box
-"Display common game content"
-[game
- user]
-(if (:selected game)
-  (game-selected-box game user)
-  (game-box game user)))
 
 
 ;;--------------------------------------------------------------------------------
@@ -150,11 +121,12 @@
                 [v-box
                  :children [[h-box
                              :style { :background-color "#EEEEEE"}
-                             :children [[box :width "300px" :child "Namn"]
+                             :children [[box :width "200px" :child "Namn"]
+                                        [box :width "100px" :child ""]
                                         [box :width "30px" :child "Mitt"]
                                         [box :width "30px" :child "Tot"]]]
                             (for [game @games]
-                              ^{:key (:_id game)} [:div (game-common-box game user)])]]]]))
+                              ^{:key (:_id game)} [:div (game-box game user)])]]]]))
 
 (defn add-game-panel
   []
