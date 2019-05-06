@@ -33,6 +33,21 @@
   []
   nil)
 
+(defn get-rating
+  [game
+   user]
+  (-> game
+      :rating
+      (get (keyword user))
+      :value))
+
+(defn get-total-rating
+  [game]
+  (let [ratings (:rating game)
+        user-ratings (vals ratings)
+        rating-values (map :value user-ratings)]
+    (/ (reduce + rating-values) (count rating-values))))
+
 
 (defn game-selected-box
   [game
@@ -41,7 +56,7 @@
         name (:name game)
         delete-icon "zmdi-delete"
         save-icon "zmdi-save"
-        slider-val (reagent/atom 50)]
+        slider-val (reagent/atom (get-rating game user))]
     [h-box
      ;; :padding "2px"
      :style { :background-color "#EEEEEE" }
@@ -65,20 +80,6 @@
                  :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
 
-(defn get-rating
-  [game
-   user]
-  (-> game
-      :rating
-      (get (keyword user))
-      :value))
-
-(defn get-total-rating
-  [game]
-  (let [ratings (:rating game)
-        user-ratings (vals ratings)
-        rating-values (map :value user-ratings)]
-    (/ (reduce + rating-values) (count rating-values))))
 
 (defn game-box
   [game
