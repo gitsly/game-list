@@ -166,6 +166,6 @@
          rating {user { :value value }}
          rated-game (assoc game :rating rating)]
      (println "Rated game: " rated-game)
-     (update-game game)
+     (update-game rated-game)
      (-> db
          (assoc :loading? true)))))

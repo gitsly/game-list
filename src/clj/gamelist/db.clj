@@ -50,7 +50,7 @@
   [game]
   (let [oid (-> game :_id (ObjectId.))
         game-no-id (dissoc game :_id)]
-    (log "Db update game: " game-no-id)
+    ;; (log "Db update game: " game-no-id)
     (mc/update-by-id (connect) "games" oid game-no-id)))
 
 (defn remove-game

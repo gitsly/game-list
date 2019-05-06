@@ -44,12 +44,13 @@
 (defn update-game-handler
   [request]
   (Thread/sleep 1000) ; fake some processing time
-  (log "Update game: " (:body request))
-  (-> request
-      :body
-      (assoc :updated (time/now))
-      db/update-game
-      json-response))
+  (let [updated-game (-> request
+                         :body
+                         (assoc :updated (time/now)))]
+    (log "update-game: " updated-game)
+    (db/update-game updated-game)
+    (-> updated-game
+        json-response)))
 
 ;; Route handler for test button
 (defn test-handler
