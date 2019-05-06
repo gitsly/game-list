@@ -88,9 +88,9 @@
 ;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
 
 (def bullen-users [{:user "David" :secret "flink" }
-{:user "Anna" :secret "powermästare sill" }
+{:user "Anna" :secret "powermästaresill" }
 {:user "Simon" :secret "zander" }
-{:user "Martin" :secret "kristall katarina" :moredata {:strength "testas sub"}}])
+{:user "Martin" :secret "kristallkatarina" :moredata {:strength "testas sub"}}])
 ;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)
 
 ;;------------------------------------------------------------------------------

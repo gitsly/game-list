@@ -33,27 +33,13 @@
   []
   nil)
 
-(defn get-rating
-  [game
-   user]
-  (-> game
-      :rating
-      (get (keyword user))
-      :value))
-
-(defn get-total-rating
-  [game]
-  (let [ratings (:rating game)
-        user-ratings (vals ratings)
-        rating-values (map :value user-ratings)]
-    (/ (reduce + rating-values) (count rating-values))))
 
 (defn game-rate-box
   [game
    user]
   (let [delete-icon "zmdi-delete"
         save-icon "zmdi-save"
-        curr-rating (get-rating game user)
+        curr-rating (subs/get-rating game user)
         slider-val (reagent/atom (if curr-rating curr-rating 50))]
     [h-box
      :width "150px"
@@ -81,8 +67,8 @@
   (let [id (:_id game)
         name (:name game)
         selected? (-> game :ui :selected)
-        rating (-> (get-rating game user) (/ 10) int)
-        total-rating (-> (get-total-rating game) (/ 10) int)]
+        rating (-> (subs/get-rating game user) (/ 10) int)
+        total-rating (-> (subs/get-total-rating game) (/ 10) int)]
     [h-box
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}

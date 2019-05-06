@@ -2,6 +2,28 @@
   (:require
    [re-frame.core :as rf]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utilty functions for transforming subscribed data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn get-rating
+  [game
+   user]
+  (-> game
+      :rating
+      (get (keyword user))
+      :value))
+
+(defn get-total-rating
+  [game]
+  (let [ratings (:rating game)
+        user-ratings (vals ratings)
+        rating-values (map :value user-ratings)]
+    (/ (reduce + rating-values) (count rating-values))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Subscriptions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (rf/reg-sub
  ::name
  (fn [db]
