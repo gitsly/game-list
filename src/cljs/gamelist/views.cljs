@@ -56,7 +56,8 @@
         name (:name game)
         delete-icon "zmdi-delete"
         save-icon "zmdi-save"
-        slider-val (reagent/atom (get-rating game user))]
+        rating (get-rating game user)
+        slider-val (reagent/atom (if rating rating 50))]
     [h-box
      ;; :padding "2px"
      :style { :background-color "#EEEFFE" }
