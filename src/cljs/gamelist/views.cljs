@@ -67,12 +67,12 @@
   (let [id (:_id game)
         name (:name game)
         selected? (-> game :volatile :selected)
-        rating (-> (subs/get-rating game user) (/ 10) int)
-        total-rating (-> (subs/get-total-rating game) (/ 10) int)]
+        rating (-> game :volatile :rating-user (/ 10) int)
+        total-rating (-> game :volatile :rating-total (/ 10) int)]
     [h-box
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
-     :gap "8px"
+     :gap "10px"
      :children [[box
                  :width "150px"
                  :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
@@ -106,11 +106,13 @@
      :children [[:h3 "Listan över alla spel"]
                 [v-box
                  :children [[h-box
+                             :gap "10px"
+                             :height "45px"
                              :style { :background-color "#EEEEEE"}
                              :children [[box :width "200px" :child "Namn"]
                                         [box :width "100px" :child ""]
-                                        [box :width "30px" :child "Mitt"]
-                                        [box :width "30px" :child "Tot"]]]
+                                        [box :width "30px" :child "Mitt betyg"]
+                                        [box :width "30px" :child "Snitt"]]]
                             (for [game @games]
                               ^{:key (:_id game)} [:div (game-box game user)])]]]]))
 
