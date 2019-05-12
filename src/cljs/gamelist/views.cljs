@@ -33,11 +33,11 @@
   []
   nil)
 
-;; (def column-widths [150, ])
-
-;; (def col-width
-;;   [index]
-;;   (nth column-widths index))
+(defn game-col-width-px
+  "Retrieve width for game column"
+  [index]
+  (let [column-widths [200 100 30 30]]
+    (str (nth column-widths index) "px")))
 
 (defn game-rate-box
   [game
@@ -66,32 +66,31 @@
                  :size         :smaller
                  :on-click #(rf/dispatch [::events/remove-selected-game game])]]]))
 
-;; TODO: unify better with unselected box
 (defn game-box
-[game
- user]
-(let [id (:_id game)
-      name (:name game)
-      selected? (-> game :volatile :selected)
-      rating (-> game :volatile :rating-user (/ 10) int)
-      total-rating (-> game :volatile :rating-total (/ 10) int)]
+  [game
+   user]
+  (let [id (:_id game)
+        name (:name game)
+        selected? (-> game :volatile :selected)
+        rating (-> game :volatile :rating-user (/ 10) int)
+        total-rating (-> game :volatile :rating-total (/ 10) int)]
     [h-box
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
      :gap "10px"
      :children [[box
-                 :width "150px"
+                 :width (game-col-width-px 0)
                  :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
                 (if selected?
                   (game-rate-box game user)
                   [box
-                   :width "150px"
+                   :width (game-col-width-px 1)
                    :child ""])
                 [box
-                 :width "30px"
+                 :width (game-col-width-px 2)
                  :child (if (> rating 0) [:p rating] "-")]
                 [box
-                 :width "30px"
+                 :width (game-col-width-px 3)
                  :child (if total-rating [:p total-rating] "-")]]]))
 
 
@@ -100,7 +99,8 @@
 ;;--------------------------------------------------------------------------------
 (defn about-panel
   []
-  [box :child "Spellistan i digitalt format. En liten sida för ett stort nöje."])
+  [box :child
+   (str "Spellistan i digitalt format. En liten sida för ett stort nöje.")])
 
 ;; TODO: make TR's
 (defn games-panel
@@ -116,10 +116,10 @@
                              :gap "10px"
                              :height "45px"
                              :style { :background-color "#EEEEEE"}
-                             :children [[box :width "200px" :child "Namn"]
-                                        [box :width "100px" :child ""]
-                                        [box :width "30px" :child "Mitt betyg"]
-                                        [box :width "30px" :child "Snitt"]]]
+                             :children [[box :width (game-col-width-px 0) :child "Namn"]
+                                        [box :width (game-col-width-px 1) :child ""]
+                                        [box :width (game-col-width-px 2) :child "Mitt betyg"]
+                                        [box :width (game-col-width-px 3) :child "Snitt"]]]
                             (for [game sorted-games]
                               ^{:key (:_id game)} [:div (game-box game user)])]]]]))
 

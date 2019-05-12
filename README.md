@@ -18,16 +18,25 @@
 ## Style ideas
 https://clojurians-log.clojureverse.org/beginners/2018-04-05
 
+## MongoDb maintenance hints
+
+### To a collection copy from live database
+use live
+db.cloneCollection("ip:port", "collectionname")
+
+### To move a local collection between local dbs
+use admin
+db.runCommand({renameCollection:"test.people",to:"world.people"});
 
 ## Running compiled weblet
 Compile project to a jar file via:
  'lein uberjar'
- 
+
 Server can then be started via:
  'java -jar target/gamelist.jar'
- 
-## Starting project in docker container 
- 
+
+## Starting project in docker container
+
 
 ## Development
 
