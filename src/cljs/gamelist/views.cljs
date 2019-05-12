@@ -33,6 +33,11 @@
   []
   nil)
 
+;; (def column-widths [150, ])
+
+;; (def col-width
+;;   [index]
+;;   (nth column-widths index))
 
 (defn game-rate-box
   [game
@@ -54,7 +59,7 @@
                  :tooltip      "Spara"
                  :size         :smaller
                  :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
-                [gap :size "20px"]
+                ;; [gap :size "20px"]
                 [md-icon-button
                  :md-icon-name delete-icon
                  :tooltip      "Ta bort spel"
@@ -63,13 +68,13 @@
 
 ;; TODO: unify better with unselected box
 (defn game-box
-  [game
-   user]
-  (let [id (:_id game)
-        name (:name game)
-        selected? (-> game :volatile :selected)
-        rating (-> game :volatile :rating-user (/ 10) int)
-        total-rating (-> game :volatile :rating-total (/ 10) int)]
+[game
+ user]
+(let [id (:_id game)
+      name (:name game)
+      selected? (-> game :volatile :selected)
+      rating (-> game :volatile :rating-user (/ 10) int)
+      total-rating (-> game :volatile :rating-total (/ 10) int)]
     [h-box
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
