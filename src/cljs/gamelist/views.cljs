@@ -1,15 +1,17 @@
 (ns gamelist.views
-  (:require
-   [re-frame.core :as rf]
-   [gamelist.subs :as subs]
-   [gamelist.events :as events]
-   [goog.object :as gobject]
-   [clojure.string :as string]
-   [re-com.core
-    :refer [modal-panel md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
-    :refer-macros [handler-fn]]
-   [re-com.misc   :refer [slider-args-desc]]
-   [reagent.core :as reagent]))
+  (:require [cljs.core :as core]
+            [re-frame.core :as rf]
+            [gamelist.subs :as subs]
+            [goog.string :as gstring]
+            [goog.string.format]
+            [gamelist.events :as events]
+            [goog.object :as gobject]
+            [clojure.string :as string]
+            [re-com.core
+             :refer [modal-panel md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
+             :refer-macros [handler-fn]]
+            [re-com.misc   :refer [slider-args-desc]]
+            [reagent.core :as reagent]))
 
 ;; Material design icons
 (def icons
@@ -73,7 +75,7 @@
         name (:name game)
         selected? (-> game :volatile :selected)
         rating (-> game :volatile :rating-user (/ 10) int)
-        total-rating (-> game :volatile :rating-total (/ 10) int)]
+        total-rating (-> game :volatile :rating-total (/ 10))]
     [h-box
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
@@ -92,7 +94,7 @@
                  :child (if (> rating 0) [:p rating] "-")]
                 [box
                  :width (game-col-width-px 3)
-                 :child (if total-rating [:p total-rating] "-")]]]))
+                 :child (if total-rating [:p (gstring/format "%.1f" total-rating)] "-")]]]))
 
 
 ;;--------------------------------------------------------------------------------

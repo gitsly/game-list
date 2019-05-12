@@ -17,17 +17,20 @@
   [game]
   (let [ratings (:rating game)
         user-ratings (vals ratings)
-        rating-values (map :value user-ratings)]
-    (/ (reduce + rating-values) (count rating-values))))
+        rating-values (map :value user-ratings)
+        cnt (count rating-values)]
+    (if (> cnt 0)
+      (/ (reduce + rating-values) cnt)
+      nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Subscriptions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rf/reg-sub
- ::name
- (fn [db]
-   (:name db)))
+  ::name
+  (fn [db]
+    (:name db)))
 
 ;; Currently selected panel
 (rf/reg-sub
