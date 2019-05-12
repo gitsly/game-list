@@ -1,7 +1,21 @@
 # gamelist
 
-## Style inspirations
+
+## TODO:
+
+- Confirm messagebox for deleting game
+- Enlarge slider and add instant number feedback
+- Add feedback section
+- Eliminate duplicate game 'name' bug
+- Fix sorting... Seems buggy
+- Click on entire row to select a game -> Use :attr
+- Resolve latency (having to reload)
+- Merge votes (and other common data) on the server side instead of client
+  to be able to work simultaneously with voting without affect each other
+
+## Style ideas
 https://clojurians-log.clojureverse.org/beginners/2018-04-05
+
 
 ## Running compiled weblet
 Compile project to a jar file via:
