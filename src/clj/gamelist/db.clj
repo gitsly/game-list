@@ -98,18 +98,25 @@
 ;;------------------------------------------------------------------------------
 
 ;; Time is in hours
-(count [
+(count [{:date "2019-05-12"
+         :game "Innovation"
+         :time 1.3
+         :winner: "Anna"
+         :participants ["David" "Anna" "Martin"]}
         {:date "2019-05-12"
          :game "Biblios"
          :time 0.5
+         :winner: "Martin"
          :participants ["David" "Anna" "Martin"]}
         {:date "2019-05-03"
          :game "Alchemists"
          :time 4.0
+         :winner: "David"
          :participants ["David" "Anna" "Simon" "Martin"]}
         {:date "2019-05-03"
          :game "Tiny epic defenders"
          :time 1.0
+         :winner: "all"
          :participants ["David" "Anna" "Simon" "Martin"]}
         ])
 
