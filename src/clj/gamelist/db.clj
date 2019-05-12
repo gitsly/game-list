@@ -101,22 +101,22 @@
 (count [{:date "2019-05-12"
          :game "Innovation"
          :time 1.3
-         :winner: "Anna"
+         :winner "Anna"
          :participants ["David" "Anna" "Martin"]}
         {:date "2019-05-12"
          :game "Biblios"
          :time 0.5
-         :winner: "Martin"
+         :winner "Martin"
          :participants ["David" "Anna" "Martin"]}
         {:date "2019-05-03"
          :game "Alchemists"
          :time 4.0
-         :winner: "David"
+         :winner "David"
          :participants ["David" "Anna" "Simon" "Martin"]}
         {:date "2019-05-03"
          :game "Tiny epic defenders"
          :time 1.0
-         :winner: "all"
+         :winner "all"
          :participants ["David" "Anna" "Simon" "Martin"]}
         ])
 
