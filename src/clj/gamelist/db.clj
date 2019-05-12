@@ -8,11 +8,11 @@
            [org.bson.types ObjectId]
            [org.joda.time DateTimeZone]))
 
-;;(def db-host "localhost")
-;;(def db-name "test")
+(def db-host "localhost")
+(def db-name "test")
 
-(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
-(def db-name "live")
+;;(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
+;;(def db-name "live")
 
 (defn connect []
 "Connect to mongo db"
