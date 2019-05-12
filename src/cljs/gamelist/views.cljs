@@ -54,6 +54,7 @@
                  :tooltip      "Spara"
                  :size         :smaller
                  :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
+                [gap :size "20px"]
                 [md-icon-button
                  :md-icon-name delete-icon
                  :tooltip      "Ta bort spel"

@@ -25,12 +25,12 @@
     db))
 
 (defn collection
-"Retrieve collection by name"
-[collection]
-(let [db (connect)
-      result(mc/find db collection)]
-(-> result
-    seq)))
+  "Retrieve collection by name"
+  [collection]
+  (let [db (connect)
+        result(mc/find db collection)]
+    (-> result
+        seq)))
 
 ;; (defn by-id
 ;;   "Get in collection by id, return keywordized"
@@ -44,9 +44,9 @@
 ;; (user "David")
 
 (defn user
-"Get single user (keywordized)"
-[user]
-(mc/find-one-as-map (connect) "users" {:user user}))
+  "Get single user (keywordized)"
+  [user]
+  (mc/find-one-as-map (connect) "users" {:user user}))
 
 
 
@@ -58,13 +58,13 @@
 [game]
 (let [oid (-> game :_id (ObjectId.))
       game-no-id (dissoc game :_id)]
-;; (log "Db update game: " game-no-id)
-(mc/update-by-id (connect) "games" oid game-no-id)))
+  ;; (log "Db update game: " game-no-id)
+  (mc/update-by-id (connect) "games" oid game-no-id)))
 
 (defn remove-game
-  [game]
-  (let [oid (-> game :_id (ObjectId.))]
-    (mc/remove-by-id (connect) "games" oid)))
+[game]
+(let [oid (-> game :_id (ObjectId.))]
+  (mc/remove-by-id (connect) "games" oid)))
 
 
 ;; Test update functionality
@@ -88,9 +88,9 @@
 ;; (mc/insert-and-return (connect) "games" (dissoc test-game :_id))
 
 (def bullen-users [{:user "David" :secret "flink" }
-{:user "Anna" :secret "powermästaresill" }
-{:user "Simon" :secret "zander" }
-{:user "Martin" :secret "kristallkatarina" :moredata {:strength "testas sub"}}])
+                   {:user "Anna" :secret "powermästaresill" }
+                   {:user "Simon" :secret "zander" }
+                   {:user "Martin" :secret "kristallkatarina" :moredata {:strength "testas sub"}}])
 ;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)
 
 ;;------------------------------------------------------------------------------
@@ -98,7 +98,12 @@
 ;;------------------------------------------------------------------------------
 
 ;; Time is in hours
-(count [{:date "2019-05-03"
+(count [
+        {:date "2019-05-12"
+         :game "Biblios"
+         :time 0.5
+         :participants ["David" "Anna" "Martin"]}
+        {:date "2019-05-03"
          :game "Alchemists"
          :time 4.0
          :participants ["David" "Anna" "Simon" "Martin"]}
