@@ -36,7 +36,7 @@
 (defn game-col-width-px
   "Retrieve width for game column"
   [index]
-  (let [column-widths [200 100 30 30]]
+  (let [column-widths [200 200 30 30]]
     (str (nth column-widths index) "px")))
 
 (defn game-rate-box
@@ -47,9 +47,9 @@
         curr-rating (subs/get-rating game user)
         slider-val (reagent/atom (if curr-rating curr-rating 50))]
     [h-box
-     :width "150px"
+     :width (game-col-width-px 1)
      :children [[slider
-                 :width  "80px"
+                 :width  "140px"
                  :model  slider-val
                  :min 0, :max 100, :step 10
                  :on-change #(reset! slider-val %)
@@ -59,7 +59,7 @@
                  :tooltip      "Spara"
                  :size         :smaller
                  :on-click #(rf/dispatch [::events/set-rating game @slider-val])]
-                ;; [gap :size "20px"]
+                [gap :size "20px"]
                 [md-icon-button
                  :md-icon-name delete-icon
                  :tooltip      "Ta bort spel"
@@ -86,6 +86,7 @@
                   [box
                    :width (game-col-width-px 1)
                    :child ""])
+
                 [box
                  :width (game-col-width-px 2)
                  :child (if (> rating 0) [:p rating] "-")]
