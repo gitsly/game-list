@@ -8,21 +8,19 @@
            [org.bson.types ObjectId]
            [org.joda.time DateTimeZone]))
 
-;; (if config/debug?
-;;   (do
-(def db-host "localhost")
-(def db-name "test")
-;; (do
-;;   (def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
-;;   (def db-name "live")))
+;;(def db-host "localhost")
+;;(def db-name "test")
+
+(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
+(def db-name "live")
 
 (defn connect []
-  "Connect to mongo db"
-  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-        ^ServerAddress address(mg/server-address db-host 27017)
-        conn                  (mg/connect address options)
-        db                    (mg/get-db conn db-name)]
-    db))
+"Connect to mongo db"
+(let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
+      ^ServerAddress address(mg/server-address db-host 27017)
+      conn                  (mg/connect address options)
+      db                    (mg/get-db conn db-name)]
+db))
 
 (defn collection
   "Retrieve collection by name"
@@ -51,8 +49,8 @@
 
 
 (defn add-game
-[game]
-(mc/insert-and-return (connect) "games" game))
+  [game]
+  (mc/insert-and-return (connect) "games" game))
 
 (defn update-game
 [game]
@@ -117,8 +115,11 @@
          :game "Tiny epic defenders"
          :time 1.0
          :winner "all"
-         :participants ["David" "Anna" "Simon" "Martin"]}
-        ])
+         :participants ["David" "Anna" "Simon" "Martin"]
+         }
+        {:date "2019-03-23" :game "Agricola" :time 3.5
+         :participants ["David" "Anna" "Simon" "Martin"]
+         }])
 
 ;; (def all-games
 ;;   [{:name "Star Realms",:added "2019-05-06T13:12:34.370Z",:rating {:Martin {:value 50},:David {:value 50}},:updated "2019-05-11T11:39:21.319Z"}

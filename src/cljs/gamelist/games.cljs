@@ -1,8 +1,6 @@
 (ns gamelist.games
   (:require [clojure.set :as set]))
 
-(def play-history
-  {:date "2019-03-23" :game agricola :time 3.5})
 
 (def rank [4 3 1 1])
 

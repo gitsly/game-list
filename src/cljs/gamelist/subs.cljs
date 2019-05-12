@@ -45,7 +45,8 @@
   (let [volatile (:volatile game)
         volatile-new (-> volatile
                          (assoc :rating-user (get-rating game user))
-                         (assoc :rating-total (get-total-rating game)))]
+                         (assoc :rating-total (get-total-rating game))
+                         (assoc :rating-count (count (:rating game))))]
     (assoc game :volatile volatile-new)))
 
 (rf/reg-sub
