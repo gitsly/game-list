@@ -1,19 +1,23 @@
 # gamelist
 
-
 ## TODO:
-- Sugslider
+- Add dev / relase automatic mapping of datbase connection string, (e.g lein
+  profile)
+- Sug-slider
 - Confirm messagebox for deleting game
-
-- Enlarge slider and add instant number feedback
 - Add feedback section
-- Eliminate duplicate game 'name' bug
-- Fix sorting... Seems buggy
+- Add image uploads for each game
+- Add game details panel on the right of selected game.
+- Prevent duplicate game adds ( enforce unique name ) bug
 - Click on entire row to select a game -> Use :attr
-- Resolve latency (having to reload)
 - Merge votes (and other common data) on the server side instead of client
   to be able to work simultaneously with voting without affect each other
 - Söka efter spel
+- Add  add instant number feedback for slider (prob: was causing atom deref
+  problems)
+
+X Enlarge slider and
+X Fix sorting... Seems buggy (due to inifinity, div by zero)
 
 ## Style ideas
 https://clojurians-log.clojureverse.org/beginners/2018-04-05
