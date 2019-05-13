@@ -81,9 +81,10 @@
      ;; :padding "2px"
      :style { :background-color (if selected? "#EEEFFE" "#FFFFFF")}
      :gap "10px"
+     :attr {:on-click #(rf/dispatch [::events/set-selected-game game])}
      :children [[box
                  :width (game-col-width-px 0)
-                 :child [:div {:on-click #(rf/dispatch [::events/set-selected-game game])} (:name game)]]
+                 :child name]
                 (if selected?
                   (game-rate-box game user)
                   [box

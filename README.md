@@ -9,13 +9,13 @@
 - Add image uploads for each game
 - Add game details panel on the right of selected game.
 - Prevent duplicate game adds ( enforce unique name ) bug
-- Click on entire row to select a game -> Use :attr
 - Merge votes (and other common data) on the server side instead of client
   to be able to work simultaneously with voting without affect each other
 - Söka efter spel
 - Add  add instant number feedback for slider (prob: was causing atom deref
   problems)
 
+X Click on entire row to select a game -> Use :attr
 X Enlarge slider and
 X Fix sorting... Seems buggy (due to inifinity, div by zero)
 
