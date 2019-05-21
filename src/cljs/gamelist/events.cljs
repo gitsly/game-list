@@ -163,27 +163,6 @@
       (-> db
           (assoc :loading? true)))))
 
-;; (rf/reg-event-db
-;;   ::add-chat
-;;   (fn [db
-;;        [event-name post]]
-;;     (let [url "list/addchat"
-;;           payload (utils/json-request post)]
-;;       (go (<! (http/put url payload))
-;;           db))))
-
-(rf/reg-event-db
-  ::add-chat
-  (fn [db
-       [event-name content]]
-    (let [user (:user db)
-          msg{:content content}
-          url "list/addchat"
-          payload (utils/json-request msg)]
-      (print payload)
-      ;; (http/put url payload)
-      db)))
-
 
 (rf/reg-event-db
   ::add-game-response 
@@ -197,16 +176,26 @@
           (assoc :games (conj games game))))))
 
 (rf/reg-event-db
- ::remove-selected-game
- (fn [db
-      [_ game]]
-   ;; remove remotely
-   ;; (go (<! (http/put "removegame" (json-request game))))
-   (http/put "list/removegame" (utils/json-request game))
-   ;; Remove in client app-db (visually)
-   (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
-     (-> db
-         (assoc :games pruned-games)))))
+  ::add-chat
+  (fn [db
+       [event-name content]]
+    (let [msg {:content content :user (:user db) }
+          url "list/addchat"
+          payload (utils/json-request msg)]
+      (go (println (<! (http/put url payload))))
+      db)))
+
+(rf/reg-event-db
+  ::remove-selected-game
+  (fn [db
+       [_ game]]
+    ;; remove remotely
+    ;; (go (<! (http/put "removegame" (json-request game))))
+    (http/put "list/removegame" (utils/json-request game))
+    ;; Remove in client app-db (visually)
+    (let [pruned-games (remove #(= (:_id game) (:_id %)) (:games db))]
+      (-> db
+          (assoc :games pruned-games)))))
 
 (rf/reg-event-db
  ::set-rating

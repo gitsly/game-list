@@ -99,17 +99,14 @@
           :user (:identity request)}]
         json-response)))
 
-;; (defn add-chat-handler
-;;   [request]
-;;   (-> request
-;;       :body
-;;       (assoc :added (time/now))
-;;       (log)
-;;       json-response))
-
 (defn add-chat-handler
   [request]
-  "")
+  (log "add chat")
+  (-> request
+      :body
+      (assoc :added (time/now))
+      json-response))
+
 
 ;;-----------------------------------------------------------------------------
 ;; Define routing
@@ -136,7 +133,6 @@
    (GET "/list/games" request
      (-> request
          games-handler))
-
 
    (GET "/list/test" request
      (-> request
