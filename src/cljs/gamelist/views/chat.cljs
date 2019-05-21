@@ -28,7 +28,7 @@
         content (:content entry)
         added (:added entry)]
     [border
-     :border "1px dashed #AAAAAA"
+     :border "2px dashed #AAAAAA"
      :child  [v-box :children [[title2 user]
                                [:p content]
                                [:p added]]]]))
@@ -42,13 +42,29 @@
   (for [entry entries]
     ^{:key (:_id entry)} [h-box :children [(chat-entry entry)]]))
 
+(defn new-entry
+  []
+  (let [text-val (reagent/atom "")]
+    [v-box :children [
+                      [input-text
+                       :model text-val
+                       :width "400px"
+                       :on-change #(reset! text-val %)
+                       :change-on-blur? false ; only call on-change when completed input
+                       ]
+                      [button
+                       :label "Skicka"
+                       :on-click #(rf/dispatch [::events/add-chat @text-val])
+                       ]
+                      ]]))
 
 (defn chat-panel
   []
   (let [chat-info (rf/subscribe [::subs/chat])
         entries (:entries @chat-info)]
-    (println entries)
-    [v-box :children [(chat-panel-children (sort-entries entries))]]))
+    (println chat-info)
+    [v-box :children [(chat-panel-children (sort-entries entries))
+                      (new-entry)]]))
 
 ;; (for [entry entries]
 ;;   [:p "TODO: views.chatish2"]

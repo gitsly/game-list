@@ -155,24 +155,46 @@
         (rf/dispatch [::add-game-response response]))))
 
 (rf/reg-event-db
- ::add-game
- (fn [db
-      [event-name game-name]]
-   (println "client: add-game")
-   (let [game (new-game game-name)]
-     (-> db
-         (assoc :loading? true)))))
+  ::add-game
+  (fn [db
+       [event-name game-name]]
+    (println "client: add-game")
+    (let [game (new-game game-name)]
+      (-> db
+          (assoc :loading? true)))))
+
+;; (rf/reg-event-db
+;;   ::add-chat
+;;   (fn [db
+;;        [event-name post]]
+;;     (let [url "list/addchat"
+;;           payload (utils/json-request post)]
+;;       (go (<! (http/put url payload))
+;;           db))))
 
 (rf/reg-event-db
-::add-game-response 
-(fn
-  [db [_ response]]
-  (let [games (:games db)
-        game (:body response)]
-    (println "client: add-game-response: " game)
-    (-> db
-        (assoc :loading? false)
-        (assoc :games (conj games game))))))
+  ::add-chat
+  (fn [db
+       [event-name content]]
+    (let [user (:user db)
+          msg{:content content}
+          url "list/addchat"
+          payload (utils/json-request msg)]
+      (print payload)
+      ;; (http/put url payload)
+      db)))
+
+
+(rf/reg-event-db
+  ::add-game-response 
+  (fn
+    [db [_ response]]
+    (let [games (:games db)
+          game (:body response)]
+      (println "client: add-game-response: " game)
+      (-> db
+          (assoc :loading? false)
+          (assoc :games (conj games game))))))
 
 (rf/reg-event-db
  ::remove-selected-game

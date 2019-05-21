@@ -159,7 +159,6 @@
     [:p "TODO: lista spel inför spelkväll och rösta"] ))
 
 
-
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
              {:id 1 :name "Lägg till spel" :render add-game-panel }
