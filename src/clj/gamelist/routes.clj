@@ -83,17 +83,26 @@
           (log "Successfully logged in: " ident)
           (main-handler request)))))
 
-  (defn not-auth-handler
-    [request value]
-    (-> "public/noauth.html"
-        io/resource
-        io/input-stream
-        response
-        (assoc :status 403)))
+(defn not-auth-handler
+  [request value]
+  (-> "public/noauth.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :status 403)))
 
-  ;;-----------------------------------------------------------------------------
-  ;; Define routing
-  ;;-----------------------------------------------------------------------------
+(defn chat-handler
+  "return entire chat page from db"
+  [request]
+  (let [chat (db/collection "chat")]
+    (-> [{:chat chat
+          :user (:identity request)}]
+        json-response)))
+
+
+;;-----------------------------------------------------------------------------
+;; Define routing
+;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
   (routes
 
@@ -104,7 +113,7 @@
    (PUT "/list/addgame" request
      (-> request
          add-game-handler))
-   
+
    (PUT "/list/updategame" request
      (-> request
          update-game-handler))
@@ -122,14 +131,18 @@
      (-> request
          test-handler))
 
+   (GET "/list/chat" request
+     (-> request
+         chat-handler))
+
    (GET "/login" request
      (-> request
          login-handler))
 
    resources "/"))
 
-;; (defn restart-server
-;;   []
-;;   (user/stop)
-;;   (user/go))
-;; (restart-server)
+(defn restart-server
+  []
+  (user/stop)
+  (user/go))
+(restart-server)
