@@ -107,9 +107,15 @@
 ;; Panels
 ;;--------------------------------------------------------------------------------
 (defn about-panel
-[]
-[box :child
- (str "Spellistan i digitalt format. En liten sida för ett stort nöje.")])
+  []
+  [box :child
+   (str "Spellistan i digitalt format. En liten sida för ett stort nöje.")])
+
+(defn sorter
+  "TODO: add possibility to deflect sorter to main generator, depending
+  on which column is selected for sorting"
+  [item]
+  (-> item :volatile :rating-total))
 
 ;; TODO: make TR's
 (defn games-panel
@@ -117,7 +123,7 @@
   (let [games (rf/subscribe [::subs/games])
         user-sub   (rf/subscribe [::subs/user])
         user @user-sub
-        sorted-games (reverse(sort-by #(-> % :volatile :rating-total) @games))]
+        sorted-games (reverse(sort-by #(-> % sorter) @games))]
     [v-box
      :children [[:h3 "Listan över alla spel"]
                 [v-box
