@@ -8,7 +8,7 @@
             [goog.object :as gobject]
             [clojure.string :as string]
             [re-com.core
-             :refer [alert-box alert-list modal-panel md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
+             :refer [border alert-box alert-list modal-panel md-icon-button scroller h-split input-text button h-box v-box box gap line label title slider checkbox input-text horizontal-bar-tabs vertical-bar-tabs p]
              :refer-macros [handler-fn]]
             [re-com.misc   :refer [slider-args-desc]]
             [reagent.core :as reagent]))
@@ -27,11 +27,11 @@
   (let [user (:user entry)
         content (:content entry)
         added (:added entry)]
-    [v-box :children [
-                      [title2 user]
-                      [:p content]
-                      [:p added]
-                      ]]))
+    [border
+     :border "1px dashed #AAAAAA"
+     :child  [v-box :children [[title2 user]
+                               [:p content]
+                               [:p added]]]]))
 
 (defn sort-entries
   [entries]

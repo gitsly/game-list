@@ -86,19 +86,19 @@
        (assoc :loading? true))))
 
 (rf/reg-event-db
- ::update-game-response 
- (fn
-   [db [_ response]]
-   (let [games (:games db)
-         updated-game (:body response)
-         game-id (:_id updated-game)
-         new-game-list (-> (zipmap (map #(:_id %) games) games)
-                           (assoc game-id updated-game)
-                           vals)]
-     ;; (println "client: update-game-response: " new-game-list)
-     (-> db
-         (assoc :loading? false)
-         (assoc :games new-game-list)))))
+  ::update-game-response
+  (fn
+    [db [_ response]]
+    (let [games (:games db)
+          updated-game (:body response)
+          game-id (:_id updated-game)
+          new-game-list (-> (zipmap (map #(:_id %) games) games)
+                            (assoc game-id updated-game)
+                            vals)]
+      ;; (println "client: update-game-response: " new-game-list)
+      (-> db
+          (assoc :loading? false)
+          (assoc :games new-game-list)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -112,12 +112,11 @@
        db)))
 
 (rf/reg-event-db
- ::set-panel
- (fn [db
-      [event-name selected-panel]]
-   (-> db
-       (assoc :panel selected-panel))))
-
+  ::set-panel
+  (fn [db
+       [event-name selected-panel]]
+    (-> db
+        (assoc :panel selected-panel))))
 
 (defn set-as-selected
   [game

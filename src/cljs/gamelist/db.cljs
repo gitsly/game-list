@@ -7,10 +7,9 @@
         names games/game-list]
     (map #(zipmap [:id :name] [%1 %2]) indices names)))
 
-
 (def default-db
   {:name "Bullen"
-   :panel 0
+   :panel 3
    :games []
    :loading? false
    :user nil

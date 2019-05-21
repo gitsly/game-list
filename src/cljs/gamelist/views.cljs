@@ -172,19 +172,19 @@
 ;;   [box :child (:name item)])
 
 (defn nav-item
-"Returns a function to render a navigation item"
-[]
-(let [mouse-over? (reagent/atom false)]
-  (fn [item]
-    (let [label (:name item)
-          id  (:id item)]
-      [:div
-       {:style (when @mouse-over? {:font-weight "bold"
-                                   :background-color "#CCCCCC"})
-        :on-click      #(rf/dispatch [::events/set-panel id])
-        :on-mouse-over #(reset! mouse-over? true)
-        :on-mouse-out  #(reset! mouse-over? false)}
-       label]))))
+  "Returns a function to render a navigation item"
+  []
+  (let [mouse-over? (reagent/atom false)]
+    (fn [item]
+      (let [label (:name item)
+            id  (:id item)]
+        [:div
+         {:style (when @mouse-over? {:font-weight "bold"
+                                     :background-color "#CCFFCC"})
+          :on-click      #(rf/dispatch [::events/set-panel id])
+          :on-mouse-over #(reset! mouse-over? true)
+          :on-mouse-out  #(reset! mouse-over? false)}
+         label]))))
 
 
 (defn navigation-panel
