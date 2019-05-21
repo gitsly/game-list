@@ -124,7 +124,7 @@
   (let [games (rf/subscribe [::subs/games])
         user-sub   (rf/subscribe [::subs/user])
         user @user-sub
-        sorted-games (reverse(sort-by #(-> % sorter) @games))]
+        sorted-games (reverse (sort-by #(-> % sorter) @games))]
     [v-box
      :children [[:h3 "Listan över alla spel"]
                 [v-box

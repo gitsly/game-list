@@ -99,7 +99,6 @@
           :user (:identity request)}]
         json-response)))
 
-
 ;;-----------------------------------------------------------------------------
 ;; Define routing
 ;;-----------------------------------------------------------------------------
@@ -141,8 +140,8 @@
 
    resources "/"))
 
-(defn restart-server
-  []
-  (user/stop)
-  (user/go))
-(restart-server)
+;; (defn restart-server
+;;   []
+;;   (user/stop)
+;;   (user/go))
+;; (restart-server)

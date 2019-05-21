@@ -107,4 +107,9 @@
                {:name "John" :age 43 :order 3}
                {:name "Nike" :age 45 :order 1}]]
     (sort-by :order users))
+
+  ;; Add :id index to existing collection
+  (let [users [{:name "James" :age 26}
+               {:name "John" :age 43}]]
+    (map-indexed #(assoc %2 :id %1) users ))
   ); EndComment

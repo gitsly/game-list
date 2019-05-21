@@ -56,9 +56,9 @@
   (fn
     [db [_ response]]
     (let [body (-> response :body first)
-          chat (:chat body)
+          chat (-> body :chat first)
           user (:user body)]
-      (println "client: get-chat-response: " chat ", User:" user)
+      ;; (println "client: get-chat-response: " response)
       (-> db
           (assoc :user user)
           (assoc :chat chat)))))
