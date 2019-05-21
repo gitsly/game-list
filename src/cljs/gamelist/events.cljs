@@ -26,23 +26,42 @@
   (go (let [response (<! (http/get "list/games"))]
         (rf/dispatch [::get-all-games-response response]))))
 
+(defn get-chat
+  []
+  (go (let [response (<! (http/get "list/chat"))]
+        (rf/dispatch [::get-chat-response response]))))
+
+
 (rf/reg-event-db
- ::initialize-db
- (fn [_ _]
-   (get-all-games)
-   db/default-db))
+  ::initialize-db
+  (fn [_ _]
+    (get-all-games)
+    (get-chat)
+    db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
- ::get-all-games-response 
- (fn
-   [db [_ response]]
-   (let [body (-> response :body first)
-         games (:games body)
-         user (:user body)]
-     ;; (println "client: get-all-games-response: " games ", User:" user)
-     (-> db
-         (assoc :user user)
-         (assoc :games games)))))
+  ::get-all-games-response
+  (fn
+    [db [_ response]]
+    (let [body (-> response :body first)
+          games (:games body)
+          user (:user body)]
+      ;; (println "client: get-all-games-response: " games ", User:" user)
+      (-> db
+          (assoc :user user)
+          (assoc :games games)))))
+
+(rf/reg-event-db
+  ::get-chat-response
+  (fn
+    [db [_ response]]
+    (let [body (-> response :body first)
+          chat (:chat body)
+          user (:user body)]
+      (println "client: get-chat-response: " chat ", User:" user)
+      (-> db
+          (assoc :user user)
+          (assoc :chat chat)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Update game and wait for game in response

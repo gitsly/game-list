@@ -153,15 +153,22 @@
                                    (reset! text-val ""))]]]))
 
 (defn session-panel
-[]
-(let [selected-session (reagent/atom nil)]
-  [:p "TODO: lista spel inför spelkväll och rösta"] ))
+  []
+  (let [selected-session (reagent/atom nil)]
+    [:p "TODO: lista spel inför spelkväll och rösta"] ))
+
+(defn chat-panel
+  []
+  (let [chat-info (rf/subscribe [::subs/chat])]
+    [:p "TODO: chat"]))
+
 
 ;; Vector of all panels
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
              {:id 1 :name "Lägg till spel" :render add-game-panel }
              {:id 2 :name "Spelkväll" :render session-panel }
-             {:id 3 :name "Om sidan" :render about-panel }])
+             {:id 3 :name "Notiser" :render chat-panel }
+             {:id 4 :name "Om sidan" :render about-panel }])
 
 ;; (defn nav-item
 ;;   [item]

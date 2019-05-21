@@ -62,6 +62,11 @@
    (:user db)))
 
 (rf/reg-sub
-::loading?
-(fn [db]
-  (:loading? db)))
+  ::loading?
+  (fn [db]
+    (:loading? db)))
+
+(rf/reg-sub
+  ::chat
+  (fn [db]
+    (:chat db)))

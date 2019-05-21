@@ -47,7 +47,6 @@ db))
   (mc/find-one-as-map (connect) "users" {:user user}))
 
 
-
 (defn add-game
   [game]
   (mc/insert-and-return (connect) "games" game))
