@@ -101,10 +101,11 @@
 
 (defn add-chat-handler
   [request]
-  (log "add chat")
   (-> request
       :body
       (assoc :added (time/now))
+      ;; log
+      (db/add-chat)
       json-response))
 
 
@@ -112,45 +113,45 @@
 ;; Define routing
 ;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
-  (routes
+(routes
 
-   (GET "/" request
-     (-> request
-         main-handler))
+ (GET "/" request
+   (-> request
+       main-handler))
 
-   (PUT "/list/addgame" request
-     (-> request
-         add-game-handler))
+ (PUT "/list/addgame" request
+   (-> request
+       add-game-handler))
 
-   (PUT "/list/updategame" request
-     (-> request
-         update-game-handler))
+ (PUT "/list/updategame" request
+   (-> request
+       update-game-handler))
 
-   (PUT "/list/removegame" request
-     (-> request
-         remove-game-handler))
+ (PUT "/list/removegame" request
+   (-> request
+       remove-game-handler))
 
-   (GET "/list/games" request
-     (-> request
-         games-handler))
+ (GET "/list/games" request
+   (-> request
+       games-handler))
 
-   (GET "/list/test" request
-     (-> request
-         test-handler))
+ (GET "/list/test" request
+   (-> request
+       test-handler))
 
-   (GET "/list/chat" request
-     (-> request
-         chat-handler))
+ (GET "/list/chat" request
+   (-> request
+       chat-handler))
 
-   (PUT "/list/addchat" request
-     (-> request
-         add-chat-handler))
+ (PUT "/list/addchat" request
+   (-> request
+       add-chat-handler))
 
-   (GET "/login" request
-     (-> request
-         login-handler))
+ (GET "/login" request
+   (-> request
+       login-handler))
 
-   resources "/"))
+ resources "/"))
 
 ;; (defn restart-server
 ;;   []

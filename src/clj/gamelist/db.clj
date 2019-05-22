@@ -2,6 +2,7 @@
   (:require [monger.core :as mg]
             [monger.joda-time :as jt]
             [monger.collection :as mc]
+            [monger.operators :refer :all]
             [gamelist.utils :refer [log]]
             [clj-time.core :as time])
   (:import [com.mongodb MongoOptions ServerAddress]
@@ -15,12 +16,12 @@
 ;;(def db-name "live")
 
 (defn connect []
-"Connect to mongo db"
-(let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
-      ^ServerAddress address(mg/server-address db-host 27017)
-      conn                  (mg/connect address options)
-      db                    (mg/get-db conn db-name)]
-db))
+  "Connect to mongo db"
+  (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
+        ^ServerAddress address(mg/server-address db-host 27017)
+        conn                  (mg/connect address options)
+        db                    (mg/get-db conn db-name)]
+    db))
 
 (defn collection
   "Retrieve collection by name"
@@ -51,18 +52,36 @@ db))
   [game]
   (mc/insert-and-return (connect) "games" game))
 
+
 (defn update-game
-[game]
-(let [oid (-> game :_id (ObjectId.))
-      game-no-id (dissoc game :_id)]
-  ;; (log "Db update game: " game-no-id)
-  (mc/update-by-id (connect) "games" oid game-no-id)))
+  [game]
+  (let [oid (-> game :_id (ObjectId.))
+        game-no-id (dissoc game :_id)]
+    ;; (log "Db update game: " game-no-id)
+    (mc/update-by-id (connect) "games" oid game-no-id)))
 
 (defn remove-game
-[game]
-(let [oid (-> game :_id (ObjectId.))]
-  (mc/remove-by-id (connect) "games" oid)))
+  [game]
+  (let [oid (-> game :_id (ObjectId.))]
+    (mc/remove-by-id (connect) "games" oid)))
 
+;; This is not very optimized, but...
+;; Read all, put all...
+
+;; TODO: can we have a index at the 'entries' level (with auto generated Object Ids)
+(defn add-chat
+  [entry]
+  (let [chat (mc/find-one-as-map (connect) "chat" {})
+        oid (-> chat :_id)]
+    (log "Db update chat: " chat)
+    (mc/update (connect) "chat" {:_id oid} {$push {:entries entry}})
+    ;; (mc/update-by-id (connect) "chat" oid chat)
+    ))
+
+;; :entries [{:_i
+
+
+;; (mc/update db coll {:_id oid} {$push {:badges "überachievement"}}
 
 ;; Test update functionality
 ;; (let [game {:_id "5ccfdc046734b02fc4acaffc",
