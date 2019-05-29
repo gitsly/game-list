@@ -13,12 +13,12 @@
             [re-com.misc   :refer [slider-args-desc]]
             [reagent.core :as reagent]))
 
-(defn title2
+(defn title3
   "2nd level title"
   [text style]
   [title
    :label text
-   :level :level2
+   :level :level3
    :style style])
 
 (defn chat-entry
@@ -29,7 +29,7 @@
         added (:added entry)]
     [border
      :border "2px dashed #AAAAAA"
-     :child  [v-box :children [[title2 user]
+     :child  [v-box :children [[title3 user]
                                [:p content]
                                [:p added]]]]))
 

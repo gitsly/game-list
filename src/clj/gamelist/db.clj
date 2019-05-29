@@ -73,10 +73,9 @@
   [entry]
   (let [chat (mc/find-one-as-map (connect) "chat" {})
         oid (-> chat :_id)]
-    (log "Db update chat: " chat)
-    (mc/update (connect) "chat" {:_id oid} {$push {:entries entry}})
-    ;; (mc/update-by-id (connect) "chat" oid chat)
-    ))
+    ;; (log "Db update chat: " chat)
+    (-> (mc/update (connect) "chat" {:_id oid} {$push {:entries entry}})
+        log)))
 
 ;; :entries [{:_i
 
