@@ -72,9 +72,11 @@
 (defn add-chat
   [entry]
   (let [chat (mc/find-one-as-map (connect) "chat" {})
-        oid (-> chat :_id)]
+        entry-oid (ObjectId.)
+        oid (-> chat :_id)
+        entry-with-id (assoc entry :_id entry-oid)]
     ;; (log "Db update chat: " chat)
-    (-> (mc/update (connect) "chat" {:_id oid} {$push {:entries entry}})
+    (-> (mc/update (connect) "chat" {:_id oid} {$push {:entries entry-with-id}})
         log)))
 
 ;; :entries [{:_i

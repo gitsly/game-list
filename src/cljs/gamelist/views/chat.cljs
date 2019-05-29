@@ -26,12 +26,16 @@
   [entry]
   (let [user (:user entry)
         content (:content entry)
-        added (:added entry)]
+        added (:added entry)
+        day (type added)
+        date (second (re-find #"(.*)T" added))]
     [border
      :border "2px dashed #AAAAAA"
      :child  [v-box :children [[title3 user]
                                [:p content]
-                               [:p added]]]]))
+                               [:p date]
+                               [:p day]
+                               ]]]))
 
 (defn sort-entries
   [entries]
