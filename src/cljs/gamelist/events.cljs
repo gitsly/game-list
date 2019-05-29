@@ -175,6 +175,8 @@
           (assoc :loading? false)
           (assoc :games (conj games game))))))
 
+;; Chat impl--------------------
+
 (rf/reg-event-db
   ::add-chat
   (fn [db
@@ -182,8 +184,22 @@
     (let [msg {:content content :user (:user db) }
           url "list/addchat"
           payload (utils/json-request msg)]
-      (go (println (<! (http/put url payload))))
-      db)))
+      (go (let [response (<! (http/put url payload))]
+            (rf/dispatch [::add-chat-response response])))
+      (-> db
+          (assoc :loading? true)))))
+
+(rf/reg-event-db
+  ::add-chat-response
+  (fn
+    [db [_ response]]
+    (let [chat (:body response)]
+      (println "client: add-chat-response: " chat)
+      (-> db
+          (assoc :loading? false)
+          (assoc :chat chat)))))
+
+;;--------------------
 
 (rf/reg-event-db
   ::remove-selected-game

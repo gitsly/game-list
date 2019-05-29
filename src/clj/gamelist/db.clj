@@ -77,7 +77,8 @@
         entry-with-id (assoc entry :_id entry-oid)]
     ;; (log "Db update chat: " chat)
     (-> (mc/update (connect) "chat" {:_id oid} {$push {:entries entry-with-id}})
-        log)))
+        log)
+    ))
 
 ;; :entries [{:_i
 
