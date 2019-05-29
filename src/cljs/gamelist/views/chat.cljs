@@ -21,21 +21,24 @@
    :level :level3
    :style style])
 
+(defn third
+  [col]
+  (nth col 2))
+
 (defn chat-entry
   "TODO: spec has: content, user, added"
   [entry]
   (let [user (:user entry)
         content (:content entry)
         added (:added entry)
-        day (type added)
-        date (second (re-find #"(.*)T" added))]
+        match (re-find #"(.*)T(\d\d:\d\d)" added)
+        date (second match)
+        time (third match)]
     [border
      :border "2px dashed #AAAAAA"
      :child  [v-box :children [[title3 user]
                                [:p content]
-                               [:p date]
-                               [:p day]
-                               ]]]))
+                               [:p (str date " (" time ")")]]]]))
 
 (defn sort-entries
   [entries]

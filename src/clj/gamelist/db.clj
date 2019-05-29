@@ -71,14 +71,14 @@
 ;; TODO: can we have a index at the 'entries' level (with auto generated Object Ids)
 (defn add-chat
   [entry]
-  (let [chat (mc/find-one-as-map (connect) "chat" {})
+  (let [chat-id nil ; TODO: if multiple chats
+        chat (mc/find-one-as-map (connect) "chat" {})
         entry-oid (ObjectId.)
-        oid (-> chat :_id)
+        chat-oid (-> chat :_id)
         entry-with-id (assoc entry :_id entry-oid)]
-    ;; (log "Db update chat: " chat)
-    (-> (mc/update (connect) "chat" {:_id oid} {$push {:entries entry-with-id}})
-        log)
-    ))
+    (log "Db update chat: " chat)
+    (log (mc/update (connect) "chat" {:_id chat-oid} {$push {:entries entry-with-id}}))
+    (mc/find-one-as-map (connect) "chat" {:_id chat-oid})))
 
 ;; :entries [{:_i
 
