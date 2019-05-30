@@ -12,8 +12,8 @@
 (def db-host "localhost")
 (def db-name "test")
 
-;;(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
-;;(def db-name "live")
+;; (def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
+;; (def db-name "live")
 
 ;; Database setup (all collections need creation, but can be empty unless
 ;; otherwise specified)

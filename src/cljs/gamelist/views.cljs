@@ -163,12 +163,8 @@
 (def panels [{:id 0 :name "Spellistan" :render games-panel }
              {:id 1 :name "Lägg till spel" :render add-game-panel }
              {:id 2 :name "Spelkväll" :render session-panel }
-             {:id 3 :name "Notiser" :render #(chat/chat-panel 'main)}
-             {:id 4 :name "test" :render #(chat/chat-panel 'test2)}
-             {:id 5 :name "Om sidan" :render about-panel }])
-
-;; (rf/dispatch [::chat/get-chat session])
-
+             {:id 3 :name "Chat" :render #(chat/chat-panel 'main)}
+             {:id 4 :name "Om sidan" :render about-panel }])
 
 ;; (defn nav-item
 ;;   [item]
