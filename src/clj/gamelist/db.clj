@@ -58,6 +58,7 @@
   "Get single document, e.g. find <- {:user username}"
   [col
    query]
+  ;; (log "db/find-in-collection-" col ": " query)
   (mc/find-one-as-map (connect) col query))
 
 (defn add-game

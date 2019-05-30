@@ -94,8 +94,8 @@
 (defn chat-handler
   "return entire chat page from db from a given sesion"
   [session]
-  (log "chat-handler: " session)
-  (let [chat (db/find-in-collection "chat" session)]
+  (let [chat (db/find-in-collection "chat" {:session session})]
+    ;; (log "chat-dbquery-resp: " chat)
     (-> [{:chat chat}]
         json-response)))
 
