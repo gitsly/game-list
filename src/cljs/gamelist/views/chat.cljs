@@ -61,7 +61,7 @@
                        ]
                       [button
                        :label "Skicka"
-                       :on-click #(rf/dispatch [::events/add-chat @text-val])
+                       :on-click #(rf/dispatch [::events/add-chat @text-val 'main])
                        ]
                       ]]))
 

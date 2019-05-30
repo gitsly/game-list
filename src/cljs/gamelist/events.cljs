@@ -27,16 +27,20 @@
         (rf/dispatch [::get-all-games-response response]))))
 
 (defn get-chat
-  []
-  (go (let [response (<! (http/get "list/chat"))]
-        (rf/dispatch [::get-chat-response response]))))
+  "takes id of the chat to fetch single string"
+  [session]
+  (let [payload (utils/json-request {:session session})
+        url (str "list/chat/" session)]
+    (println "GET-CHAT:" url)
+    (go (let [response (<! (http/get url))]
+          (rf/dispatch [::get-chat-response response])))))
 
 
 (rf/reg-event-db
   ::initialize-db
   (fn [_ _]
     (get-all-games)
-    (get-chat)
+    (get-chat 'main)
     db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
@@ -56,11 +60,9 @@
   (fn
     [db [_ response]]
     (let [body (-> response :body first)
-          chat (-> body :chat first)
-          user (:user body)]
+          chat (-> body :chat first)]
       ;; (println "client: get-chat-response: " response)
       (-> db
-          (assoc :user user)
           (assoc :chat chat)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,13 +105,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rf/reg-event-db
- ::test
- (fn [db
-      [event-name params]]
-   (go (let [response (<! (http/get "list/test"))]
-         (println event-name "completed request: " params)
-         (println  response))
-       db)))
+  ::test
+  (fn [db
+       [event-name params]]
+    (go (let [response (<! (http/get "list/test"))]
+          (println event-name "completed request: " params)
+          (println  response))
+        db)))
 
 (rf/reg-event-db
   ::set-panel
@@ -136,13 +138,13 @@
   (map #(set-as-selected % selected-id) games))
 
 (rf/reg-event-db
- ::set-selected-game
- (fn[db
-     [event-name game]]
-   (let [games (:games db)
-         id (:_id game)]
-     (println "set selected game: " id)
-     (assoc db :games (select-game games id)))))
+  ::set-selected-game
+  (fn[db
+      [event-name game]]
+    (let [games (:games db)
+          id (:_id game)]
+      ;; (println "set selected game: " id)
+      (assoc db :games (select-game games id)))))
 
 
 (defn new-game [name]
@@ -158,7 +160,7 @@
   ::add-game
   (fn [db
        [event-name game-name]]
-    (println "client: add-game")
+    ;; (println "client: add-game")
     (let [game (new-game game-name)]
       (-> db
           (assoc :loading? true)))))
@@ -170,18 +172,19 @@
     [db [_ response]]
     (let [games (:games db)
           game (:body response)]
-      (println "client: add-game-response: " game)
+      ;; (println "client: add-game-response: " game)
       (-> db
           (assoc :loading? false)
           (assoc :games (conj games game))))))
 
-;; Chat impl--------------------
+;; Chat impl: TODO: move to events/chat.cljs --------------------
 
 (rf/reg-event-db
   ::add-chat
   (fn [db
-       [event-name content]]
-    (let [msg {:content content :user (:user db) }
+       [event-name content session]]
+    (let [msg {:entry {:content content :user (:user db) }
+               :session session}
           url "list/addchat"
           payload (utils/json-request msg)]
       (go (let [response (<! (http/put url payload))]
@@ -194,7 +197,7 @@
   (fn
     [db [_ response]]
     (let [chat (:body response)]
-      (println "client: add-chat-response: " chat)
+      ;; (println "client: add-chat-response: " chat)
       (-> db
           (assoc :loading? false)
           (assoc :chat chat)))))
@@ -214,16 +217,16 @@
           (assoc :games pruned-games)))))
 
 (rf/reg-event-db
- ::set-rating
- (fn [db
-      [_ game value]]
-   (let [user (keyword (:user db))
-         game-id (:_id game)
-         games (:games db)
-         old-rating (:rating game)
-         new-rating (assoc old-rating user { :value value }) 
-         rated-game (assoc game :rating new-rating)]
-     (println "Rated game: " rated-game)
-     (update-game rated-game)
-     (-> db
-         (assoc :loading? true)))))
+  ::set-rating
+  (fn [db
+       [_ game value]]
+    (let [user (keyword (:user db))
+          game-id (:_id game)
+          games (:games db)
+          old-rating (:rating game)
+          new-rating (assoc old-rating user { :value value }) 
+          rated-game (assoc game :rating new-rating)]
+      ;; (println "Rated game: " rated-game)
+      (update-game rated-game)
+      (-> db
+          (assoc :loading? true)))))

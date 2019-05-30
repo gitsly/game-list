@@ -66,13 +66,13 @@
       db/remove-game)
   "done")
 
-  (defn main-handler
-    [request]
-    (-> "public/index.html"
-        io/resource
-        io/input-stream
-        response
-        (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
+(defn main-handler
+  [request]
+  (-> "public/index.html"
+      io/resource
+      io/input-stream
+      response
+      (assoc :headers {"Content-Type" "text/html; charset=utf-8"})))
 
   (defn login-handler
     [request]
@@ -92,66 +92,68 @@
       (assoc :status 403)))
 
 (defn chat-handler
-  "return entire chat page from db"
-  [request]
-  (let [chat (db/collection "chat")]
-    (-> [{:chat chat
-          :user (:identity request)}]
+  "return entire chat page from db from a given sesion"
+  [session]
+  (log "chat-handler: " session)
+  (let [chat (db/find-in-collection "chat" session)]
+    (-> [{:chat chat}]
         json-response)))
 
+;; TODO: rename to add-chat-entry
 (defn add-chat-handler
   [request]
-  (-> request
-      :body
-      (assoc :added (time/now))
-      ;; log
-      (db/add-chat)
-      json-response))
+  (let [chat-insertion (:body request)
+        session (:session chat-insertion)
+        entry (:entry chat-insertion)]
+    (-> entry
+        (assoc :added (time/now))
+        (db/add-chat)
+        json-response)))
 
 
 ;;-----------------------------------------------------------------------------
-;; Define routing
+;; Define routing (Compojure)
 ;;-----------------------------------------------------------------------------
 (defn home-routes [endpoint]
-(routes
+  (routes
 
- (GET "/" request
-   (-> request
-       main-handler))
+   (GET "/" request
+     (-> request
+         main-handler))
 
- (PUT "/list/addgame" request
-   (-> request
-       add-game-handler))
+   (PUT "/list/addgame" request
+     (-> request
+         add-game-handler))
 
- (PUT "/list/updategame" request
-   (-> request
-       update-game-handler))
+   (PUT "/list/updategame" request
+     (-> request
+         update-game-handler))
 
- (PUT "/list/removegame" request
-   (-> request
-       remove-game-handler))
+   (PUT "/list/removegame" request
+     (-> request
+         remove-game-handler))
 
- (GET "/list/games" request
-   (-> request
-       games-handler))
+   (GET "/list/games" request
+     (-> request
+         games-handler))
 
- (GET "/list/test" request
-   (-> request
-       test-handler))
+   (GET "/list/test" request
+     (-> request
+         test-handler))
 
- (GET "/list/chat" request
-   (-> request
-       chat-handler))
+   (GET "/list/chat/:session"
+       [session]
+     (chat-handler session))
 
- (PUT "/list/addchat" request
-   (-> request
-       add-chat-handler))
+   (PUT "/list/addchat" request
+     (-> request
+         add-chat-handler))
 
- (GET "/login" request
-   (-> request
-       login-handler))
+   (GET "/login" request
+     (-> request
+         login-handler))
 
- resources "/"))
+   resources "/"))
 
 ;; (defn restart-server
 ;;   []

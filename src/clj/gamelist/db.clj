@@ -15,6 +15,13 @@
 ;;(def db-host "mongo") ; If using docker-compose, ensure this is referring to image name
 ;;(def db-name "live")
 
+;; Database setup
+;; collections:
+;; - games: can be empty
+;; - users: must add users manually, one document per user, see: bullen-users
+;; - chat: must be added manually, one document per chat "session".
+
+
 (defn connect []
   "Connect to mongo db"
   (let [^MongoOptions options (mg/mongo-options {:threads-allowed-to-block-for-connection-multiplier 300})
@@ -47,6 +54,11 @@
   [user]
   (mc/find-one-as-map (connect) "users" {:user user}))
 
+(defn find-in-collection
+  "Get single document, e.g. find <- {:user username}"
+  [col
+   query]
+  (mc/find-one-as-map (connect) col query))
 
 (defn add-game
   [game]
@@ -65,18 +77,17 @@
   (let [oid (-> game :_id (ObjectId.))]
     (mc/remove-by-id (connect) "games" oid)))
 
-;; This is not very optimized, but...
-;; Read all, put all...
 
 ;; TODO: can we have a index at the 'entries' level (with auto generated Object Ids)
 (defn add-chat
-  [entry]
+  [entry
+   session]
   (let [chat-id nil ; TODO: if multiple chats
-        chat (mc/find-one-as-map (connect) "chat" {})
+        chat (mc/find-one-as-map (connect) "chat" {:session session})
         entry-oid (ObjectId.)
         chat-oid (-> chat :_id)
         entry-with-id (assoc entry :_id entry-oid)]
-    (log "Db update chat: " chat)
+    ;; (log "Db update chat: " chat)
     (log (mc/update (connect) "chat" {:_id chat-oid} {$push {:entries entry-with-id}}))
     (mc/find-one-as-map (connect) "chat" {:_id chat-oid})))
 
@@ -108,7 +119,7 @@
 (def bullen-users [{:user "David" :secret "flink" }
                    {:user "Anna" :secret "powermästaresill" }
                    {:user "Simon" :secret "zander" }
-                   {:user "Martin" :secret "kristallkatarina" :moredata {:strength "testas sub"}}])
+                   {:user "Martin" :secret "kristallkatarina"}])
 ;; (map #(mc/insert-and-return (connect) "users" %) bullen-users)
 
 ;;------------------------------------------------------------------------------
