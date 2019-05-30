@@ -26,12 +26,13 @@
   (go (let [response (<! (http/get "list/games"))]
         (rf/dispatch [::get-all-games-response response]))))
 
+;; TODO: move to events/chat.cljs
 (defn get-chat
   "takes id of the chat to fetch single string"
   [session]
   (let [payload (utils/json-request {:session session})
         url (str "list/chat/" session)]
-    (println "GET-CHAT:" url)
+    ;; (println "GET-CHAT:" url)
     (go (let [response (<! (http/get url))]
           (rf/dispatch [::get-chat-response response])))))
 
@@ -59,11 +60,12 @@
   ::get-chat-response
   (fn
     [db [_ response]]
-    (let [body (-> response :body first)
-          chat (-> body :chat first)]
-      ;; (println "client: get-chat-response: " response)
+    (let [body (-> response :body)
+          chat body]
+      (println "client: get-chat-response: " body)
       (-> db
           (assoc :chat chat)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Update game and wait for game in response
