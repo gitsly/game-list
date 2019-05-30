@@ -4,7 +4,7 @@
             [gamelist.subs :as subs]
             [goog.string :as gstring]
             [goog.string.format]
-            [gamelist.events :as events]
+            [gamelist.events.chat :as events]
             [goog.object :as gobject]
             [clojure.string :as string]
             [re-com.core
@@ -69,9 +69,9 @@
 
 (defn chat-panel
   [session]
+  (rf/dispatch [::events/get-chat session])
   (let [chat-info (rf/subscribe [::subs/chat])
         entries (:entries @chat-info)]
-    ;; (rf/dispatch [::events/get-chat session]) ; Get actual content: not working properly
     (println chat-info)
     [v-box :children [(chat-panel-children (sort-entries entries))
                       (new-entry session)]]))

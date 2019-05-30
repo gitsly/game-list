@@ -32,7 +32,6 @@
   ::initialize-db
   (fn [_ _]
     (get-all-games)
-    (chat/get-chat 'main)
     db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
