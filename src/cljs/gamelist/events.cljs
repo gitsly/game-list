@@ -28,7 +28,8 @@
 
 ;; TODO: move to events/chat.cljs
 (defn get-chat
-  "takes id of the chat to fetch single string"
+  "takes id of the chat to fetch single string
+  stores result in 'chat' subscription of app-db"
   [session]
   (let [payload (utils/json-request {:session session})
         url (str "list/chat/" session)]
@@ -36,6 +37,7 @@
     (go (let [response (<! (http/get url))]
           (rf/dispatch [::get-chat-response response])))))
 
+;; Get this to work...
 (rf/reg-event-db
   ::get-chat
   (fn [_ [event-name session]]
@@ -46,6 +48,7 @@
   ::initialize-db
   (fn [_ _]
     (get-all-games)
+    (get-chat 'test)
     db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
@@ -191,6 +194,7 @@
        [event-name
         session
         content]]
+    (println "add-chat-event: " session ", content: " content)
     (let [msg {:entry {:content content :user (:user db) }
                :session session}
           url "list/addchat"

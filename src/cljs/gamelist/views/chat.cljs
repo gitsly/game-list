@@ -23,7 +23,9 @@
 
 (defn third
   [col]
-  (nth col 2))
+  (if (> (count col) 2)
+    (nth col 2)
+    nil))
 
 (defn chat-entry
   "TODO: spec has: content, user, added"
@@ -69,7 +71,7 @@
   [session]
   (let [chat-info (rf/subscribe [::subs/chat])
         entries (:entries @chat-info)]
-    (rf/dispatch [::events/get-chat session]) ; Get actual content
+    ;; (rf/dispatch [::events/get-chat session]) ; Get actual content: not working properly
     (println chat-info)
     [v-box :children [(chat-panel-children (sort-entries entries))
                       (new-entry session)]]))

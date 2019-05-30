@@ -101,14 +101,14 @@
 
 ;; TODO: rename to add-chat-entry
 (defn add-chat-handler
-[request]
-(let [chat-insertion (:body request)
-      session (:session chat-insertion)
-      entry (:entry chat-insertion)]
-  (-> entry
-      (assoc :added (time/now))
-      (db/add-chat)
-      json-response)))
+  [request]
+  (let [chat-insertion (:body request)
+        session (:session chat-insertion)
+        entry (:entry chat-insertion)]
+    (-> entry
+        (assoc :added (time/now))
+        (db/add-chat-entry session)
+        json-response)))
 
 
 ;;-----------------------------------------------------------------------------

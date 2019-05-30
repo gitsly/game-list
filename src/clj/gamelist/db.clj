@@ -79,16 +79,15 @@
     (mc/remove-by-id (connect) "games" oid)))
 
 
-;; TODO: can we have a index at the 'entries' level (with auto generated Object Ids)
-(defn add-chat
+(defn add-chat-entry
   [entry
    session]
+  (log "db/add-chat-entry: " session ", entry: " entry)
   (let [chat-id nil ; TODO: if multiple chats
         chat (mc/find-one-as-map (connect) "chat" {:session session})
         entry-oid (ObjectId.)
         chat-oid (-> chat :_id)
         entry-with-id (assoc entry :_id entry-oid)]
-    ;; (log "Db update chat: " chat)
     (log (mc/update (connect) "chat" {:_id chat-oid} {$push {:entries entry-with-id}}))
     (mc/find-one-as-map (connect) "chat" {:_id chat-oid})))
 
