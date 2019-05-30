@@ -36,12 +36,16 @@
     (go (let [response (<! (http/get url))]
           (rf/dispatch [::get-chat-response response])))))
 
+(rf/reg-event-db
+  ::get-chat
+  (fn [_ [event-name session]]
+    (println "Getting chat content: " session)
+    (get-chat session)))
 
 (rf/reg-event-db
   ::initialize-db
   (fn [_ _]
     (get-all-games)
-    (get-chat 'main)
     db/default-db))
 
 (rf/reg-event-db ;; register-handler has been renamed to reg-event-db
@@ -184,7 +188,9 @@
 (rf/reg-event-db
   ::add-chat
   (fn [db
-       [event-name content session]]
+       [event-name
+        session
+        content]]
     (let [msg {:entry {:content content :user (:user db) }
                :session session}
           url "list/addchat"

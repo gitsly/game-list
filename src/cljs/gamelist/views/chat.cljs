@@ -50,7 +50,7 @@
     ^{:key (:_id entry)} [h-box :children [(chat-entry entry)]]))
 
 (defn new-entry
-  []
+  [session]
   (let [text-val (reagent/atom "")]
     [v-box :children [
                       [input-text
@@ -61,17 +61,18 @@
                        ]
                       [button
                        :label "Skicka"
-                       :on-click #(rf/dispatch [::events/add-chat @text-val 'main])
+                       :on-click #(rf/dispatch [::events/add-chat session @text-val])
                        ]
                       ]]))
 
 (defn chat-panel
-  []
+  [session]
   (let [chat-info (rf/subscribe [::subs/chat])
         entries (:entries @chat-info)]
+    (rf/dispatch [::events/get-chat session]) ; Get actual content
     (println chat-info)
     [v-box :children [(chat-panel-children (sort-entries entries))
-                      (new-entry)]]))
+                      (new-entry session)]]))
 
 ;; (for [entry entries]
 ;;   [:p "TODO: views.chatish2"]
